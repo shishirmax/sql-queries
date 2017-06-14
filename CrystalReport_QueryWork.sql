@@ -45,6 +45,8 @@ select * from BATCH_SCHEDULE
 select * from MASTER_LOCATION
 select * from tank
 --Getting (Fecha) Date
+select Month(START_TIME), Month(END_TIME) from BATCH_SCHEDULE_DETAIL
+
 select cast(day(START_TIME) as varchar(2)) + ' - ' + cast(day(END_TIME) as varchar(2)) as FECHA
 from BATCH_SCHEDULE_DETAIL
 -----------------------------------------------------------------------------------------------
