@@ -48,3 +48,5 @@ select E1.EmployeeName,ISNULL(E2.EmployeeName, 'No Boss') as ManagerName
 from EmployeeCTE E1
 left join EmployeeCTE E2
 on E1.ManagerID = E2.EmployeeID
+
+select EmployeeID,EmployeeName,ManagerID as '""' from Employees
