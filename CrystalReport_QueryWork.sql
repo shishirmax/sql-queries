@@ -44,6 +44,12 @@ select * from BATCH_SCHEDULE_ACTIVITY_TYPE
 select * from BATCH_SCHEDULE
 select * from MASTER_LOCATION
 select * from tank
+--Getting Product Name with parameter value
+Declare @Product varchar(max) = 'mezcla' 
+
+select * from MASTER_PRODUCT
+where PRODUCT_NAME IN (@Product,@Product)
+
 --Getting (Fecha) Date
 select Month(START_TIME), Month(END_TIME) from BATCH_SCHEDULE_DETAIL
 
@@ -71,61 +77,67 @@ where MASTER_LOCATION_ID IN (select LOCATION_ID from BATCH_SCHEDULE_DETAIL)
 select CAST(CAST(ROUND(QUANTITY/1000,0) as int) as varchar(50)) +' KB' from BATCH_SCHEDULE_DETAIL
 -------------------------------------------------------------------------------------------------
 
-insert into BATCH_SCHEDULE_DETAIL
-(
-BATCH_SCHEDULE_ID,
-BATCH_ID,
-ACTIVITY_TYPE_ID,
-ACCOUNTING_ID,
-PRODUCT_ID,
-SA_REQ_ID,
-START_TIME,
-END_TIME,
-QUANTITY,
-INCREMENTAL_QTY,
-TOTAL_BATCH_QTY,
-BLEND,
-FIXED_RATE,
-LOCATION_ID,
-ROUTE,
-TANK_ID,
-SHIPPER_ID,
-CONSIGNEE,
-CARRIER_FROM,
-CARRIER_TO,
-COMMENT,
-DESTINATION_ID,
-DESTINATION_TANK_ID,
-RECORD_ACTION_TYPE,
-BATCH_SCHEDULE_PART_ID)
-VALUES
-(
-1000,
-'BA123',
-32,
-'BA123',
-123456,
-123456,
-'12/01/16',
-'12/02/16',
-123,
-123,
-123,
-'ABCD',
-120,
-18026,
-'ABCD',
-60386,
-422087,
-422087,
-422087,
-422087,
-'TestData',
-18026,
-60386,
-12345,
-'TestData'
-)
+--Getting the BPD Volume
+--select sum(QUANTITY) from Batch_schedule_detail
+select CAST(CAST(ROUND(sum(QUANTITY)/1000,0) as int) as varchar(50)) +' BPD' from BATCH_SCHEDULE_DETAIL
+-------------------------------------------------------------------------------------------------------
+
+
+--insert into BATCH_SCHEDULE_DETAIL
+--(
+--BATCH_SCHEDULE_ID,
+--BATCH_ID,
+--ACTIVITY_TYPE_ID,
+--ACCOUNTING_ID,
+--PRODUCT_ID,
+--SA_REQ_ID,
+--START_TIME,
+--END_TIME,
+--QUANTITY,
+--INCREMENTAL_QTY,
+--TOTAL_BATCH_QTY,
+--BLEND,
+--FIXED_RATE,
+--LOCATION_ID,
+--ROUTE,
+--TANK_ID,
+--SHIPPER_ID,
+--CONSIGNEE,
+--CARRIER_FROM,
+--CARRIER_TO,
+--COMMENT,
+--DESTINATION_ID,
+--DESTINATION_TANK_ID,
+--RECORD_ACTION_TYPE,
+--BATCH_SCHEDULE_PART_ID)
+--VALUES
+--(
+--1000,
+--'BA123',
+--32,
+--'BA123',
+--123456,
+--123456,
+--'12/01/16',
+--'12/02/16',
+--123,
+--123,
+--123,
+--'ABCD',
+--120,
+--18026,
+--'ABCD',
+--60386,
+--422087,
+--422087,
+--422087,
+--422087,
+--'TestData',
+--18026,
+--60386,
+--12345,
+--'TestData'
+--)
 
 
 sp_help batch_schedule
@@ -178,4 +190,21 @@ join BATCH_SCHEDULE_DETAIL D on C.MASTER_BE_ID = D.SHIPPER_ID
 --order by A.BILL_ATTN
 
 
+select * from CONTACT
+select * from MASTER_BUSINESS_ENTITY
+select * from BATCH_SCHEDULE_DETAIL
 
+select * from 
+MASTER_BUSINESS_ENTITY A
+join 
+BATCH_SCHEDULE_DETAIL B
+on 
+A.MASTER_BE_ID = B.SHIPPER_ID
+
+select * from CONTACT A
+join 
+MASTER_BUSINESS_ENTITY B
+on A.ADDRESS_ID = B.ADDRESS_ID
+join 
+BATCH_SCHEDULE_DETAIL C
+on B.MASTER_BE_ID = C.SHIPPER_ID
