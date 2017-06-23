@@ -39,11 +39,35 @@ select * from MASTER_LOCATION
 select * from
 select* from BATCH_SCHEDULE_DETAIL
 
-sp_help BATCH_SCHEDULE_DETAIL
+
 select * from BATCH_SCHEDULE_ACTIVITY_TYPE
 select * from BATCH_SCHEDULE
 select * from MASTER_LOCATION
 select * from tank
+
+sp_help address
+sp_help BATCH_SCHEDULE_DETAIL
+sp_help CONTACT
+sp_help MASTER_BUSINESS_ENTITY
+sp_help MASTER_PRODUCT
+sp_help MASTER_PRODUCT_GRADE
+select * from MASTER_PRODUCT
+select * from MASTER_PRODUCT_GROUP
+select* from BATCH_SCHEDULE_DETAIL
+select * from ADDRESS
+select * from CONTACT
+select * from MASTER_BUSINESS_ENTITY
+where MASTER_BE_ID = (select 
+
+/*
+Display SHORT_NAME from MASTER_BUSINESS_ENTITY DB Table for MASTER_BUSINESS_ENTITY_ID included on CONTACT DB Table.
+*/
+select * from MASTER_BUSINESS_ENTITY
+
+--Getting Sender Contact
+select * from CONTACT
+where MASTER_BUSINESS_ENTITY_ID = 5001
+
 --Getting Product Name with parameter value
 Declare @Product varchar(max) = 'mezcla' 
 
@@ -81,6 +105,14 @@ select CAST(CAST(ROUND(QUANTITY/1000,0) as int) as varchar(50)) +' KB' from BATC
 --select sum(QUANTITY) from Batch_schedule_detail
 select CAST(CAST(ROUND(sum(QUANTITY)/1000,0) as int) as varchar(50)) +' BPD' from BATCH_SCHEDULE_DETAIL
 -------------------------------------------------------------------------------------------------------
+
+--getting parameter detail
+select MASTER_SYSTEM_ID as SYSTEM_ID from MASTER_LOCATION --SystemID
+select TRANSFER_DATE as START_DATE from INV_REQUEST --StartDate
+
+--select DATEADD(mm,-1,TRANSFER_DATE) from INV_REQUEST
+
+select PRODUCT_ID from BATCH_SCHEDULE_DETAIL --ProductID
 
 
 --insert into BATCH_SCHEDULE_DETAIL
