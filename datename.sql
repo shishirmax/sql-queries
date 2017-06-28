@@ -27,7 +27,30 @@ values
 
 
 select 
-	LEFT(DATENAME(month,OrderDate),3) as DateColumn,
+	CAST(LEFT(DATENAME(month,OrderDate),3) AS VARCHAR(50)),
 	ID,
 	Project_No 
 from tblProduct
+UNION ALL
+select CAST(OrderDate as varchar(5)),ID,Project_No from tblProduct
+
+SELECT CONVERT(NVARCHAR(10), GETDATE(),126)
+
+select convert(varchar(30), GETDATE(), 106) 
+
+declare @d date = GETDATE();
+select cast(YEAR(@d) as varchar(4)) + '-' + DATENAME(mm, @d) + '-' + cast(DAY(@d) as varchar(2))
+
+
+DECLARE @DATE DATETIME = GETDATE()
+DECLARE @MOD_DATE VARCHAR(50)
+DECLARE @YEAR VARCHAR(10)
+DECLARE @MONTH VARCHAR(10)
+DECLARE @DAY VARCHAR(10)
+
+SET @YEAR = DATENAME(YEAR,@DATE)
+SET @MONTH = DATENAME(MONTH,@DATE)
+SET @DAY = DATENAME(DAY,@DATE)
+
+SET @MOD_DATE= @YEAR+'-'+LEFT(@MONTH,3)+'-'+@DAY
+PRINT @MOD_DATE
