@@ -54,3 +54,33 @@ SET @DAY = DATENAME(DAY,@DATE)
 
 SET @MOD_DATE= @YEAR+'-'+LEFT(@MONTH,3)+'-'+@DAY
 PRINT @MOD_DATE
+
+
+--Some Random Operations
+select GETDATE()
+declare @report_date datetime
+declare @strBeginDate datetime = '2017-06-03'
+set @report_date = (case 
+						when day(@strBeginDate)<=12 
+							then convert(varchar, year(@strBeginDate)) 
+							+ '-'+right('0'+convert(varchar, day(@strBeginDate)),2) 
+							+'-'+right('0'+convert(varchar, month(@strBeginDate)),2)
+						else @strBeginDate 
+					end)
+
+print @strBeginDate
+print @report_date
+
+declare @strBeginDate datetime = '2017-06-03'
+select convert(varchar, year(@strBeginDate))+'-'+right('0'+convert(varchar, day(@strBeginDate)),2)+'-'+right('0'+convert(varchar, month(@strBeginDate)),2)
+
+
+declare @startDate_pre datetime
+declare @endDate_pre datetime
+
+set @startDate_pre=dateadd(mm,-1,GETDATE()) --getting one month back 
+set @endDate_pre =dateadd(mm,+1,GETDATE()) --adding one month advance to the current month
+
+select @startDate_pre
+select @endDate_pre
+
