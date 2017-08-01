@@ -1,0 +1,27 @@
+##Concepts around Temporary Tables and Table Variables
+1. Table variables and temporary tables both exists in TempDB
+2. Table variables can have clustered index.
+3. Table variables do not adhere database transaction whereas temporary tables adheres database transaction.
+4. Table variable cannot be assigned to another table variable.
+5. Table variable cannot be truncated.
+6. Temporary table created inside store procedure is automaticaly dropped when store procedure completes execution.
+
+##Store Procedures precompiled?
+1. Store Procedures are not compiled when created.
+2. Store Procedures are compiled on the First Run time.
+
+##Unique Index and NULL
+DB: tempdb
+Table: TestData
+Column: ID,Name
+--Add a Unique Constrain to the table
+CREATE UNIQUE INDEX UNQ_Name_TestData ON TestData(name)
+GO
+
+--Create a Filtered Index
+DROP INDEX TestData.UNQ_Name_TestData
+GO
+
+CREATE UNIQUE INDEX UNQ_Name_TestData ON TestData(name)
+WHERE name IS NOT NULL
+GO
