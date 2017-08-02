@@ -25,3 +25,4 @@ GO
 CREATE UNIQUE INDEX UNQ_Name_TestData ON TestData(name)
 WHERE name IS NOT NULL
 GO
+**Use FILTERED INDEX to enforce multiple NULLS on UNIQUE INDEX
