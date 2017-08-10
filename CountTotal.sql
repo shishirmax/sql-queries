@@ -34,15 +34,18 @@ select * from filedata
 select * from filedata2
 
 select 
-filename,
-count(filename)as filecount,
+A.filename,B.filename2,
+count(A.filename)as filecount_TableA,
+count(B.filename2)as filecount_TableB,
 totalCount = (
 				select count(distinct filename) from filedata
 				join filedata2
 				on filedata.filename = filedata2.filename2
 			 )
-from filedata
-group by filename
+from filedata A
+join filedata2 B
+on A.filename = B.filename2
+group by A.filename, B.filename2
 
 
 select count(*) from
@@ -54,3 +57,6 @@ on filedata.filename = filedata2.filename2
 
 select count(distinct filename) from filedata
 select count(distinct filename2) from filedata2
+
+select count(filename)as filecount_TableA from filedata
+select count(filename2)as filecount_TableB from filedata2

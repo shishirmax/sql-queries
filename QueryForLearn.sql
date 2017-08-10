@@ -268,3 +268,12 @@ select * from customers A
 join orders B
 on A.customer_id = B.customer_id
 order by A.customer_id
+
+
+select * from suppliers 
+--using between condition with numeric value
+select * from suppliers
+where supplier_id between 200 and 500
+
+--random
+select '10/08/2017' as date
