@@ -52,3 +52,20 @@ select deptname,totalemployee
 from VwEmployeeCount
 --order by deptid
 where TotalEmployee>=2
+
+--Table Variable
+
+Declare @tblEmployeeCount table(DeptName varchar(100),DepartmentID int,TotalEmployees int)
+
+insert @tblEmployeeCount
+select tbldepartment.deptname,tbldepartment.deptid,count(*) as TotalEmployee
+from tblEmployee
+join
+tbldepartment
+on
+tblEmployee.departmentid = tbldepartment.deptid
+group by tbldepartment.deptid,tbldepartment.deptname
+
+select deptname,totalemployees
+from @tblEmployeeCount
+where TotalEmployees>=2
