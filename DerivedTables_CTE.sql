@@ -69,3 +69,19 @@ group by tbldepartment.deptid,tbldepartment.deptname
 select deptname,totalemployees
 from @tblEmployeeCount
 where TotalEmployees>=2
+
+--Derived Tables
+
+select DeptName, TotalEmployees
+from
+	(
+	select tbldepartment.deptname,tbldepartment.deptid,count(*) as TotalEmployees
+	from tblEmployee
+	join
+	tbldepartment
+	on
+	tblEmployee.departmentid = tbldepartment.deptid
+	group by tbldepartment.deptid,tbldepartment.deptname
+	)
+as EmployeeCount
+where TotalEmployees>=2
