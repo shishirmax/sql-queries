@@ -25,6 +25,14 @@ values
 ('Sara','Female',1),
 ('Ben','Male',3)
 
+insert into tbldepartment
+values
+('Pantry')
+insert into tblEmployee
+values
+('Brad','Male',5)
+
+
 select * from tblEmployee
 select * from tbldepartment
 
@@ -42,5 +50,5 @@ select * from VwEmployeeCount
 
 select deptname,totalemployee
 from VwEmployeeCount
-order by deptid
+--order by deptid
 where TotalEmployee>=2
