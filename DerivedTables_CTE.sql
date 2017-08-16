@@ -1,0 +1,46 @@
+--Derived tables and common table expressions in sql server
+create table tbldepartment
+(deptid int identity(1,1),
+deptname varchar(100))
+
+insert into tbldepartment
+values
+('IT'),
+('Payroll'),
+('HR'),
+('Admin')
+
+create table tblEmployee(
+id int identity(1,1),
+name varchar(100),
+Gender varchar(10),
+departmentid int)
+
+insert into tblEmployee
+values
+('John','Male',3),
+('Mike','Male',2),
+('Pam','Female',1),
+('Todd','Male',4),
+('Sara','Female',1),
+('Ben','Male',3)
+
+select * from tblEmployee
+select * from tbldepartment
+
+create view VwEmployeeCount
+as
+select tbldepartment.deptname,tbldepartment.deptid,count(*) as TotalEmployee
+from tblEmployee
+join
+tbldepartment
+on
+tblEmployee.departmentid = tbldepartment.deptid
+group by tbldepartment.deptid,tbldepartment.deptname
+
+select * from VwEmployeeCount
+
+select deptname,totalemployee
+from VwEmployeeCount
+order by deptid
+where TotalEmployee>=2
