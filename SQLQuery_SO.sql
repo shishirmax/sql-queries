@@ -21,3 +21,30 @@ select
 	commission,
 	increased_commission = (commission*1.1) 
 from employee
+
+------------------------------------------------------------------
+create table UserTransactions(
+    WinnerWeek   varchar(50),
+    UserGSM  varchar(100))
+    
+insert into UserTransactions
+values
+('w1','1000000001'),
+('w2','1000000002'),
+('w2','1000000003 '),
+('w2','1000000002'),
+('w2','1000000003 '),
+('w2','1000000003 '),
+('w2','1000000003 '),
+('w3','1000000004'),
+('w3','1000000005'),
+('w3','1000000005'),
+('w3','1000000005'),
+('w4','1000000005'),
+('w4','1000000002')
+
+select * from UserTransactions
+
+SELECT WinnerWeek,UserGSM, COUNT( * ) AS WeeklyCount
+FROM UserTransactions
+GROUP BY UserGSM,WinnerWeek
