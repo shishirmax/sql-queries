@@ -85,3 +85,40 @@ from
 	)
 as EmployeeCount
 where TotalEmployees>=2
+
+--CTE
+/*
+A CTE can be thought of as a temporart result set that is defined within the execution scope of a single SELECT, INSERT, UPDATE, DELETE, or CREATE VIEW
+statement. A CTE is similar to a derived table in that it is not stored as an object and last only for the duration of the query.
+*/
+
+With EmployeeCount(DeptName, Departmentidm, TotalEmployees)
+as
+(
+	select tbldepartment.deptname,tbldepartment.deptid,count(*) as TotalEmployees
+	from tblEmployee
+	join
+	tbldepartment
+	on
+	tblEmployee.departmentid = tbldepartment.deptid
+	group by tbldepartment.deptid,tbldepartment.deptname
+)
+Select DeptName, TotalEmployees
+From EmployeeCount
+where TotalEmployees>=2
+
+
+--CTE
+with EmployeeCount(DeptId, Total)
+as
+(
+	select Departmentid, count(*) as TotalEmployees
+	from tblEmployee
+	group by departmentid
+)
+
+select deptname,Total
+from tbldepartment
+join EmployeeCount
+on tbldepartment.deptid = EmployeeCount.DeptId
+order by Total
