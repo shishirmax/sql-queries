@@ -38,3 +38,30 @@ EXEC dbo.spInsertNewVendor
 declare @Query nvarchar(max)
 set @Query = 'Select Id, PtName + ''('' +Investigation+ '')'' as PtName, Y, M, D, Sex, PtCode FROM DiagMain'
 print @Query
+
+-----------------------------------------------------
+create table temperature(
+id int identity(1,1),
+tempDate datetime,
+tempRecorded varchar(10))
+
+select * from temperature
+select getdate()
+
+insert into temperature
+values
+('2017-08-07','32'),
+('2017-08-07','30'),
+('2017-08-07','31'),
+('2017-08-08','34'),
+('2017-08-08','35'),
+('2017-08-08','31'),
+('2017-08-09','29'),
+('2017-08-09','28'),
+('2017-08-10','21'),
+('2017-08-10','25'),
+('2017-08-10','30')
+
+select max(tempRecorded),tempDate
+from temperature
+group by tempDate
