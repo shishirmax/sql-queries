@@ -310,3 +310,51 @@ pivot
 avg(amount) for type in
 ([Type A],[Type B],[Type C],[Type D]))as Pivoting
 order by date desc
+
+
+-------------------------------------------------------------------------------------------
+--URL: https://stackoverflow.com/questions/45836077/sql-server-pivot-and-sort/45840941#45840941
+create table shoporder(
+ItemCode varchar(50),
+Description varchar(50),
+ReleasedDate datetime,
+RequiredQty int)
+
+select MONTH(releaseddate) from shoporder
+truncate table shoporder
+insert into shoporder
+values
+('D4593-WD15127BP','SLEEVE NUT','08/01/2017',19200),
+('D4593-WD15127BP','SLEEVE NUT','08/02/2017',18000),
+('D4593-WD15127BP','SLEEVE NUT','08/30/2017',20480),
+('D4593-WD15127BP','SLEEVE NUT','08/31/2017',18000),
+('D4593-WD15127BP','SLEEVE NUT','09/23/2017',19200),
+('D4593-WD15127BP','SLEEVE NUT','09/26/2017',18000),
+('D4593-WD15127BP','SLEEVE NUT','09/02/2017',20480),
+('D4593-WD15127BP','SLEEVE NUT','09/17/2017',500),
+('FE3-1209-000','STARTER','08/03/2017',18000),
+('FE3-1209-000','STARTER','08/06/2017',9608),
+('FE3-1209-000','STARTER','08/20/2017',35700),
+('FE3-1209-000','STARTER','08/19/2017',50400),
+('FE3-1209-000','STARTER','09/15/2017',300),
+('FE3-1209-000','STARTER','09/10/2017',48720),
+('FE3-1209-000','STARTER','09/16/2017',11908),
+('FE3-1209-000','STARTER','09/22/2017',6572)
+
+select * from shoporder
+select cast(year(ReleasedDate) as nvarchar)+'/'+cast(month(ReleasedDate) as nvarchar) from shoporder
+
+Select 
+	[ItemCode],
+	[Description],
+	[2017/8],
+	[2017/9]
+from
+(
+select cast(year(ReleasedDate) as nvarchar)+'/'+cast(month(ReleasedDate) as nvarchar) as ReleasedDate,ItemCode,Description,RequiredQty
+from shoporder) as PivotData
+Pivot
+(
+sum(RequiredQty) for ReleasedDate in
+([2017/8],[2017/9])) as Pivoting
+order by ItemCode
