@@ -77,3 +77,42 @@ SELECT *,
 		when 'Services' then 'Services Dept' 
 	end 
 FROM tblEmployee
+---------------------------------------------------------------
+/*
+URL:https://stackoverflow.com/questions/45859688/calculating-variance-between-two-days-in-a-column
+*/
+
+create table variance(
+fruit varchar(100),
+vdate datetime,
+profit decimal(10,2),
+rolling_avg decimal(10,2))
+
+insert into variance
+values
+('Apple','2014-01-16',5.61,0.80),
+('Apple','2014-01-17',3.12,1.25),
+('Apple','2014-01-18',2.20,1.56),
+('Apple','2014-01-19',3.28,2.03),
+('Apple','2014-01-20',7.59,3.11),
+('Apple','2014-01-21',3.72,3.65),
+('Apple','2014-01-22',1.11,3.80),
+('Apple','2014-01-23',5.07,3.73)
+
+select * from variance
+
+--SELECT
+--   [current].rowInt,
+--   [current].Value,
+--   ISNULL([next].Value, 0) - [current].Value
+--FROM
+--   sourceTable       AS [current]
+--LEFT JOIN
+--   sourceTable       AS [next]
+--      ON [next].rowInt = (SELECT MIN(rowInt) FROM sourceTable WHERE rowInt > [current].rowInt)
+
+
+select fruit,vdate,profit,rolling_avg,
+	LAG(profit,1,0) over(order by day(vdate)) as previousprofit,
+	((profit-LAG(profit) over(order by day(vdate)))/LAG(profit) over(order by day(vdate))) as variance_percent
+from variance
