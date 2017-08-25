@@ -358,3 +358,47 @@ Pivot
 sum(RequiredQty) for ReleasedDate in
 ([2017/8],[2017/9])) as Pivoting
 order by ItemCode
+
+-----------------------------------------------------
+/*
+https://stackoverflow.com/questions/45876876/how-to-combine-multiple-rows-into-one-row-and-multiple-column-in-sql-server
+*/
+select * from sys.tables
+
+create table carorder(
+car_id int,
+car_type int,
+car_status int,
+car_count int)
+
+insert into carorder
+values
+(100421,1,1,9),   
+(100421,1,2,8),   
+(100421,1,3,3), 
+(100421,2,1,6),   
+(100421,2,2,8),   
+(100421,2,3,3),
+(100422,1,1,5),
+(100422,1,2,8),   
+(100422,1,3,7)
+
+--using case
+select [car_id], [car_type],
+max(case [car_status] when 1 then [car_count] end) as [sale],
+max(case [car_status] when 2 then [car_count] end) as [purchase],
+max(case [car_status] when 3 then [car_count] end) as [return]
+from carorder
+group by [car_id], [car_type]
+order by [car_id]
+
+--using pivot
+select 
+	car_id,
+	car_type,
+	[1]  as Sale,
+	[2] as Purchase,
+	[3] as [return]
+from carorder d
+pivot
+(sum([car_count]) for [car_status] in([1],[2],[3]) ) as pvt
