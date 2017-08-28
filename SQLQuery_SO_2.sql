@@ -451,3 +451,32 @@ select  date , sum(Amount) as Amount ,sum(ExpAmount) as ExpAmount from
 union 
 select ExpDate as date,0 as Amount, ExpAmount from tbl_Expense ) as a 
 group by date
+
+
+---------------------------------------------------------------
+/*
+https://stackoverflow.com/questions/45918385/convert-date-to-desired-format-in-sql
+*/
+
+Create table RegistruTransport (
+id int identity(1,1),
+DataExpirareAutD datetime,
+FirmaD varchar(100))
+
+insert into RegistruTransport
+values
+('2017-08-10','bat'),
+('2017-08-10','cat'),
+('2017-08-10','rat'),
+('2017-08-11','bat'),
+('2017-08-12','bat'),
+('2017-08-13','bat'),
+('2017-08-14','bat'),
+('2017-08-14','cat'),
+('2017-08-14','rat')
+
+select * from RegistruTransport
+
+select distinct convert(varchar,dataexpirareautd,103) As Date 
+from RegistruTransport
+where FirmaD = 'bat'
