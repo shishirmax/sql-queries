@@ -402,3 +402,52 @@ select
 from carorder d
 pivot
 (sum([car_count]) for [car_status] in([1],[2],[3]) ) as pvt
+-----------------------------------------------------------------------
+/*
+https://stackoverflow.com/questions/45914698/matching-two-or-more-column-value-and-display-in-a-single-column-in-sql-server
+*/
+create table tbl_invoice
+(PayDate Datetime,
+Amount int)
+
+insert into tbl_invoice
+values
+('2017-08-23',2300),
+('2017-08-23',2400),
+('2017-08-23',2500),
+('2017-08-24',5000)
+
+
+create table tbl_Expense
+(ExpDate datetime,
+ExpAmount int)
+
+insert into tbl_Expense
+values
+('2017-08-23',1700),
+('2017-08-25',2800),
+('2017-08-25',2900)
+
+select * from tbl_invoice
+select * from tbl_Expense
+
+select 
+	COALESCE(T1.Paydate,T2.ExpDate) as Date,
+	COALESCE(T1.Amount,0) as Amount,
+	COALESCE(T2.ExpAmount,0) as ExpAmount
+from
+(select Paydate,SUM(Amount) as Amount
+from tbl_invoice
+group by PayDate)T1
+full outer join
+(select ExpDate,SUM(ExpAmount) as ExpAmount
+from tbl_Expense
+group by ExpDate)T2
+on
+T1.PayDate = T2.ExpDate 
+
+select  date , sum(Amount) as Amount ,sum(ExpAmount) as ExpAmount from 
+(select PayDate as date , Amount, 0 as ExpAmount from tbl_Invoice
+union 
+select ExpDate as date,0 as Amount, ExpAmount from tbl_Expense ) as a 
+group by date
