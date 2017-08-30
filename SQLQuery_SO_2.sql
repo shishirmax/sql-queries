@@ -480,3 +480,104 @@ select * from RegistruTransport
 select distinct convert(varchar,dataexpirareautd,103) As Date 
 from RegistruTransport
 where FirmaD = 'bat'
+
+---------------------------------------------
+/*
+https://stackoverflow.com/questions/45952265/how-to-get-latest-salary-of-each-associate-in-sql-table-have-month-and-year-col?noredirect=1#comment78863349_45952265
+*/
+Create table asso_billinghrs(
+ASSOCIATE_ID int,
+Rate_Billed	float,
+Currency varchar(5),
+RateMultiplier float,
+UOM	varchar(2),
+tblMONTH int,
+tblYear int)
+
+insert into asso_billinghrs
+values
+(1,'23.78','USD','1','B',11,2013 ),
+(1,'23.78','USD','1','B',2,2014),
+(1,'23.78','USD','1','B',3,2014), 
+(1,'29','SGD','0.81','A',11,2012),
+(1,'29','SGD','0.81','A',12,2012), 
+(2,'1','INR','0.0146701','C',1,2017), 
+(2,'1','INR','0.0146777','C',1,2017), 
+(2,'1','INR','0.0146859','C',1,2017), 
+(2,'1','INR','0.0147451','C',1,2017), 
+(2,'1','INR','0.0147601','C',12,2016), 
+(2,'1','INR','0.0147699','C',6,2016) 
+
+
+
+--Select ASSOCIATE_ID, 
+--                Rate_Billed, 
+--                Currency, 
+--                RateMultiplier, 
+--                UOM,
+--                tblMONTH, 
+--                tblYEAR--= MAX(tblYear) over (partition by associate_id) 
+--from  asso_billinghrs
+
+--select * from asso_billinghrs
+--order by tblYear desc
+
+--Select ASSOCIATE_ID,Rate_Billed, 
+--                Currency, 
+--                RateMultiplier, 
+--                UOM,                
+--                max(tblMONTH), 
+--                tblYEAR		
+--from asso_billinghrs
+--group by ASSOCIATE_ID,tblYEAR
+
+--select tt.*
+--from asso_billinghrs tt
+--join
+--(select ASSOCIATE_ID,MAX(tblYear) as tblYear
+--from asso_billinghrs
+--group by ASSOCIATE_ID) groupedtt
+--on tt.ASSOCIATE_ID = groupedtt.ASSOCIATE_ID
+--and tt.tblYear = groupedtt.tblYear
+
+select * from 
+(select *,RANK() over(partition by ASSOCIATE_ID order by tblyear desc,tblmonth desc,ratemultiplier desc)as r from asso_billinghrs)T
+where r = 1
+Go
+
+
+--select * from asso_billinghrs
+--where RateMultiplier in(
+--select max(ratemultiplier) from asso_billinghrs
+--where tblMONTH in(
+--select max(tblMonth) from asso_billinghrs
+--where tblYear in(
+--select MAX(tblYear) as Year
+--from asso_billinghrs
+--group by ASSOCIATE_ID)
+--group by tblYear)
+--group by tblYear)
+--Go
+
+
+
+--select ASSOCIATE_ID,max(tblMonth) as Month
+--from asso_billinghrs
+--group by ASSOCIATE_ID,tblYear
+--Go
+
+--WITH CTE AS(
+--Select distinct ASSOCIATE_ID, 
+--       Rate_Billed, 
+--       Currency, 
+--       RateMultiplier, 
+--       UOM,
+--       tblMONTH, 
+--       tblYear,
+--       ROW_NUMBER()over (partition by associate_id ORDER BY [tblYEAR],[tblMONTH] DESC) RN
+--from asso_billinghrs)
+--SELECT * 
+--FROM CTE 
+--WHERE RN=1
+
+
