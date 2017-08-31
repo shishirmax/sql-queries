@@ -55,3 +55,15 @@ from Worker)
 select top 1 salary
 from result
 where denserank = 6
+
+--3rd highest salary
+--The below query will only work if there are no duplicates.
+with result as
+(
+select salary,
+	ROW_NUMBER() over(order by salary desc) as rownumber
+	from Worker
+)
+select salary
+from result
+where rownumber = 3
