@@ -581,3 +581,25 @@ Go
 --WHERE RN=1
 
 
+-----------------------------------------------------------------------------------------------
+/*
+https://stackoverflow.com/questions/45974513/issue-with-the-variables-in-sql-server
+*/
+Declare @week1 varchar(max)='value 1'
+Declare @week2 varchar(max)='value 2'
+declare @sql varchar(max)
+declare @i int=1
+while(@i<=2)
+begin
+set @sql='print '+ @week1 + cast(@i as varchar(6))
+exec(@sql)
+set @i=@i+1
+end
+
+select * from sys.tables
+
+select * from Worker for JSON auto
+
+select ID,FirstName,LastName,Gender,Salary
+from Worker
+FOR XML AUTO
