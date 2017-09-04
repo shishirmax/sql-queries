@@ -603,3 +603,34 @@ select * from Worker for JSON auto
 select ID,FirstName,LastName,Gender,Salary
 from Worker
 FOR XML AUTO
+
+--------------------------------------------------------------------------------------
+/*
+https://stackoverflow.com/questions/45976752/splitting-an-email-column-into-three-columns-in-sql-server
+*/
+--Splitting an email column into three columns in Sql Server
+
+create table email(
+mailid varchar(max))
+
+insert into email
+values
+('shishir.max@gmail.com'),
+('bruce.wayne@wayne.com'),
+('larry.dom@yifi.com'),
+('alex.john@yahoo.com')
+
+select * from email
+
+select email.*, v.domain, v2.firstname, v2.lastname
+from email cross apply
+     (values(stuff(mailid, 1, charindex('@', mailid), '') as domain,left(mailid, charindex('@', mailid)) as name)) v (domain, name)
+	 cross apply
+     (values (left(name, charindex('.')),stuff(name, 1, charindex('.', name), ''))) v2 (lastname, firstname)
+
+select stuff(mailid, 1, charindex('@', mailid), '') as domain,left(mailid, charindex('@', mailid)) as name from email
+Go
+
+select left(name, charindex('.',name)),stuff(name, 1, charindex('.', name), '') from email
+
+select stuff(mailid, 1, charindex('@', mailid), '') as domain,left(mailid, charindex('@', mailid)) as name from email
