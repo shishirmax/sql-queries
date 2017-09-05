@@ -634,3 +634,12 @@ Go
 select left(name, charindex('.',name)),stuff(name, 1, charindex('.', name), '') from email
 
 select stuff(mailid, 1, charindex('@', mailid), '') as domain,left(mailid, charindex('@', mailid)) as name from email
+
+---------------------------------------------------------------------
+--If table column is VARCHAR and has all the numeric values in it, it can be retrieved as Integer using CAST or CONVERT function.
+declare @str varchar(max)
+set @str = 'AB1234'
+--print cast(@str as int)
+--select convert(int,@str)
+ 
+--Output: Conversion failed when converting the varchar value 'AB1234' to data type int.
