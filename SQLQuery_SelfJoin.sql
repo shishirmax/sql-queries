@@ -56,7 +56,18 @@ select * from tblDepartment
 
 select * from tblEmpManager
 
-select E.empid,M.managerId,E.empName As [Employee Name],M.empName As [Manager Name]
+select E.empName As [Employee Name],M.empName As [Manager Name]
 from tblEmpManager E
-inner join tblEmpManager M
+left join tblEmpManager M
 on E.managerId = M.empId
+
+select E.empName As [Employee Name],COALESCE(M.empName,'No Manager') As [Manager Name]
+from tblEmpManager E
+left join tblEmpManager M
+on E.managerId = M.empId
+
+select ISNULL(NULL,'Sample Data') as [Sample Data]
+select ISNULL('Random Data','Sample Data') as [Sample Data]
+
+select COALESCE('Business Data','My Data') as Sample
+select COALESCE(NULL,'My Data') as Sample
