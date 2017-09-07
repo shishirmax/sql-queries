@@ -116,3 +116,146 @@ select fruit,vdate,profit,rolling_avg,
 	LAG(profit,1,0) over(order by day(vdate)) as previousprofit,
 	((profit-LAG(profit) over(order by day(vdate)))/LAG(profit) over(order by day(vdate))) as variance_percent
 from variance
+
+--------------------
+--HackerRank Problem(SQL) The Report
+create table student(
+id int,
+name varchar(100),
+marks int)
+
+insert into student
+values
+(1,'Julia',88),
+(2,'Samantha',68),
+(3,'Maria',99),
+(4,'Scarlet',78),
+(5,'Ashley',63),
+(6,'Jane',81)
+
+create table grades(
+grade int,
+min_mark int,
+max_mark int)
+
+insert into grades
+values
+(1,0,9),
+(2,10,19),
+(3,20,29),
+(4,30,39),
+(5,40,49),
+(6,50,59),
+(7,60,69),
+(8,70,79),
+(9,80,89),
+(10,90,100)
+
+select * from student
+select * from grades
+
+select 
+	CASE
+		when grades.grade<8
+			Then NULL
+		ELSE 
+			student.name
+	END As Name,student.marks,grades.grade
+from student
+join grades
+on student.marks between grades.min_mark and grades.max_mark
+order by grades.grade desc,student.name,student.marks
+
+--HackerRank Top Competitors
+create table Hackers(
+hacker_id int,
+name varchar(100))
+
+create table Difficulty(
+difficulty_level int,
+score int)
+
+create table Challenges(
+challenge_id int,
+hacker_id int,
+difficulty_level int)
+
+create table Submissions(
+submission_id int,
+hacker_id int,
+challenge_id int,
+score int)
+
+insert into Hackers
+values
+(5580,'Rose'),
+(8439,'Angela'),
+(27205,'Frank'),
+(52243,'Patrick'),
+(52348,'Lisa'),
+(57645,'Kimberly'),
+(77726,'Bonnie'),
+(83082,'Michael'),
+(86870,'Todd'),
+(90411,'Joe')
+
+--To Check the size of stored data use DATALENGTH
+select *,DATALENGTH(name) from Hackers
+
+
+insert into Difficulty
+values
+(1,20),
+(2,30),
+(3,40),
+(4,60),
+(5,80),
+(6,100),
+(7,100)
+
+insert into Challenges
+values
+(4810,77726,4),
+(21089,27205,1),
+(36566,5580,7),
+(66730,52243,6),
+(71055,52243,2)
+
+insert into Submissions
+values
+(68628,77726,36566,30),
+(65300,77726,21089,10),
+(40326,52243,36566,77),
+(8941,27205,4810,4),
+(83554,77726,66730,30),
+(43353,52243,66730,0),
+(55385,52348,71055,20),
+(39784,27205,71055,23),
+(94613,868780,71055,30)
+
+SELECT h.hacker_id, h.name
+    FROM submissions s
+    JOIN challenges c
+        ON s.challenge_id = c.challenge_id
+    JOIN difficulty d
+        ON c.difficulty_level = d.difficulty_level 
+    JOIN hackers h
+        ON s.hacker_id = h.hacker_id
+    WHERE s.score = d.score 
+        AND c.difficulty_level = d.difficulty_level
+    GROUP BY h.hacker_id
+        HAVING COUNT(s.hacker_id) > 1
+    ORDER BY COUNT(s.hacker_id) DESC, s.hacker_id ASC
+
+select h.hacker_id, h.name
+from submissions s
+inner join challenges c
+on s.challenge_id = c.challenge_id
+inner join difficulty d
+on c.difficulty_level = d.difficulty_level 
+inner join hackers h
+on s.hacker_id = h.hacker_id
+where s.score = d.score 
+group by h.hacker_id, h.name
+having count(h.hacker_id) > 1
+order by count(h.hacker_id) desc, h.hacker_id asc;

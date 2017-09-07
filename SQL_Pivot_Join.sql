@@ -38,6 +38,8 @@ values
 select * from EmployeeMaster
 select * from EmployeeSalaryDetails
 
+select CONCAT(EmpId,+','+EmpName) from EmployeeMaster
+
 --PIVOT of EmployeeSalaryDetails
 
 select * from EmployeeSalaryDetails
