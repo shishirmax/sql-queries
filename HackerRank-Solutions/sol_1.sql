@@ -30,3 +30,8 @@ where s.score = d.score
 group by h.hacker_id, h.name
 having count(h.hacker_id) > 1
 order by count(h.hacker_id) desc, h.hacker_id asc;
+
+--Higher Than 75 Marks
+select name from students
+where marks > 75
+order by right(name,3),id
