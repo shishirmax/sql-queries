@@ -25,3 +25,14 @@ values
 
 select * from ComputedColumns
 ```
+
+For updating the existing table:
+```SQL
+Alter Table dbo.tablename ADD columnName As ((column1+column2)/2)
+--If the computed column is the average of the two columns.
+```
+
+To force data type for a computed column
+```SQL
+Alter Table dbo.tablename ADD ColumnName As CAST((column1+column2)/2 As Numeric(10,0))
+```
