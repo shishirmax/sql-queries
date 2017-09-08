@@ -19,3 +19,103 @@ select * from myTable
 select * from 
 (select *, RANK() over(partition by status order by time desc) as rn from myTable)T
 where rn = 1
+
+-----------------
+
+drop table EstimationData
+Go
+create table EstimationData(
+    EstChargeCode varchar(100),
+    EstAmount numeric(10,0))
+    
+insert into EstimationData
+values
+('CNFS0001',43250000.00),
+('CNIH0001',0.00),
+('CNIH0001',2625000.00),
+('CNIP0001',4500000.00),
+('CNIP0005',2250000.00),
+('CNOH0001',20484690.00),
+('CNOP0001',0.00)
+
+select * from EstimationData
+
+create table ActualData(
+ActChargeCode varchar(100),
+ActAmount numeric(9,0))
+
+insert into ActualData
+values
+('CNFS0001',39950000.00),
+('CNIH0001',1300000.00),
+('CNIH0001',950000.00),
+('CNIH0001',-950000.00),
+('CNIH0001',950000.00),
+('CNIP0001',4500000.00),
+('CNIP0005',2250005.00),
+('CNOH0001',20484690.00),
+('CNOP0001',3300000.00)
+
+select * from EstimationData
+select * from ActualData
+
+Select 
+	ActualData.ActChargeCode As ChargeCode,
+	CAST(EstimationData.EstAmount as decimal(10,2)) As EstimatedAmount,
+	CAST(ActualData.ActAmount as decimal(10,2)) As ActualAmount
+	from EstimationData
+join ActualData
+on EstimationData.EstChargeCode = ActualData.ActChargeCode
+
+--MERGE EstimationData AS TARGET
+--USING ActualData AS SOURCE 
+--ON (TARGET.EstChargeCode = SOURCE.ActChargeCode)
+
+--WHEN MATCHED AND TARGET.EstAmount <> SOURCE.ActAmount Then
+--UPDATE SET TARGET.EstAmount = SOURCE.ActAmount
+
+--WHEN NOT MATCHED BY TARGET THEN 
+--INSERT (EstChargeCode, EstAmount) 
+--VALUES (SOURCE.ActChargeCode, SOURCE.ActAmount)
+
+--WHEN NOT MATCHED BY SOURCE THEN
+--DELETE
+
+--OUTPUT $action,
+--DELETED.EstChargeCode As TargetEstChargeCode,
+--DELETED.EstAmount As TargetEstAmount,
+--INSERTED.EstChargeCode As SourceActChargeCode,
+--INSERTED.EstAmount As SourceActAmount;
+--SELECT @@ROWCOUNT;
+--Go
+
+
+--select numbervalue from string_split('6,7,8',',')
+
+-----------------------------------------
+--SPLIT STRING
+
+CREATE FUNCTION [dbo].[fnSplitString] 
+( 
+    @string NVARCHAR(MAX), 
+    @delimiter CHAR(1) 
+) 
+RETURNS @output TABLE(splitdata NVARCHAR(MAX) 
+) 
+BEGIN 
+    DECLARE @start INT, @end INT 
+    SELECT @start = 1, @end = CHARINDEX(@delimiter, @string) 
+    WHILE @start < LEN(@string) + 1 BEGIN 
+        IF @end = 0  
+            SET @end = LEN(@string) + 1
+       
+        INSERT INTO @output (splitdata)  
+        VALUES(SUBSTRING(@string, @start, @end - @start)) 
+        SET @start = @end + 1 
+        SET @end = CHARINDEX(@delimiter, @string, @start)
+        
+    END 
+    RETURN 
+END
+
+select * from dbo.fnSplitString('6,7,8',',')

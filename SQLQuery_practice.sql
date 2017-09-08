@@ -259,3 +259,19 @@ where s.score = d.score
 group by h.hacker_id, h.name
 having count(h.hacker_id) > 1
 order by count(h.hacker_id) desc, h.hacker_id asc;
+
+--Computed Columns
+create table ComputedColumns(
+column1 int,
+column2 int,
+column3 int,
+AverageColumn as (column1+column2+column3)/3
+)
+
+insert into ComputedColumns
+values
+(2,4,5),
+(12,45,76),
+(33,66,11)
+
+select * from ComputedColumns
