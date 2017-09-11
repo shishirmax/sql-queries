@@ -164,3 +164,7 @@ select p1.pname,p2.* from product p1
 join product p2 
 on p1.pname = p2.pname
 and p1.vendorName<>p2.vendorName
+
+select * from tblEmployee
+cross join tblDepartment
+where tblEmployee.DepartmentId = 1
