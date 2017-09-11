@@ -119,3 +119,48 @@ BEGIN
 END
 
 select * from dbo.fnSplitString('6,7,8',',')
+
+select patindex('%hi%','shishir')
+
+select PATINDEX('%hir%','shishir')
+
+select PATINDEX('%l%','I am a rockstar.')
+
+select CHARINDEX('hi','shishir')
+
+select * from tblEmployee
+where name like 'To__'
+
+select * from Production.Document
+
+select CHARINDEX('arm',Title)
+from Production.Document
+
+select PATINDEX('%arm%',Title)
+from Production.Document
+
+--Query that return all the product name which are supplied by more than one vendors.
+
+create table product(
+pid int,
+pname varchar(100),
+vendorid int,
+price int,
+vendorName varchar(100))
+
+insert into product
+values
+(1,'Notebook',2,25,'ITC'),
+(2,'Dove',1,50,'HUL'),
+(1,'Notebook',1,22,'Godrej'),
+(3,'Minto',2,1,'ITC'),
+(4,'Locks',3,190,'Godrej'),
+(4,'Locks',1,180,'HUL'),
+(3,'Minto',2,1,'ITC')
+
+select * from product
+Go
+select p1.pname,p2.* from product p1
+join product p2 
+on p1.pname = p2.pname
+and p1.vendorName<>p2.vendorName
