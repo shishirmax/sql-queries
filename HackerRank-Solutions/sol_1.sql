@@ -35,3 +35,27 @@ order by count(h.hacker_id) desc, h.hacker_id asc;
 select name from students
 where marks > 75
 order by right(name,3),id
+
+--Weather Observation Station 5
+select top 1 max(CITY),LEN(max(CITY)) from STATION  group by CITY order by LEN(max(CITY)) desc,CITY;
+select top 1 min(CITY),LEN(min(CITY)) from STATION group by CITY order by LEN(min(CITY)),CITY;
+
+--Weather Observation Station 14
+select cast(max(lat_n)as decimal(10,4))  from station
+where lat_n < 137.2345
+
+--Weather Observation Station 15
+select cast(long_w as decimal(10,4)) from station
+where lat_n=(select max(lat_n)from station where lat_n<137.2345)
+
+--Weather Observation Station 16
+select cast(min(lat_n) as decimal(10,4)) from station 
+where lat_n>38.7780
+
+--Weather Observation Station 17
+select cast(long_w as decimal(10,4)) from station
+where lat_n = (select min(lat_n) from station where lat_n>38.7780)
+
+--Weather Observation Station 18
+select CAST((ABS(min(lat_n)-max(lat_n))+ABS(min(long_w)-max(long_w))) as decimal(10,4)) 
+from station
