@@ -168,3 +168,13 @@ and p1.vendorName<>p2.vendorName
 select * from tblEmployee
 cross join tblDepartment
 where tblEmployee.DepartmentId = 1
+
+select ABS(-1) as AbsoluteValue
+
+select LEN('shishir')
+select DATALENGTH('shishir')
+
+select top 1 max(pname),LEN(max(pname)) from product  group by pname order by LEN(max(pname)) desc,pname
+select top 1 min(pname),LEN(min(pname)) from product group by pname order by LEN(min(pname)),pname
+
+select * from product for XML auto
