@@ -59,3 +59,35 @@ where lat_n = (select min(lat_n) from station where lat_n>38.7780)
 --Weather Observation Station 18
 select CAST((ABS(min(lat_n)-max(lat_n))+ABS(min(long_w)-max(long_w))) as decimal(10,4)) 
 from station
+
+--Type of Triangle
+/*
+SELECT CASE WHEN A + B <= C OR A + C <= B OR B + C <= A THEN 'Not A Triangle'
+            WHEN A = B AND B = C THEN 'Equilateral'
+            WHEN A = B OR A = C OR B = C THEN 'Isosceles'
+            ELSE 'Scalene'
+        END
+FROM TRIANGLES
+*/
+--OR--
+SELECT CASE WHEN A + B <= C THEN 'Not A Triangle'
+            WHEN A = B AND B = C THEN 'Equilateral'
+            WHEN A = B OR A = C OR B = C THEN 'Isosceles'
+            ELSE 'Scalene'
+        END
+FROM TRIANGLES
+
+--The PADS
+select name+'('+upper(substring(occupation,1,1))+')' from occupations order by name;
+select 'There are a total of '+occupation_count+' '+lower(occupation)+'s.' from (select occupation,CAST(count(occupation)as varchar) as occupation_count from occupations
+group by occupation)S
+order by occupation_count,occupation asc;
+
+--Occupations
+select Doctor,Professor, Singer, Actor from 
+(select 
+    name,
+    occupation,
+    rank() over(partition by occupation order by name) rnk from occupations) sorce 
+    pivot
+        (max(name) for occupation in (Doctor,Professor, Singer, Actor)) pivoting order by rnk;
