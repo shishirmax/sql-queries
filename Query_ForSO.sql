@@ -160,6 +160,11 @@ values
 
 select * from product
 Go
+
+select 'There are'+cast(count(pname) as varchar)+pname from product
+group by pname
+order by pname
+
 select p1.pname,p2.* from product p1
 join product p2 
 on p1.pname = p2.pname
@@ -178,3 +183,33 @@ select top 1 max(pname),LEN(max(pname)) from product  group by pname order by LE
 select top 1 min(pname),LEN(min(pname)) from product group by pname order by LEN(min(pname)),pname
 
 select * from product for XML auto
+
+--HackerRank
+--N represents the node in Binary Tree
+--P is the parent of N
+create table BST(
+N int,
+P int)
+
+insert into BST
+values
+(1,2),
+(3,2),
+(6,8),
+(9,8),
+(2,5),
+(8,5),
+(5,NULL)
+
+select * from BST
+
+select N,
+case 
+	when P is NULL
+		then 'Root'
+	when (select count(*) from BST where P=B.N)>0
+		then 'Inner'
+	Else 'Leaf'
+end
+from bst as B order by N
+
