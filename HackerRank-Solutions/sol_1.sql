@@ -91,3 +91,14 @@ select Doctor,Professor, Singer, Actor from
     rank() over(partition by occupation order by name) rnk from occupations) sorce 
     pivot
         (max(name) for occupation in (Doctor,Professor, Singer, Actor)) pivoting order by rnk;
+
+--Binary Tree Nodes
+SELECT N, 
+    CASE 
+        WHEN P IS NULL 
+            THEN 'Root' 
+        WHEN (SELECT COUNT(*) FROM BST WHERE P=B.N)>0 
+            THEN 'Inner' 
+        ELSE 'Leaf' 
+    END 
+FROM BST AS B ORDER BY N;
