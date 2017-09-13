@@ -275,3 +275,10 @@ values
 (33,66,11)
 
 select * from ComputedColumns
+
+select * from sys.tables
+select 'shishir'+'('+upper(substring('shishir',1,1))+')'
+
+select * from tblEmployee
+
+SELECT IIF(1 > 10, 'TRUE', 'FALSE' )
