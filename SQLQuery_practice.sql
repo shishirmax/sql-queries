@@ -282,3 +282,5 @@ select 'shishir'+'('+upper(substring('shishir',1,1))+')'
 select * from tblEmployee
 
 SELECT IIF(1 > 10, 'TRUE', 'FALSE' )
+
+BCP shishir.tblEmployee out c:\tblEmployeeData.txt -SSHISHIRS -T -c

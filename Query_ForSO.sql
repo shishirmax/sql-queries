@@ -213,3 +213,21 @@ case
 end
 from bst as B order by N
 
+-----------------------------
+SELECT  COALESCE(TRY_CONVERT(DATETIME, x, 105), TRY_CONVERT(DATETIME, x, 120))
+FROM    (VALUES('25-10-2016'), ('2016-10-13')) a(x)
+
+select cast('25-10-2016' as date)
+SELECT CAST ('20161025' as datetime) 
+select CAST('2016-10-13' as datetime)
+
+declare @date varchar(100)
+--set @date = '25-10-2016'
+set @date = '2016-10-13'
+select LEN(@date)
+select CHARINDEX('-',@date,0)
+select SUBSTRING(@date,CHARINDEX('-',@date,0)-5,LEN(@date))
+select SUBSTRING(@date,charindex('-',@date,0)+1,LEN(@date))
+select cast(YEAR(@date) as varchar(10))
+
+select cast(substring(@date,charindex('-',@date,0)-5,LEN(@date))+substring(@date, charindex('-',@date,0)+1, LEN(@date))+cast(YEAR(GETDATE())as varchar(10)) as datetime)

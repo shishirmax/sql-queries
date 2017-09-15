@@ -34,6 +34,7 @@ where Salary <(select MAX(salary) from Worker)
 -- replace N with the number
 
 select * from Worker
+order by salary desc
 Go
 
 declare @n int
@@ -54,7 +55,7 @@ with result as
 from Worker)
 select top 1 salary
 from result
-where denserank = 6
+where denserank = 2
 
 --3rd highest salary
 --The below query will only work if there are no duplicates.
