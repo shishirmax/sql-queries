@@ -1,8 +1,16 @@
 select * from sys.tables
 
 select * from tblEmailResults
+sp_help tblEmailResults
+select max(EmailResultsId) from tblEmailResults
+
 select * from tblWebsiteData
+sp_help tblWebsiteData
+select max(WebsiteDataId) from tblWebsiteData
+
 select * from tblSales
+sp_help tblSales
+select max(SalesId) from tblSales
 
 select * from tblDynamicsCRM_POC
 select * from tblPropertyForm
