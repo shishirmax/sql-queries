@@ -14,11 +14,11 @@ sp_help tblWebsiteData
 sp_help tblSales
 sp_help tblEmailResults
 
-select WebsiteUserId,count(*) from tblWebsiteData
-where WebsiteUserId IS NULL
-group by WebsiteUserId
+select PhoneNumber,count(*) from tblWebsiteData
+where PhoneNumber IS NULL
+group by PhoneNumber
 
-select count(WebsiteUserId) from tblWebsiteData
+select count(PhoneNumber) from tblWebsiteData
 
 select RecordIDs,count(*) from tblSales
 group by RecordIDs
@@ -79,9 +79,9 @@ sp_help tblSales
 select * from tblSales
 select RECORDING_DATE,sale_date from tblSales
 
-select Suffix,count(*) as totalCount from tblSales
-where Suffix is NULL
-group by Suffix
+select SALES_TRANSACTION_CODE,count(*) as totalCount from tblSales
+--where SALES_TRANSACTION_CODE is NULL
+group by SALES_TRANSACTION_CODE
 
 
 

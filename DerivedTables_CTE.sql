@@ -117,8 +117,8 @@ as
 	group by departmentid
 )
 
-select deptname,Total
+select DepartmentName,DeptId,Total
 from tbldepartment
 join EmployeeCount
-on tbldepartment.deptid = EmployeeCount.DeptId
+on tbldepartment.ID = EmployeeCount.DeptId
 order by Total
