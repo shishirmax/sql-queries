@@ -122,3 +122,31 @@ from tbldepartment
 join EmployeeCount
 on tbldepartment.ID = EmployeeCount.DeptId
 order by Total
+
+select * from tblEmployee
+select * from tblDepartment
+
+--multiple CTE's using a single WITH clause
+with EmployeesCountBy_Payroll_IT_Dept(DepartmentName, Total)
+as
+(
+	select DepartmentName, COUNT(DepartmentId) as TotalEmployees
+	from tblEmployee
+	join tblDepartment
+	on tblEmployee.DepartmentId = tblDepartment.ID
+	where DepartmentName in('Payroll','IT')
+	group by DepartmentName
+),
+EmployeesCountBy_HR_Other_Dept(DepartmentName, Total)
+as
+(
+	select DepartmentName, COUNT(DepartmentId) as TotalEmployees
+	from tblEmployee
+	join tblDepartment
+	on tblEmployee.DepartmentId = tblDepartment.ID
+	where DepartmentName in('HR','Other Department')
+	group by DepartmentName
+)
+select * from EmployeesCountBy_Payroll_IT_Dept
+union
+select * from EmployeesCountBy_HR_Other_Dept
