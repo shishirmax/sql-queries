@@ -38,13 +38,13 @@ select ASCII('”')
 --begin
 --declare @query varchar(max)
 --set @query = 
---N'insert into tblXMLDataWithFileName(XMLData,loadedDate,'''+@filename+''')
---select CONVERT(xml,BulkColumn) As BulkColumn, GETDATE()
---from openrowset(BULK ''D:\Edina\DataExtract\Generated Error\' + @filename + ''',SINGLE_BLOB)As x'
+--N'insert into tblXMLDataWithFileName(XMLData,loadedDate,'+@filename+')
+--select CONVERT(xml,BulkColumn) As BulkColumn, GETDATE(),'+@filename+'
+--from openrowset(BULK ''D:\Edina\DataExtract\Generated Error\' + @filename + '.xml'',SINGLE_BLOB)As x'
 --execute (@query)
 --end
 
---sp_ImportXMLFileWithFilename 'testXml.xml'
+--sp_ImportXMLFileWithFilename 'testXml'
 
 
 --declare @XMLDoc XML
