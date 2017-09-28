@@ -620,3 +620,16 @@ SELECT @xml = '<us.mn.state.mdor.ecrv.extract.form.EcrvForm>
 	</supplementaryForm>
 	<submitterForm/>
 </us.mn.state.mdor.ecrv.extract.form.EcrvForm>'
+
+CREATE TABLE [xmlBookDataImport] (
+    [id] nvarchar(255),
+    [author] nvarchar(255),
+    [title] nvarchar(255),
+    [genre] nvarchar(255),
+    [price] decimal(28,10),
+    [publish_date] datetime,
+    [description] nvarchar(255),
+    [ImportDate] datetime DEFAULT (getdate())
+)
+
+select * from [xmlBookDataImport]

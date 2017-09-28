@@ -33,8 +33,8 @@ order by CreatedDate
 select min(cast(CreatedDate as date)) from tblWebsiteData
 select max(cast(CreatedDate as date)) from tblWebsiteData
 
-select count(*) as tblRowCount,YEAR(CreatedDate) as tblYear,MONTH(CreatedDate) as tblMonth from tblWebsiteData
-group by YEAR(CreatedDate),MONTH(CreatedDate)
+select count(*) as tblRowCount,YEAR(CreatedDate) as tblYear,MONTH(CreatedDate) as tblMonth,cast(CreatedDate as date) CreatedDate from tblWebsiteData
+group by YEAR(CreatedDate),MONTH(CreatedDate),cast(CreatedDate as date)
 order by YEAR(CreatedDate),MONTH(CreatedDate)
 
 2016: 536875
@@ -84,11 +84,13 @@ select SALES_TRANSACTION_CODE,count(*) as totalCount from tblSales
 group by SALES_TRANSACTION_CODE
 
 
-
+SELECT replace(right(convert(varchar, getdate(), 106), 8), ' ', '-')
+select convert(varchar, GETDATE(),106)
 
 select count(*) as tblRowCount,YEAR(sale_date) as tblYear,MONTH(sale_date) as tblMonth from tblSales
 group by YEAR(sale_date),MONTH(sale_date)
 order by YEAR(sale_date),MONTH(sale_date)
+
 
 
 select min(cast(sale_date as date)) from tblSales
