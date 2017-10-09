@@ -59,4 +59,4 @@ CROSS JOIN Company Comp
 ```
 
 If we run the above query, we produce the result set shown in the image below.
-![alt text](../img/CrossJoin.png)
+![alt text](https://github.com/shishirmax/sql-queries/blob/master/SQLNotes/img/CrossJoin.png)
