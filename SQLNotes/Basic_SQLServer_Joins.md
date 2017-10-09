@@ -60,3 +60,12 @@ CROSS JOIN Company Comp
 
 If we run the above query, we produce the result set shown in the image below.
 ![alt text](https://github.com/shishirmax/sql-queries/blob/master/SQLNotes/img/CrossJoin.png)
+
+Key Points to remember about CROSS JOIN. 
+
+1. A cross join produces the Cartesian product of the tables involved in the join.This mean every row in the Left Table is joined to every row in the Right Table. Candidate is LEFT Table and Company is RIGHT Table. In our example we have 28 total number of rows in the result set. 7 rows in the Candidate table multiplied by 4 rows in the Company Table. 
+2. In real time scenarios we rarley use CROSS JOIN. Most often we use either INNER JOIN or LEFT OUTER JOIN. 
+3. CROSS JOIN does not have an ON clause with a Join Condition. All the other JOINS use ON clause with a Join Condition. 
+4. Using an ON clause on a CROSS JOIN would generate a syntax error. 
+
+Note: Understanding the above key points will help you answer any follow up interview questions on cross join in sql server.
