@@ -65,6 +65,3 @@ FROM Candidate Cand
 JOIN Company Comp
 ON Cand.CompanyId = Comp.CompanyId
 ```
-
-
-If you can think of any other sql server interview questions please post them as comments, so they will be useful to other users like you. This will be a great help from your side to improve this site.
