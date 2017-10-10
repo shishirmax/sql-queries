@@ -49,7 +49,7 @@ If we run the above query the output will be as shown in below. If you look at t
 
 ![Left Join](https://github.com/shishirmax/sql-queries/blob/master/SQLNotes/img/LeftJoin.png)
 
-Left Join Result
+**Left Join Result**
 
 Instead of using LEFT OUTER JOIN keyword we can just use LEFT JOIN keyword as shown below. LEFT OUTER JOIN or LEFT JOIN means the same.
 
