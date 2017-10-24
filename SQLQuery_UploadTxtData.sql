@@ -6,6 +6,11 @@ Select * from EmailResults -- Total records inserted 8424034
 select * from [Website-Data] -- Total records inserted 938194
 select * from Sales -- Total records inserted 134336
 
+--New Table with imported data on 24-10-2017
+select * from tblEmailResults_24102017
+select * from tblWebsiteData_24102017
+select * from tblSales_24102017
+
 select Sales.RecordIDs
 from Sales
 inner join
