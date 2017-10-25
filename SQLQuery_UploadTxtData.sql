@@ -11,6 +11,8 @@ select * from tblEmailResults_24102017
 select * from tblWebsiteData_24102017
 select * from tblSales_24102017
 
+truncate table tblEmailResults_24102017
+
 select Sales.RecordIDs
 from Sales
 inner join
