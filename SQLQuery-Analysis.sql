@@ -37,6 +37,14 @@ select count(*) as tblRowCount,YEAR(CreatedDate) as tblYear,MONTH(CreatedDate) a
 group by YEAR(CreatedDate),MONTH(CreatedDate),cast(CreatedDate as date)
 order by YEAR(CreatedDate),MONTH(CreatedDate)
 
+/*
+select count(*) as tblRowCount,UPPER(DATENAME(M,EOMONTH(CreatedDate)))+' '+CONVERT(VARCHAR(50),DATEPART(YEAR,EOMONTH(CreatedDate))) as Monthly from tblWebsiteData_24102017
+group by EOMONTH(CreatedDate)
+order by EOMONTH(CreatedDate)
+
+
+select UPPER(DATENAME(M,EOMONTH(CreatedDate)))+' '+CONVERT(VARCHAR(50),DATEPART(YEAR,EOMONTH(CreatedDate))) from tblWebsiteData_24102017
+*/
 2016: 536875
 2017: 307992
 --2016-10-17 to 2017-09-13

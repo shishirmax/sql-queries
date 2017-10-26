@@ -11,6 +11,11 @@ select * from tblEmailResults_24102017
 select * from tblWebsiteData_24102017
 select * from tblSales_24102017
 
+select * from tblSales_24102017
+where RecordIDs = '1179455'
+
+sp_help tblsales
+
 truncate table tblEmailResults_24102017
 
 select Sales.RecordIDs
@@ -52,3 +57,17 @@ FIELDTERMINATOR='||',
 FIRSTROW=2,
 ROWTERMINATOR='\n'
 )
+
+--Analysis Query
+select convert(CAST(EOMONTH(GETDATE()) AS VARCHAR(130)),datetime,112)
+
+select ListingId,CreatedDate,Rating,Type,WebsiteUserId,LastName,FirstName,Email,PhoneNumber from tblWebsiteData_24102017
+order by CreatedDate
+
+
+select min(cast(CreatedDate as date)) from tblWebsiteData_24102017
+select max(cast(CreatedDate as date)) from tblWebsiteData_24102017
+
+select count(*) as tblRowCount, CONVERT(CAST(EOMONTH(CreatedDate) AS VARCHAR(30)), DATETIME, 112) as MonthEndDate from tblWebsiteData_24102017
+group by EOMONTH(CreatedDate)
+order by EOMONTH(CreatedDate)
