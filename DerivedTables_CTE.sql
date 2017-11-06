@@ -70,18 +70,20 @@ select deptname,totalemployees
 from @tblEmployeeCount
 where TotalEmployees>=2
 
---Derived Tables
+select * from tblDepartment
+select * from tblEmployee
 
-select DeptName, TotalEmployees
+--Derived Tables
+select DepartmentName, TotalEmployees
 from
 	(
-	select tbldepartment.deptname,tbldepartment.deptid,count(*) as TotalEmployees
+	select tbldepartment.DepartmentName,tbldepartment.ID,count(*) as TotalEmployees
 	from tblEmployee
 	join
 	tbldepartment
 	on
-	tblEmployee.departmentid = tbldepartment.deptid
-	group by tbldepartment.deptid,tbldepartment.deptname
+	tblEmployee.departmentid = tbldepartment.ID
+	group by tbldepartment.ID,tbldepartment.DepartmentName
 	)
 as EmployeeCount
 where TotalEmployees>=2
@@ -95,13 +97,13 @@ statement. A CTE is similar to a derived table in that it is not stored as an ob
 With EmployeeCount(DeptName, Departmentidm, TotalEmployees)
 as
 (
-	select tbldepartment.deptname,tbldepartment.deptid,count(*) as TotalEmployees
+	select tbldepartment.DepartmentName,tbldepartment.ID,count(*) as TotalEmployees
 	from tblEmployee
 	join
 	tbldepartment
 	on
-	tblEmployee.departmentid = tbldepartment.deptid
-	group by tbldepartment.deptid,tbldepartment.deptname
+	tblEmployee.departmentid = tbldepartment.ID
+	group by tbldepartment.ID,tbldepartment.DepartmentName
 )
 Select DeptName, TotalEmployees
 From EmployeeCount
