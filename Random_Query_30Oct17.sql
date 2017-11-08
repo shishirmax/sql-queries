@@ -62,3 +62,7 @@ DECLARE @string NVARCHAR(20)
 SET @string = 'Robin'  
 SELECT @string AS 'String', DATALENGTH(@string) AS 'Datalength' , LEN(@string) AS 'Len'  
 Go
+
+
+select [Address],Latitude,Longitude from tblSales
+FOR JSON PATH 
