@@ -95,7 +95,7 @@ group by SALES_TRANSACTION_CODE
 SELECT replace(right(convert(varchar, getdate(), 106), 8), ' ', '-')
 select convert(varchar, GETDATE(),106)
 
-select count(*) as tblRowCount,YEAR(sale_date) as tblYear,MONTH(sale_date) as tblMonth from tblSales
+select count(*) as tblRowCount,YEAR(sale_date) as tblYear,MONTH(sale_date) as tblMonth from tblSales_24102017
 group by YEAR(sale_date),MONTH(sale_date)
 order by YEAR(sale_date),MONTH(sale_date)
 

@@ -1,6 +1,6 @@
---select count(*) as tblRowCount,UPPER(DATENAME(M,EOMONTH(sale_date)))+' '+CONVERT(VARCHAR(50),DATEPART(YEAR,EOMONTH(sale_date))) AS Monthly from tblSales_24102017
---group by EOMONTH(sale_date)
---order by EOMONTH(sale_date)
+select count(*) as tblRowCount,UPPER(DATENAME(M,EOMONTH(sale_date)))+' '+CONVERT(VARCHAR(50),DATEPART(YEAR,EOMONTH(sale_date))) AS Monthly from tblSales_24102017
+group by EOMONTH(sale_date)
+order by EOMONTH(sale_date)
 
 --UPPER(DATENAME(M,EOMONTH(ResultDate)))+' '+CONVERT(VARCHAR(50),DATEPART(YEAR,EOMONTH(ResultDate)))
 
