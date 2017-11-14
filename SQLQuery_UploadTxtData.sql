@@ -11,6 +11,9 @@ select * from tblEmailResults_24102017
 select * from tblWebsiteData_24102017
 select * from tblSales_24102017
 
+select TOP 10 * from tblSales_24102017
+order by SalesId desc
+
 select * from tblSales_24102017
 where RecordIDs = '1179455'
 
@@ -90,10 +93,37 @@ group by WebsiteUserId
 
 select *
 from (select *, count(*) over (partition by WebsiteUserId) as NumWebsiteUserId
-      from tblWebsiteData_24102017
-	  order by NumWebsiteUserId 
+      from tblWebsiteData_24102017	  
      ) t
-where NumWebsiteUserId > 1
+where NumWebsiteUserId = 4
+
+--and Type = 'Blocked Listing'
+--and Rating IS NOT NULL
+
+select * from tblWebsiteData_24102017
+where WebsiteUserId IN (
+select WebsiteUserId
+from (select *, count(*) over (partition by WebsiteUserId) as NumWebsiteUserId
+      from tblWebsiteData_24102017	  
+     ) t
+where NumWebsiteUserId = 1
+and Type = 'Saved Listing'
+and Rating IS NOT NULL)
+
+select *
+from (select *, count(*) over (partition by WebsiteUserId) as NumWebsiteUserId
+      from tblWebsiteData_24102017	  
+     ) t
+where 	NumWebsiteUserId >1
+	and PhoneNumber IS NULL
+	and Email IS NULL
+	and LastName IS NULL
+	and FirstName IS NULL
+
+Select * from tblWebsiteData_24102017
+where	Email IS NULL
+	and PhoneNumber IS NULL
+
 
 
 select * from tblWebsiteData_24102017
@@ -101,7 +131,7 @@ where ListingId = '2194585'
 order by CreatedDate
 
 select * from tblWebsiteData_24102017
-where WebsiteUserId = '0f6b96ef-a332-479d-9463-f898f6663f7f'
+where WebsiteUserId = '0021de45-2f98-4339-abf5-1144bdb2b1c5'
 order by WebsiteUserId
 
 select type,count(*) from tblWebsiteData_24102017

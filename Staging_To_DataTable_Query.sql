@@ -1,0 +1,285 @@
+SELECT * FROM tblEmailResults_24102017
+SELECT * FROM tblWebsiteData_24102017
+SELECT * FROM tblSales_24102017
+
+SELECT
+		 MAX(LEN(EmailResultsId))
+		,MAX(LEN(MdmContactId))
+		,MAX(LEN(LastName))
+		,MAX(LEN(FirstName))
+		,MAX(LEN(IsActive)) BIT
+		,MAX(LEN(Email))
+		,MAX(LEN(CampaignName))
+		,MAX(LEN(Result))
+		,MAX(LEN(ResultDate))
+		,MAX(LEN(ModifiedDate))
+FROM tblEmailResults_24102017
+
+--SELECT DATA_TYPE 
+--FROM INFORMATION_SCHEMA.COLUMNS
+--WHERE 
+--     TABLE_NAME = 'tblEmailResults_24102017' AND 
+--     COLUMN_NAME = 'MdmContactId'
+
+select max(len(LastName)) from tblEmailResults_24102017
+
+SELECT TOP 10
+		EmailResultsId
+		,MdmContactId
+		,LastName
+		,FirstName
+		,IsActive
+		,Email
+		,CampaignName
+		,Result
+		,ResultDate
+		,ModifiedDate
+FROM 	tblEmailResults_24102017
+
+
+select 
+	CASE
+		WHEN IsActive = 'true'
+		THEN 1
+		WHEN IsActive = 'false'
+		THEN 0
+		ELSE NULL
+	END
+		--CAST(isActive AS BIT) 
+FROM tblEmailResults_24102017
+
+SELECT TOP 10 ResultDate from tblEmailResults_24102017
+select CAST(ResultDate AS DATETIME2) from tblEmailResults_24102017
+select cast('true' AS BIT)
+select cast('false' AS BIT)
+select CAST(NULL AS BIT)
+
+select IsActive,count(1) from tblEmailResults_24102017
+group by IsActive
+having count(1)>1
+
+select * from tblEmailResults_24102017
+where IsActive IS NULL
+
+INSERT INTO tblEdinaEmailResults_DT(				
+				MdmContactId
+				,LastName
+				,FirstName
+				,IsActive
+				,Email
+				,CampaignName
+				,Result
+				,ResultDate
+				,ModifiedDate)
+SELECT 
+				MdmContactId
+				,LastName
+				,FirstName
+				,CAST(IsActive as BIT)
+				,Email
+				,CampaignName
+				,Result
+				,CAST(ResultDate AS DATETIME2)
+				,ModifiedDate
+FROM tblEmailResults_24102017
+
+--DROP TABLE tblEdinaEmailResults_DT
+
+CREATE TABLE dbo.tblEdinaEmailResults_DT(
+	[EmailResultsId] 	[bigint] IDENTITY(1,1) NOT NULL,
+	[MdmContactId] 		VARCHAR(63) NULL,
+	[LastName] 			VARCHAR(63) NULL,
+	[FirstName] 		VARCHAR(63) NULL,
+	[IsActive] 			BIT NULL,
+	[Email] 			VARCHAR(127) NULL,
+	[CampaignName] 		VARCHAR(127) NULL,
+	[Result] 			VARCHAR(15) NULL,
+	[ResultDate] 		DATETIME2 NULL,
+	[ModifiedDate] 		DATETIME NULL DEFAULT (getdate())
+)
+GO
+
+
+
+
+
+
+
+SELECT 
+		 MAX(LEN([WebsiteDataId]))
+		,MAX(LEN([ListingId]))
+		,MAX(LEN([CreatedDate]))
+		,MAX(LEN([Rating]))
+		,MAX(LEN([Type]))
+		,MAX(LEN([WebsiteUserId]))
+		,MAX(LEN([LastName]))
+		,MAX(LEN([FirstName]))
+		,MAX(LEN([Email]))
+		,MAX(LEN([PhoneNumber]))
+		,MAX(LEN([ModifiedDate]))
+FROM tblWebsiteData_24102017
+
+SELECT                                            
+		 MAX(LEN([SalesId]))
+		,MAX(LEN([RecordIDs]))
+		,MAX(LEN([Company]))
+		,MAX(LEN([Prefix]))
+		,MAX(LEN([First]))
+		,MAX(LEN([Middle]))
+		,MAX(LEN([Last]))
+		,MAX(LEN([BuyerEmail]))
+		,MAX(LEN([Suffix]))
+		,MAX(LEN([Title]))
+		,MAX(LEN([PROPERTY_INDICATOR]))
+		,MAX(LEN([MUNICIPALITY_NAME]))
+		,MAX(LEN([OWNER_CORPORATE_INDICATOR]))
+		,MAX(LEN([LAND_USE]))
+		,MAX(LEN([OWNER_NAME]))
+		,MAX(LEN([OWNER_NAME_2]))
+		,MAX(LEN([OWNER_NAME_3]))
+		,MAX(LEN([ABSENTEE_OWNER]))
+		,MAX(LEN([Address]))
+		,MAX(LEN([City]))
+		,MAX(LEN([State]))
+		,MAX(LEN([Zip]))
+		,MAX(LEN([Zip4]))
+		,MAX(LEN([Latitude]))
+		,MAX(LEN([Longitude]))
+		,MAX(LEN([SCF]))
+		,MAX(LEN([ADDRESS_INDICATOR]))
+		,MAX(LEN([HOUSE_NUMBER_PREFIX]))
+		,MAX(LEN([HOUSE_NUMBER]))
+		,MAX(LEN([HOUSE_NUMBER_SUFFIX]))
+		,MAX(LEN([DIRECTION]))
+		,MAX(LEN([STREET_NAME]))
+		,MAX(LEN([MODE]))
+		,MAX(LEN([QUADRANT]))
+		,MAX(LEN([CARRIER_CODE]))
+		,MAX(LEN([HOUSE_NUMBER_PREFIX2]))
+		,MAX(LEN([HOUSE_NUMBER2]))
+		,MAX(LEN([HOUSE_NUMBER_SUFFIX2]))
+		,MAX(LEN([DIRECTION2]))
+		,MAX(LEN([STREET_NAME2]))
+		,MAX(LEN([MODE2]))
+		,MAX(LEN([QUADRANT2]))
+		,MAX(LEN([CARRIER_CODE2]))
+		,MAX(LEN([APT_UNIT_NUMBER2]))
+		,MAX(LEN([CITY2]))
+		,MAX(LEN([STATE2]))
+		,MAX(LEN([ZIP_CODE2]))
+		,MAX(LEN([TOTAL_VALUE_CALCULATED]))
+		,MAX(LEN([LAND_VALUE_CALCULATED]))
+		,MAX(LEN([IMPROVEMENT_VALUE_CALCULATED]))
+		,MAX(LEN([TOTAL_VALUE_CALCULATED_IND]))
+		,MAX(LEN([LAND_VALUE_CALCULATED_IND]))
+		,MAX(LEN([IMPROVEMENT_VALUE_CALCULATED_IND]))
+		,MAX(LEN([ASSD_TOTAL_VALUE]))
+		,MAX(LEN([ASSD_LAND_VALUE]))
+		,MAX(LEN([ASSD_IMPROVEMENT_VALUE]))
+		,MAX(LEN([ASSD_YEAR]))
+		,MAX(LEN([MKT_TOTAL_VALUE]))
+		,MAX(LEN([MKT_LAND_VALUE]))
+		,MAX(LEN([MKT_IMPROVEMENT_VALUE]))
+		,MAX(LEN([APPR_TOTAL_VALUE]))
+		,MAX(LEN([APPR_LAND_VALUE]))
+		,MAX(LEN([APPR_IMPROVEMENT_VALUE]))
+		,MAX(LEN([TAX_AMOUNT]))
+		,MAX(LEN([TAX_YEAR]))
+		,MAX(LEN([DOCUMENT_YEAR]))
+		,MAX(LEN([SALES_DEED_CATEGORY_TYPE]))
+		,MAX(LEN([RECORDING_DATE]))
+		,MAX(LEN([SALE_DATE]))
+		,MAX(LEN([SALE_PRICE]))
+		,MAX(LEN([SALE_CODE]))
+		,MAX(LEN([SELLER_NAME]))
+		,MAX(LEN([SellerEmail]))
+		,MAX(LEN([SALES_TRANSACTION_CODE]))
+		,MAX(LEN([RESIDENTIAL_MODEL_INDICATOR]))
+		,MAX(LEN([PRIOR_DOCUMENT_YEAR]))
+		,MAX(LEN([PRIOR_SLS_DEED_CATEGORY_TYPE]))
+		,MAX(LEN([PRIOR_RECORDING_DATE]))
+		,MAX(LEN([PRIOR_SALE_DATE]))
+		,MAX(LEN([PRIOR_SALE_PRICE]))
+		,MAX(LEN([PRIOR_SALE_CODE]))
+		,MAX(LEN([PRIOR_DEED_TYPE]))
+		,MAX(LEN([FRONT_FOOTAGE]))
+		,MAX(LEN([DEPTH_FOOTAGE]))
+		,MAX(LEN([ACRES]))
+		,MAX(LEN([LAND_SQUARE_FOOTAGE]))
+		,MAX(LEN([UNIVERSAL_BUILDING_SQUARE_FEET]))
+		,MAX(LEN([BUILDING_SQUARE_FEET_IND]))
+		,MAX(LEN([BUILDING_SQUARE_FEET]))
+		,MAX(LEN([LIVING_SQUARE_FEET]))
+		,MAX(LEN([GROUND_FLOOR_SQUARE_FEET]))
+		,MAX(LEN([GROSS_SQUARE_FEET]))
+		,MAX(LEN([ADJUSTED_GROSS_SQUARE_FEET]))
+		,MAX(LEN([BASEMENT_SQUARE_FEET]))
+		,MAX(LEN([GARAGE_PARKING_SQUARE_FEET]))
+		,MAX(LEN([YEAR_BUILT]))
+		,MAX(LEN([EFFECTIVE_YEAR_BUILT]))
+		,MAX(LEN([BEDROOMS]))
+		,MAX(LEN([TOTAL_ROOMS]))
+		,MAX(LEN([TOTAL_BATHS_CALCULATED]))
+		,MAX(LEN([TOTAL_BATHS]))
+		,MAX(LEN([FULL_BATHS]))
+		,MAX(LEN([HALF_BATHS]))
+		,MAX(LEN([QTR_BATHS1]))
+		,MAX(LEN([QTR_BATHS3]))
+		,MAX(LEN([BATH_FIXTURES]))
+		,MAX(LEN([AIR_CONDITIONING]))
+		,MAX(LEN([BASEMENT_FINISH]))
+		,MAX(LEN([BLDG_CODE]))
+		,MAX(LEN([BLDG_IMPV_CODE]))
+		,MAX(LEN([CONDITION]))
+		,MAX(LEN([CONSTRUCTION_TYPE]))
+		,MAX(LEN([EXTERIOR_WALLS]))
+		,MAX(LEN([FIREPLACE_IND]))
+		,MAX(LEN([FIREPLACE_NUMBER]))
+		,MAX(LEN([FIREPLACE_TYPE]))
+		,MAX(LEN([FOUNDATION]))
+		,MAX(LEN([FLOOR]))
+		,MAX(LEN([FRAME]))
+		,MAX(LEN([GARAGE]))
+		,MAX(LEN([HEATING]))
+		,MAX(LEN([MOBILE_HOME_IND]))
+		,MAX(LEN([PARKING_SPACES]))
+		,MAX(LEN([PARKING_TYPE]))
+		,MAX(LEN([POOL]))
+		,MAX(LEN([POOL_CODE]))
+		,MAX(LEN([QUALITY]))
+		,MAX(LEN([ROOF_COVER]))
+		,MAX(LEN([ROOF_TYPE]))
+		,MAX(LEN([STORIES_CODE]))
+		,MAX(LEN([STORIES_NUMBER]))
+		,MAX(LEN([STYLE]))
+		,MAX(LEN([UNITS_NUMBER]))
+		,MAX(LEN([ELECTRIC_ENERGY]))
+		,MAX(LEN([FUEL]))
+		,MAX(LEN([SEWER]))
+		,MAX(LEN([WATER]))
+		,MAX(LEN([OWNER_OWNERSHIP_RIGHTS_CODE]))
+		,MAX(LEN([SUBDIVISION_NAME]))
+		,MAX(LEN([HOMESTEAD_EXEMPT2]))
+		,MAX(LEN([VETERANS_EXEMPTION]))
+		,MAX(LEN([DISABLED_EXEMPTION]))
+		,MAX(LEN([WIDOW_EXEMPTION]))
+		,MAX(LEN([AGED_EXEMPTION]))
+		,MAX(LEN([CONSTRUCTION_CD]))
+		,MAX(LEN([STYLE_CODE]))
+		,MAX(LEN([SELLER_CARRY_BACK]))
+		,MAX(LEN([SITUS_LATITUDE]))
+		,MAX(LEN([SITUS_LONGITUE]))
+		,MAX(LEN([LOAN_TO_VALUE]))
+		,MAX(LEN([CENSUS_TRACT]))
+		,MAX(LEN([ZONING]))
+		,MAX(LEN([RANGE]))
+		,MAX(LEN([TOWNSHIP]))
+		,MAX(LEN([SECTION]))
+		,MAX(LEN([QUARTER_SECTION]))
+		,MAX(LEN([HOMESTEAD_EXEMPT1]))
+		,MAX(LEN([COUNTY_USE_1]))
+		,MAX(LEN([COUNTY_USE_2]))
+		,MAX(LEN([NUMBER_OF_BUILDINGS]))
+		,MAX(LEN([ListingId]))
+		,MAX(LEN([ModifiedDate]))
+FROM tblSales_24102017
