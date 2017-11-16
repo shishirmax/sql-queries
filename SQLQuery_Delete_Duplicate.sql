@@ -10,6 +10,7 @@ Subject6 int)
 
 insert into tblGrade
 values
+('Sally',3,3,3,3,3,3)
 ('John',1,1,1,1,1,1),
 ('Sally',3,3,3,3,3,3),
 ('John',1,1,1,1,1,1),
@@ -22,3 +23,11 @@ with cte as
 from tblGrade)
 
 delete from cte where rn>1
+
+drop table tblGrade
+
+
+select StudentName,subject1,count(*)
+from tblGrade
+group by subject1,StudentName
+having count(*)>1
