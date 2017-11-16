@@ -163,3 +163,19 @@ Where Type = 'Saved Listing'
 and Email is null
 --and Rating IS NOT NULL
 order by CreatedDate
+
+select ListingId, count(1) from tblSales --_24102017
+group by ListingId
+having count(1)>1
+
+select RecordIDs,count(1) from tblSales_24102017
+group by RecordIDs
+having count(1)>1
+
+select count(ListingId) from tblSales_24102017
+where ListingId IS NULL
+
+select * from tblSales_FF
+select count(*) from tblSales_24102017
+
+EXEC sp_rename 'tblSales', 'tblSales_FF'

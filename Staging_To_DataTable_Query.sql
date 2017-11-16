@@ -61,6 +61,8 @@ having count(1)>1
 select * from tblEmailResults_24102017
 where IsActive IS NULL
 
+select * from tblEdinaEmailResults_DT
+
 INSERT INTO tblEdinaEmailResults_DT(				
 				MdmContactId
 				,LastName
