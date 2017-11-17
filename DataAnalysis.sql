@@ -4,6 +4,8 @@ select count(*) from tblEdinaEmailResults_DT -- 8424034
 select count(*) from tblEdinaSales_DT --134336
 
 
+select TOP 10 * from tblEdinaWebsiteData_DT
+select TOP 10 * from tblEdinaSales_DT
 -------------------------------------------------------------------------------------------------
 -- EDINA
 -------------------------------------------------------------------------------------------------
@@ -73,12 +75,30 @@ ORDER BY  EMail
 
 -- WebsiteData
 
-SELECT COUNT(1) FROM [dbo].tblEdinaWebsiteData_DT -- 844967
-SELECT COUNT(1) FROM [dbo].tblEdinaWebsiteData_DT WHERE Email IS NOT NULL -- 841872
-SELECT COUNT(DISTINCT Email) FROM [dbo].tblEdinaWebsiteData_DT WHERE Email IS NOT NULL -- 57042
+select top 10 * from tblEdinaWebsiteData_DT
 
-SELECT COUNT(1) FROM [dbo].tblEdinaWebsiteData_DT WHERE PhoneNumber IS NOT NULL -- 103902
-SELECT COUNT(DISTINCT Email) FROM [dbo].tblEdinaWebsiteData_DT WHERE PhoneNumber IS NOT NULL -- 6104
+--3302
+select * from tblEdinaWebsiteData_DT
+where email is NULL and phonenumber is NULL
+
+--111871
+select * from tblEdinaWebsiteData_DT
+where email is NOT NULL and phonenumber is NOT NULL
+
+select listingid, count(1) from tblEdinaWebsiteData_DT
+group by listingid
+having count(1)>1
+
+select * from tblEdinaWebsiteData_DT
+where listingid = 5517011
+
+
+SELECT COUNT(1) FROM [dbo].tblEdinaWebsiteData_DT -- 938194
+SELECT COUNT(1) FROM [dbo].tblEdinaWebsiteData_DT WHERE Email IS NOT NULL -- 934888
+SELECT COUNT(DISTINCT Email) FROM [dbo].tblEdinaWebsiteData_DT WHERE Email IS NOT NULL -- 57868
+
+SELECT COUNT(1) FROM [dbo].tblEdinaWebsiteData_DT WHERE PhoneNumber IS NOT NULL -- 111875
+SELECT COUNT(DISTINCT Email) FROM [dbo].tblEdinaWebsiteData_DT WHERE PhoneNumber IS NOT NULL -- 6512
 
 SELECT DISTINCT PhoneNumber, Email INTO #tempEdinaWebsiteEmailPhone FROM [dbo].tblEdinaWebsiteData_DT
 
