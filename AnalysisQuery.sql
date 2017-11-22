@@ -16,7 +16,12 @@ ADD OriginalAddress VARCHAR(MAX)
 
 SELECT COUNT(*) FROM EdinaAddressGoogleApi (NOLOCK)
 
-SELECT * FROM EdinaAddressGoogleApi (NOLOCK)
+SELECT COUNT(*) FROM tblEdinaStandardAddressApi (NOLOCK)
+
+
+SELECT COUNT(*) FROM tblEdinaStandardAddressApi
+WHERE Latitude  = 'NA'
+
 
 --TRUNCATE TABLE EdinaAddressGoogleApi
 
@@ -65,9 +70,10 @@ DECLARE @PageNumber AS INT
         ,@RowspPage AS INT
 
 SET @PageNumber = 1
-SET @RowspPage  = 100
+SET @RowspPage  = 2000
 
-SELECT * FROM (
+--67428
+SELECT COUNT(*) FROM (
                     SELECT  ROW_NUMBER() OVER(ORDER BY RecordIDs) AS Number,
                     SF.RecordIDs,
                     SF.[Address] + ',' + SF.City + ',' + SF.[State] + ',' + SF.Zip As [Address]
