@@ -33,7 +33,7 @@ sp_helptext usp_LoadEdinaToDT
 select TRY_CAST('10/2/2017 5:03:10' AS DATETIME)
 
 select * from tblHomeSpotter_DT
-ALTER TABLE tblHomeSpotter_DT DROP COLUMN GoodToImport
+ALTER TABLE tblHomeSpotter_DT DROP COLUMN GoodToImport --Dropping an existing column
 
 ALTER TABLE tblHomeSpotter_FF ADD CONSTRAINT DF_tblHomeSpotter_FF DEFAULT 1 FOR GoodToImport -- Adding default Value to existing column
 
@@ -59,3 +59,14 @@ SELECT @TableName = ViewName FROM TableMapping WHERE ContainerName = @Container
 declare @num int;
 set @num =( next value for GetGroupId);
 select @num as groupId
+
+
+select 
+	--count(*) 
+	*
+from tbleCRVStandardAddressApi
+where address like '%-%'
+and formatted_address = 'NA'
+
+
+select * from tbleCRVStandardAddressApi where ErrorCode='500'
