@@ -29,6 +29,10 @@ tblEdinaEmailResults
 
 sp_helptext usp_getDataTypeErrors
 sp_helptext usp_LoadEdinaToDT
+usp_getDataTypeErrors
+
+sp_helptext usp_LoadHSFlatToFF
+sp_helptext usp_LoadHomeSpotterToDT
 
 select TRY_CAST('10/2/2017 5:03:10' AS DATETIME)
 
@@ -39,6 +43,11 @@ ALTER TABLE tblHomeSpotter_FF ADD CONSTRAINT DF_tblHomeSpotter_FF DEFAULT 1 FOR 
 
 select * from LogError
 select * from logTaskControlFlow
+order by logtaskid desc
+
+SELECT LEFT('HS_DataFeed.csv',11)
+
+SELECT LEN('HS_DataFeed')
 
 select * from TableMapping
 
@@ -62,11 +71,12 @@ select @num as groupId
 
 
 select 
-	--count(*) 
-	*
+	count(*) 
+	--*
 from tbleCRVStandardAddressApi
-where address like '%-%'
-and formatted_address = 'NA'
+where --address like '%-%'
+--and 
+formatted_address = 'NA'
 
 
 select * from tbleCRVStandardAddressApi where ErrorCode='500'
