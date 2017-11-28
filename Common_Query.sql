@@ -37,6 +37,8 @@ sp_helptext usp_LoadHomeSpotterToDT
 select TRY_CAST('10/2/2017 5:03:10' AS DATETIME)
 
 select * from tblHomeSpotter_DT
+select * from tblHomeSpotter_AE
+select * from tblHomeSpotter_FF
 ALTER TABLE tblHomeSpotter_DT DROP COLUMN GoodToImport --Dropping an existing column
 
 ALTER TABLE tblHomeSpotter_FF ADD CONSTRAINT DF_tblHomeSpotter_FF DEFAULT 1 FOR GoodToImport -- Adding default Value to existing column
@@ -44,6 +46,10 @@ ALTER TABLE tblHomeSpotter_FF ADD CONSTRAINT DF_tblHomeSpotter_FF DEFAULT 1 FOR 
 select * from LogError
 select * from logTaskControlFlow
 order by logtaskid desc
+
+SELECT 1 FROM sys.external_data_sources WHERE name = 'contata'
+
+select * from database
 
 SELECT LEFT('HS_DataFeed.csv',11)
 
