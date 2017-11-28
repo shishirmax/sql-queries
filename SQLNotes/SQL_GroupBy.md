@@ -19,9 +19,7 @@ ORDER BY column1, column2;
 ```
 
 **function_name:** Name of the function used for example, SUM() , AVG().
-
 **table_name:** Name of the table.
-
 **condition:** Condition used.
 
 ## HAVING Clause
@@ -42,9 +40,7 @@ ORDER BY column1, column2;
 ```
 
 **function_name:** Name of the function used for example, SUM() , AVG().
-
 **table_name:** Name of the table.
-
 **condition:** Condition used.
 
 **Example:**
