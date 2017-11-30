@@ -90,24 +90,26 @@ formatted_address = 'NA'
 select * from tbleCRVStandardAddressApi where ErrorCode='500'
 
 
-CREATE TABLE tblHomeSpotter(
-	[user_id]                         NVARCHAR(MAX) NULL, 
-	[user]                            NVARCHAR(MAX) NULL, 
-	hs_agent_id                     NVARCHAR(MAX) NULL, 
-	agent_name                      NVARCHAR(MAX) NULL, 
-	device_id                       NVARCHAR(MAX) NULL, 
-	ip_address                      NVARCHAR(MAX) NULL, 
-	session_start_utc               NVARCHAR(MAX) NULL, 
-	session_end_guess_utc           NVARCHAR(MAX) NULL, 
-	session_end_is_guess            NVARCHAR(MAX) NULL, 
-	event_count_listing_view        NVARCHAR(MAX) NULL, 
-	event_count_run_saved_search    NVARCHAR(MAX) NULL, 
-	event_count_add_saved_listing   NVARCHAR(MAX) NULL, 
-	event_count_search_for_agent    NVARCHAR(MAX) NULL, 
-	event_count_share_app           NVARCHAR(MAX) NULL, 
-	event_count_app_feedback        NVARCHAR(MAX) NULL, 
-	event_count_call_company        NVARCHAR(MAX) NULL, 
-	event_count_open_mortgage_calc  NVARCHAR(MAX) NULL
+CREATE TABLE tblHomeSpotter_DT(
+	HomeSpotterId						BIGINT IDENTITY(1,1) NOT NULL,
+	[user_id]							VARCHAR(63) NULL, 
+	[user]								VARCHAR(63) NULL, 
+	hs_agent_id							INT NULL, 
+	agent_name							VARCHAR(127) NULL, 
+	device_id							VARCHAR(63) NULL, 
+	ip_address							VARCHAR(31) NULL, 
+	session_start_utc					DATETIME NULL, 
+	session_end_guess_utc				DATETIME NULL, 
+	session_end_is_guess				INT NULL, 
+	event_count_listing_view			INT NULL, 
+	event_count_run_saved_search		INT NULL, 
+	event_count_add_saved_listing		INT NULL, 
+	event_count_search_for_agent		INT NULL, 
+	event_count_share_app				INT NULL, 
+	event_count_app_feedback			INT NULL, 
+	event_count_call_company			INT NULL, 
+	event_count_open_mortgage_calc		INT NULL,
+	ModifiedDate						DATETIME DEFAULT(GETDATE())
 )
 
 select * from tblHomeSpotter
