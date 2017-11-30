@@ -36,6 +36,8 @@ sp_helptext usp_LoadHomeSpotterToDT
 
 select TRY_CAST('10/2/2017 5:03:10' AS DATETIME)
 
+truncate table tblHomeSpotter_DT
+
 select * from tblHomeSpotter_DT
 select * from tblHomeSpotter_AE
 select * from tblHomeSpotter_FF
@@ -50,7 +52,7 @@ order by logtaskid desc
 SELECT 1 FROM sys.external_data_sources WHERE name = 'contata'
 
 select * from database
-
+select * from tblIntermediate_FF
 SELECT LEFT('HS_DataFeed.csv',11)
 
 SELECT LEN('HS_DataFeed')
@@ -86,3 +88,30 @@ formatted_address = 'NA'
 
 
 select * from tbleCRVStandardAddressApi where ErrorCode='500'
+
+
+CREATE TABLE tblHomeSpotter(
+	[user_id]                         NVARCHAR(MAX) NULL, 
+	[user]                            NVARCHAR(MAX) NULL, 
+	hs_agent_id                     NVARCHAR(MAX) NULL, 
+	agent_name                      NVARCHAR(MAX) NULL, 
+	device_id                       NVARCHAR(MAX) NULL, 
+	ip_address                      NVARCHAR(MAX) NULL, 
+	session_start_utc               NVARCHAR(MAX) NULL, 
+	session_end_guess_utc           NVARCHAR(MAX) NULL, 
+	session_end_is_guess            NVARCHAR(MAX) NULL, 
+	event_count_listing_view        NVARCHAR(MAX) NULL, 
+	event_count_run_saved_search    NVARCHAR(MAX) NULL, 
+	event_count_add_saved_listing   NVARCHAR(MAX) NULL, 
+	event_count_search_for_agent    NVARCHAR(MAX) NULL, 
+	event_count_share_app           NVARCHAR(MAX) NULL, 
+	event_count_app_feedback        NVARCHAR(MAX) NULL, 
+	event_count_call_company        NVARCHAR(MAX) NULL, 
+	event_count_open_mortgage_calc  NVARCHAR(MAX) NULL
+)
+
+select * from tblHomeSpotter
+
+
+
+
