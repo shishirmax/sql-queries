@@ -45,7 +45,10 @@ ALTER TABLE tblHomeSpotter_DT DROP COLUMN GoodToImport --Dropping an existing co
 
 ALTER TABLE tblHomeSpotter_FF ADD CONSTRAINT DF_tblHomeSpotter_FF DEFAULT 1 FOR GoodToImport -- Adding default Value to existing column
 
+
+sp_who 
 select * from LogError
+order by ErrorID desc
 select * from logTaskControlFlow
 order by logtaskid desc
 
@@ -161,3 +164,20 @@ from tblHomeSpotter
 
 
 
+select system_type_id,object_id  from sys.columns
+
+DECLARE @sql NVARCHAR(MAX);
+
+SET @sql = N'';
+
+SELECT @sql = @sql + '
+  ' + QUOTENAME(name) + ' = CASE
+  WHEN ' + QUOTENAME(name) + ' = ''NULL'' THEN NULL ELSE '
+  + QUOTENAME(name) + ' END,'
+FROM sys.columns
+WHERE [object_id] = OBJECT_ID('dbo.tblHomeSpotterFeed')
+AND system_type_id IN (35,99,167,175,231,239);
+
+SELECT @sql = N'UPDATE dbo.tblHomeSpotterFeed SET ' + LEFT(@sql, LEN(@sql)-1) + ';';
+
+PRINT @sql;
