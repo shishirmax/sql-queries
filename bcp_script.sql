@@ -6,4 +6,5 @@ CREATE TABLE websitedata(ListingId NVARCHAR(MAX),CreatedDate NVARCHAR(MAX),Ratin
 
 bcp dbo.<tablename> in <file location in local folder> -S <server_name> -d <database_name> -U <username> -P <password> -a 16384 -b 20000 -q -c -t"||"
 
+--Adding servername with username
 bcp dbo.<tablename> in <file location in local folder> -S tcp:<server_name> -d <database_name> -U <servername>.<username> -P <password> -a 16384 -b 20000 -q -c -t","
