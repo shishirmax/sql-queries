@@ -93,7 +93,7 @@ formatted_address = 'NA'
 select * from tbleCRVStandardAddressApi where ErrorCode='500'
 
 
-CREATE TABLE tblHomeSpotter_FF(
+CREATE TABLE tblHomeSpotter_DT(
 	HomeSpotterId						BIGINT IDENTITY(1,1) NOT NULL,
 	[user_id]							VARCHAR(63) NULL, 
 	[user]								VARCHAR(63) NULL, 
@@ -117,11 +117,12 @@ CREATE TABLE tblHomeSpotter_FF(
 
 select * from tblHomeSpotter
 select * from tblHomeSpotter_FF
+select * from tblHomeSpotter_DT
 
 DECLARE @modifiedDate DATETIME
 SET @modifiedDate = GETDATE()
 
-INSERT INTO tblHomeSpotter_FF(
+INSERT INTO tblHomeSpotter_DT(
 	[user_id]
 	,[user]
 	,hs_agent_id
@@ -142,42 +143,46 @@ INSERT INTO tblHomeSpotter_FF(
 	,ModifiedDate
 )
 SELECT
-	[user_id]
-	,[user]
-	,hs_agent_id
-	,REPLACE(agent_name,'"','')
-	,device_id
-	,ip_address
-	,REPLACE(session_start_utc,'"','')
-	,REPLACE(session_end_guess_utc,'"','')
-	,session_end_is_guess
-	,event_count_listing_view
-	,event_count_run_saved_search
-	,event_count_add_saved_listing
-	,event_count_search_for_agent
-	,event_count_share_app
-	,event_count_app_feedback
-	,event_count_call_company
-	,event_count_open_mortgage_calc
+	 NULLIF([user_id],'')
+	,NULLIF([user],'')
+	,NULLIF(hs_agent_id,'')
+	,NULLIF(REPLACE(agent_name,'"',''),'')
+	,NULLIF(device_id,'')
+	,NULLIF(ip_address,'')
+	,NULLIF(REPLACE(session_start_utc,'"',''),'')
+	,NULLIF(REPLACE(session_end_guess_utc,'"',''),'')
+	,NULLIF(session_end_is_guess,'')
+	,NULLIF(event_count_listing_view,'')
+	,NULLIF(event_count_run_saved_search,'')
+	,NULLIF(event_count_add_saved_listing,'')
+	,NULLIF(event_count_search_for_agent,'')
+	,NULLIF(event_count_share_app,'')
+	,NULLIF(event_count_app_feedback,'')
+	,NULLIF(event_count_call_company,'')
+	,NULLIF(event_count_open_mortgage_calc,'')
 	,@modifiedDate
-from tblHomeSpotter
+from tblHomeSpotter_FF
 
-
+Select count(1) from tblHomeSpotter_DT
 
 select system_type_id,object_id  from sys.columns
+--********************************************************************************************
+--DECLARE @sql NVARCHAR(MAX);
 
-DECLARE @sql NVARCHAR(MAX);
+--SET @sql = N'';
 
-SET @sql = N'';
+--SELECT @sql = @sql + '
+--  ' + QUOTENAME(name) + ' = CASE
+--  WHEN ' + QUOTENAME(name) + ' = ''NULL'' THEN NULL ELSE '
+--  + QUOTENAME(name) + ' END,'
+--FROM sys.columns
+--WHERE [object_id] = OBJECT_ID('dbo.tblHomeSpotterFeed')
+--AND system_type_id IN (35,99,167,175,231,239);
 
-SELECT @sql = @sql + '
-  ' + QUOTENAME(name) + ' = CASE
-  WHEN ' + QUOTENAME(name) + ' = ''NULL'' THEN NULL ELSE '
-  + QUOTENAME(name) + ' END,'
-FROM sys.columns
-WHERE [object_id] = OBJECT_ID('dbo.tblHomeSpotterFeed')
-AND system_type_id IN (35,99,167,175,231,239);
+--SELECT @sql = N'UPDATE dbo.tblHomeSpotterFeed SET ' + LEFT(@sql, LEN(@sql)-1) + ';';
 
-SELECT @sql = N'UPDATE dbo.tblHomeSpotterFeed SET ' + LEFT(@sql, LEN(@sql)-1) + ';';
+--PRINT @sql;
+--********************************************************************************************
 
-PRINT @sql;
+select TOP 10 * from tblPopScore_FF
+select TOP 10 * from tblPopScore_DT
