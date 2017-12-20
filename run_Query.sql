@@ -69,6 +69,9 @@ SELECT * FROM homeSpotter.tblHomeSpotterHistory_FF
 SELECT * FROM homeSpotter.tblHomeSpotterHistory_DT
 SELECT * FROM homeSpotter.tblHomeSpotterHistory_AE
 
+dculbertson.65@ icloud.com
+gcmullins@q.com
+
 --TRUNCATE TABLE homeSpotter.tblHomeSpotterHistory_bcp
 --TRUNCATE TABLE homeSpotter.tblHomeSpotterHistory_FF
 --TRUNCATE TABLE homeSpotter.tblHomeSpotterHistory_DT
@@ -89,6 +92,12 @@ SELECT * FROM homeSpotter.tblHomeSpotterHistory_AE
 --sp_RENAME 'homeSpotter.tblHomeSpotterHistory_AE.HS_AE_ID','HSHistoryId','COLUMN' --Done
 select * from sys.tables t
 where t.name = 'tblHomeSpotter_DT'
+
+DECLARE @schemaName	NVARCHAR(255) = 'homeSpotter'
+DECLARE @schemaId INT
+select  @schemaId = SCHEMA_ID ( @schemaName ) 
+print @schemaId
+
 
 DECLARE @ctr int;  
 DECLARE @temp AS TABLE
@@ -116,7 +125,7 @@ SELECT
 		FROM sys.columns c 
 		INNER JOIN sys.tables t 
 			ON		c.OBJECT_ID=t.OBJECT_ID 
-				AND t.name='tblHomeSpotterHistory_DT'
+				AND t.name='tblHomeSpotter_DT'
 				AND c.name NOT IN ('GoodToImport', 'ErrorDescription') 
 				AND t.schema_id = 9
 		INNER JOIN sys.types u 
