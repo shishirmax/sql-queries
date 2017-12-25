@@ -1,6 +1,3 @@
---********************************
---Query to Neeraj
---********************************
 
 --Table where formatted address will be inserted comming as a response from google API
 CREATE TABLE EdinaAddressGoogleApi
