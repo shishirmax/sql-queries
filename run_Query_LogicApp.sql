@@ -140,7 +140,7 @@ Cannot fetch a row from OLE DB provider "BULK" for linked server "(null)".
 		)     
 
 
-select * from TableMapping 
+select * from Edina.TableMapping 
 select count(1) from vwSourceedinawebsitedata
 select count(1) from vwSourcehomespotter
 
