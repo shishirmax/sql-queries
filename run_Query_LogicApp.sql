@@ -6,7 +6,7 @@ TRUNCATE TABLE tblHomeSpotter_FF
 TRUNCATE TABLE tblHomeSpotter_AE
 TRUNCATE TABLE tblHomeSpotter_DT
 
-select * from logTaskControlFlow(NOLOCK)
+select * from logTaskControlFlow(NOLOCK)-- where FeedName = 'HS_DataFeed'
 order by 1 desc
 
 select * from logerror(NOLOCK)
@@ -97,18 +97,22 @@ declare
 		EXEC SP_EXECUTESQL @sql
 		PRINT '@sql_2: '+@sql
 		  
-		--SET @SqlInter= 'BULK INSERT tblIntermediate_FF FROM '''+ @FileName + ''' WITH (DATA_SOURCE = '''+@container+''', FORMAT = ''CSV'');'
-		--EXEC SP_EXECUTESQL @SqlInter	
-		--PRINT @SqlInter
+		SET @SqlInter= 'BULK INSERT tblIntermediate_FF FROM '''+ @FileName + ''' WITH (DATA_SOURCE = '''+@container+''', FORMAT = ''CSV'',FIRSTROW = 2);'
+		EXEC SP_EXECUTESQL @SqlInter	
+		PRINT @SqlInter
 
-		--SET @SqlInter='Select @cnt=count(1) from tblIntermediate_FF'        
-		--EXECUTE sp_executesql  @SqlInter,N'@cnt int OUTPUT',@countInter OUTPUT 
-		--PRINT @SqlInter
-		--PRINT @countInter
+		SET @SqlInter='Select @cnt=count(1) from tblIntermediate_FF'        
+		EXECUTE sp_executesql  @SqlInter,N'@cnt int OUTPUT',@countInter OUTPUT 
+		PRINT @SqlInter
+		PRINT @countInter
 
 		SET @sql= 'BULK INSERT ' + @ViewName + ' FROM '''+ @FileName + ''' WITH (DATA_SOURCE = '''+@container+''', FORMAT = ''CSV'', FIELDTERMINATOR  = '','', FIRSTROW = 2);'          
 		EXEC SP_EXECUTESQL @sql
 		PRINT '@sql_3: '+@sql 
+
+		BULK INSERT homeSpotter.tblHomeSpotter_bcp FROM 'HS_DataFeed_20171224.csv' WITH (DATA_SOURCE = 'sourcehomespotter', FORMAT = 'CSV', FIELDTERMINATOR  = ',', FIRSTROW = 2);
+
+		BULK INSERT tblIntermediate_FF FROM 'HS_DataFeed_20171224.csv' WITH (DATA_SOURCE = 'sourcehomespotter', FORMAT = 'CSV',FIRSTROW = 2);
 	
 /*
 #### ERROR
@@ -119,10 +123,14 @@ The OLE DB provider "BULK" for linked server "(null)" reported an error. The pro
 Msg 7330, Level 16, State 2, Line 69
 Cannot fetch a row from OLE DB provider "BULK" for linked server "(null)".
 */
+	--TRUNCATE TABLE tblHomeSpotter
+	SELECT TOP 10 * FROM tblHomeSpotter
 	SELECT * FROM tblIntermediate_FF
+	SELECT TOP 10 * FROM tblEdinaEmailResults_FF
 	--https://contata.blob.core.windows.net/sourcehomespotter
 	--https://contata.blob.core.windows.net/archivehomespotter
 	SELECT 1 FROM sys.external_data_sources WHERE name = 'sourcehomespotter'
+	SELECT * FROM sys.external_data_sources
 	DROP EXTERNAL DATA SOURCE sourcehomespotter 
 
 	CREATE EXTERNAL DATA SOURCE sourcehomespotter
@@ -131,10 +139,33 @@ Cannot fetch a row from OLE DB provider "BULK" for linked server "(null)".
 		LOCATION = 'https://contata.blob.core.windows.net/sourcehomespotter'
 		)     
 
-SELECT * FROM sys.external_data_sources
+
 select * from TableMapping 
 select count(1) from vwSourceedinawebsitedata
 select count(1) from vwSourcehomespotter
+
+
+CREATE VIEW vwSourcehomespotter
+AS
+SELECT 
+	[user_id]
+	,[user]
+	,hs_agent_id
+	,agent_name
+	,device_id
+	,ip_address
+	,session_start_utc
+	,session_end_guess_utc
+	,session_end_is_guess
+	,event_count_listing_view
+	,event_count_run_saved_search
+	,event_count_add_saved_listing
+	,event_count_search_for_agent
+	,event_count_share_app
+	,event_count_app_feedback
+	,event_count_call_company
+	,event_count_open_mortgage_calc
+FROM tblHomeSpotter_FF
 select count(1) from tblHomeSpotter_FF
 
  "status": 504,
@@ -158,3 +189,142 @@ ArchiveContainerURL: https://contata.blob.core.windows.net/archivehomespotter
 (17043 rows affected)
 @sql_3: BULK INSERT vwSourcehomespotter FROM 'HS_DataFeed_20171224.csv' WITH (DATA_SOURCE = 'sourcehomespotter', FORMAT = 'CSV', FIELDTERMINATOR  = ',', FIRSTROW = 2);
  */
+
+ TRUNCATE TABLE homeSpotter.tblHomeSpotter_bcp
+
+select TOP 100 * from homeSpotter.tblHomeSpotter_bcp
+
+SELECT COUNT(1) As tblHomeSpotter_bcp FROM homeSpotter.tblHomeSpotter_bcp(NOLOCK)
+SELECT COUNT(1) As tblHomeSpotter_FF FROM homeSpotter.tblHomeSpotter_FF(NOLOCK)
+SELECT COUNT(1) As tblHomeSpotter_DT FROM homeSpotter.tblHomeSpotter_DT(NOLOCK)
+SELECT COUNT(1) As tblHomeSpotter_AE FROM homeSpotter.tblHomeSpotter_AE(NOLOCK)
+
+SELECT COUNT(1) As DimAgent					FROM homeSpotter.DimAgent
+SELECT COUNT(1) As DimDevice				FROM homeSpotter.DimDevice
+SELECT COUNT(1) As DimSession				FROM homeSpotter.DimSession
+SELECT COUNT(1) As DimUser					FROM homeSpotter.DimUser
+SELECT COUNT(1) As FactHomeSpotter			FROM homeSpotter.FactHomeSpotter
+SELECT COUNT(1) As FactHomeSpotterSummary	FROM homeSpotter.FactHomeSpotterSummary
+
+
+SELECT  * FROM homeSpotter.DimAgent
+SELECT  * FROM homeSpotter.DimDevice
+SELECT  * FROM homeSpotter.DimSession
+SELECT  * FROM homeSpotter.DimUser
+SELECT  * FROM homeSpotter.FactHomeSpotter
+SELECT  * FROM homeSpotter.FactHomeSpotterSummary
+
+SELECT * FROM (
+                             SELECT ROW_NUMBER() OVER(ORDER BY crvNumberId, ID, recordType) AS Number,
+                               crvNumberId AS crvNumberId,
+                               ID   AS ID,
+                               recordType AS recordType,
+                               REPLACE(CASE WHEN AddressLine1 = 'NA'
+												THEN ' '
+											WHEN AddressLine1 LIKE 'c/o%'
+												THEN 
+													CASE WHEN PATINDEX('%[0-9]%',AddressLine1) > 0 THEN SUBSTRING (  AddressLine1,PATINDEX('%[0-9]%',AddressLine1) , LEN(AddressLine1) ) ELSE ' ' END
+											ELSE AddressLine1
+										END+' '+
+                               CASE WHEN AddressLine2 = 'NA' THEN ' ' ELSE AddressLine2 END +' '+
+                               CASE WHEN City   = 'NA' THEN ' ' ELSE City  END +', '+
+                               CASE WHEN State   = 'NA' THEN ' ' ELSE State   END+', '+
+                               CASE WHEN Zip   = 'NA' THEN ' ' ELSE Zip  END,'#','') [Address]
+                             FROM tblEcrvAddress (NOLOCK)
+                             WHERE crvNumberId = 120649 AND recordType != 'eCRV_property_add'
+                            ) AS TBL
+                        WHERE Number BETWEEN ((' + PageNumber + ' - 1)  500 + 1) AND (' + PageNumber + '   500)
+                        ORDER BY TBL.Number
+                             
+select TOP 10 * from tblEcrvAddress
+where crvNumberId >= 294012 AND recordType != 'eCRV_property_add'
+
+select count(1) from tbleCRVStandardAddressApi -- 3024560
+where recordType != 'eCRV_property_add' --2542308
+
+
+Select *,ROW_NUMBER() OVER(PARTITION BY [Address] ORDER BY [Address]) as rNumber		
+into #tempTbl
+from tbleCRVStandardAddressApi --26sec
+--where recordType != 'eCRV_property_add'
+order by recordType
+
+select count(1) from #tempTbl
+
+select TOP 100 * from #tempTbl
+where recordType = 'eCRV_buyer1_property_add'
+
+select COUNT(1) from #tempTbl
+where formatted_address = 'NA' --1581550
+
+select * from tblEcrvAddress
+where crvNumberId = 120649
+
+
+SELECT recordType,count(1) as TCount from tblEcrvAddress
+group by recordType
+
+/* records in tblEcrvAddress
+|recordType					|TCount	|
+|---------------------------|-------|
+|eCRV_buyer1_property_add	|718940	|
+|eCRV_property_add			|482257	|
+|eCRV_seller1_property_add	|751820	|
+*/
+
+SELECT recordType,count(1) as TCount from tbleCRVStandardAddressApi
+group by recordType
+
+/* records in tbleCRVStandardAddressApi
+|recordType					|TCount	|
+|---------------------------|-------|
+|eCRV_buyer1_property_add	|1240168|
+|eCRV_property_add			|482252	|
+|eCRV_seller1_property_add	|1302140|
+*/
+
+SELECT recordType,count(1) as TCount from tbleCRVStandardAddressApi
+where formatted_address = 'NA'
+group by recordType
+
+/* records in tblEcrvAddress
+|recordType					|TCount	|
+|---------------------------|-------|
+|eCRV_buyer1_property_add	|718648	|
+|eCRV_property_add			|100875	|
+|eCRV_seller1_property_add	|762027	|
+*/
+
+SELECT recordType,count(1) as TCount from tbleCRVStandardAddressApi
+where formatted_address != 'NA'
+group by recordType
+
+/* records in tblEcrvAddress
+|recordType					|TCount	|
+|---------------------------|-------|
+|eCRV_buyer1_property_add	|521520	|
+|eCRV_property_add			|381377	|
+|eCRV_seller1_property_add	|540113	|
+*/
+
+
+select count(*)  from #tempTbl
+where recordType = 'eCRV_seller1_property_add' and formatted_address <> 'NA'
+
+select TOP 5 * from tbleCRVStandardAddressApi
+where recordType != 'eCRV_property_add'
+order by 1 desc 
+
+
+
+select count(1) from tblEcrvAddress  --1953017
+where recordType != 'eCRV_property_add' --1470760
+
+select max(crvNumberId) from tblEcrvAddress --655366
+where recordType != 'eCRV_property_add'
+
+select max(crvNumberId) from tbleCRVStandardAddressApi --655366
+where recordType != 'eCRV_property_add' --485483
+
+
+drop table #tempTbl
