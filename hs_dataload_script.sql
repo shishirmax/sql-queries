@@ -15,25 +15,32 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\25Dec17\edina_contata_sessions.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\26Dec17\edina_contata_sessions.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
 EXEC homeSpotter.usp_MergeHomeSpotter
 
 SELECT COUNT(1) As DimAgent					FROM homeSpotter.DimAgent --2055
-SELECT COUNT(1) As DimDevice				FROM homeSpotter.DimDevice --40415
-SELECT COUNT(1) As DimSession				FROM homeSpotter.DimSession --565227
-SELECT COUNT(1) As DimUser					FROM homeSpotter.DimUser --13493
-SELECT COUNT(1) As FactHomeSpotter			FROM homeSpotter.FactHomeSpotter --567032
-SELECT COUNT(1) As FactHomeSpotterSummary	FROM homeSpotter.FactHomeSpotterSummary --15651
+SELECT COUNT(1) As DimDevice				FROM homeSpotter.DimDevice --41644
+SELECT COUNT(1) As DimSession				FROM homeSpotter.DimSession --606148
+SELECT COUNT(1) As DimUser					FROM homeSpotter.DimUser --13511
+SELECT COUNT(1) As FactHomeSpotter			FROM homeSpotter.FactHomeSpotter --607953
+SELECT COUNT(1) As FactHomeSpotterSummary	FROM homeSpotter.FactHomeSpotterSummary --15671
 
+/*
+|DimAgent|DimDevice	|DimSession	|DimUser|FactHomeSpotter|FactHomeSpotterSummary	|
+|--------|----------|-----------|-------|---------------|-----------------------|
+|2055	 |41644		|606148		|13511	|607953			|15671					|
+
+*/
 SELECT COUNT(1) As tblHomeSpotter_bcp FROM homeSpotter.tblHomeSpotter_bcp
 SELECT COUNT(1) As tblHomeSpotter_FF FROM homeSpotter.tblHomeSpotter_FF
 SELECT COUNT(1) As tblHomeSpotter_DT FROM homeSpotter.tblHomeSpotter_DT
 SELECT COUNT(1) As tblHomeSpotter_AE FROM homeSpotter.tblHomeSpotter_AE
 
 SELECT * FROM  homeSpotter.tblHomeSpotter_AE
+where DAY(modifieddate) = 28
 
 SELECT * FROM homeSpotter.DimAgent
 SELECT * FROM homeSpotter.DimDevice
