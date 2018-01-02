@@ -52,10 +52,11 @@ select @num as groupId
 select recordType,count(1) from tbleCRVStandardAddressApi
 group by recordType
 
-tblHomeSpotter_FF
-tblHomeSpotter_DT
-tblHomeSpotter_AE
+select count(1) from tblHomeSpotter_FF
+select count(1) from tblHomeSpotter_DT
+select count(1) from tblHomeSpotter_AE
 
+select * from tblHomeSpotter_DT
 ALTER TABLE tblHomeSpotter_AE
 ADD LogTaskID BIGINT;
 
@@ -65,6 +66,9 @@ LogTaskID BIGINT
 "Container": "/sourcehomespotter/HS_DataFeed_20171219.csv",
 "FileName": "HS_DataFeed_20171219.csv",
 "GroupId": 402
+exec [usp_LoadHSFlatToFF]'/sourcehomespotter/HS_DataFeed_20171224.csv','HS_DataFeed_20171224.csv',380 
+
+BULK INSERT tblIntermediate_FF FROM 'HS_DataFeed_20171224.csv' WITH (DATA_SOURCE = 'sourcehomespotter');
 
 declare
 	@Container NVARCHAR(127) = '/sourcehomespotter/HS_DataFeed_20171219.csv',
@@ -231,17 +235,23 @@ SELECT * FROM (
                                CASE WHEN State   = 'NA' THEN ' ' ELSE State   END+', '+
                                CASE WHEN Zip   = 'NA' THEN ' ' ELSE Zip  END,'#','') [Address]
                              FROM tblEcrvAddress (NOLOCK)
-                             WHERE crvNumberId = 120649 AND recordType != 'eCRV_property_add'
+                             WHERE crvNumberId >= 655366 AND recordType != 'eCRV_property_add'
                             ) AS TBL
                         WHERE Number BETWEEN ((' + PageNumber + ' - 1)  500 + 1) AND (' + PageNumber + '   500)
                         ORDER BY TBL.Number
                              
+
+select max(crvNumberId) from tbleCRVStandardAddressApi
+where recordType != 'eCRV_property_add' --485483
+
 select TOP 10 * from tblEcrvAddress
 where crvNumberId >= 294012 AND recordType != 'eCRV_property_add'
 
 select count(1) from tbleCRVStandardAddressApi -- 3024560
 where recordType != 'eCRV_property_add' --2542308
 
+select * from tbleCRVStandardAddressApi
+where crvNumberId = 485484 and recordType != 'eCRV_property_add'
 
 Select *,ROW_NUMBER() OVER(PARTITION BY [Address] ORDER BY [Address]) as rNumber		
 into #tempTbl
@@ -276,18 +286,18 @@ SELECT recordType,count(1) as TCount from tbleCRVStandardAddressApi
 group by recordType
 
 /* records in tbleCRVStandardAddressApi
-|recordType					|TCount	|
-|---------------------------|-------|
-|eCRV_buyer1_property_add	|1240168|
-|eCRV_property_add			|482252	|
-|eCRV_seller1_property_add	|1302140|
+|recordType					|TCount	 |
+|---------------------------|--------|
+|eCRV_buyer1_property_add	|1240168 |
+|eCRV_property_add			|482252	 |
+|eCRV_seller1_property_add	|1302140 |
 */
 
 SELECT recordType,count(1) as TCount from tbleCRVStandardAddressApi
 where formatted_address = 'NA'
 group by recordType
 
-/* records in tblEcrvAddress
+/* records in tbleCRVStandardAddressApi when formatted_address = 'NA'
 |recordType					|TCount	|
 |---------------------------|-------|
 |eCRV_buyer1_property_add	|718648	|
@@ -299,7 +309,7 @@ SELECT recordType,count(1) as TCount from tbleCRVStandardAddressApi
 where formatted_address != 'NA'
 group by recordType
 
-/* records in tblEcrvAddress
+/* records in tbleCRVStandardAddressApi when formatted_address != 'NA'
 |recordType					|TCount	|
 |---------------------------|-------|
 |eCRV_buyer1_property_add	|521520	|

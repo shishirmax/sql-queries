@@ -15,13 +15,14 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\26Dec17\edina_contata_sessions.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\December2017\30Dec17\edina_contata_sessions.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
 EXEC homeSpotter.usp_MergeHomeSpotter
 
 SELECT COUNT(1) As DimAgent					FROM homeSpotter.DimAgent --2055
+SELECT COUNT(1) As DimAgentSCD				FROM homeSpotter.DimAgent_SCD --2127
 SELECT COUNT(1) As DimDevice				FROM homeSpotter.DimDevice --41644
 SELECT COUNT(1) As DimSession				FROM homeSpotter.DimSession --606148
 SELECT COUNT(1) As DimUser					FROM homeSpotter.DimUser --13511
@@ -34,6 +35,7 @@ SELECT COUNT(1) As FactHomeSpotterSummary	FROM homeSpotter.FactHomeSpotterSummar
 |2055	 |41644		|606148		|13511	|607953			|15671					|
 
 */
+
 SELECT COUNT(1) As tblHomeSpotter_bcp FROM homeSpotter.tblHomeSpotter_bcp
 SELECT COUNT(1) As tblHomeSpotter_FF FROM homeSpotter.tblHomeSpotter_FF
 SELECT COUNT(1) As tblHomeSpotter_DT FROM homeSpotter.tblHomeSpotter_DT
@@ -43,9 +45,15 @@ SELECT * FROM  homeSpotter.tblHomeSpotter_AE
 where DAY(modifieddate) = 28
 
 SELECT * FROM homeSpotter.DimAgent
+SELECT * FROM homeSpotter.DimAgent_SCD where EndDate IS NOT NULL
 SELECT * FROM homeSpotter.DimDevice
-SELECT * FROM homeSpotter.DimSession
+SELECT TOP 10 * FROM homeSpotter.DimSession
 SELECT * FROM homeSpotter.DimUser
+
+SELECT COUNT(1) TotalRecords, CAST(SessionnStart As DATE) As Dates
+from homeSpotter.DimSession
+group by CAST(SessionnStart AS DATE)
+order by CAST(SessionnStart AS DATE)
 
 
 --TRUNCATE TABLE   homeSpotter.DimAgent 
@@ -93,3 +101,5 @@ order by 1 desc
 
 select * from logerror(NOLOCK)
 order by 1 desc
+
+TRUNCATE TABLE homeSpotter.tblHomeSpotter_DT
