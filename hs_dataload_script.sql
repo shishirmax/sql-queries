@@ -21,7 +21,8 @@ EXEC homeSpotter.usp_InsertHomeSpotter
 
 EXEC homeSpotter.usp_MergeHomeSpotter
 
-SELECT COUNT(1) As DimAgent					FROM homeSpotter.DimAgent --2055
+
+SELECT COUNT(1) As DimAgent					FROM homeSpotter.DimAgent(NOLOCK) --2055
 SELECT COUNT(1) As DimAgentSCD				FROM homeSpotter.DimAgent_SCD --2127
 SELECT COUNT(1) As DimDevice				FROM homeSpotter.DimDevice --41644
 SELECT COUNT(1) As DimSession				FROM homeSpotter.DimSession --606148
@@ -30,9 +31,9 @@ SELECT COUNT(1) As FactHomeSpotter			FROM homeSpotter.FactHomeSpotter --607953
 SELECT COUNT(1) As FactHomeSpotterSummary	FROM homeSpotter.FactHomeSpotterSummary --15671
 
 /*
-|DimAgent|DimDevice	|DimSession	|DimUser|FactHomeSpotter|FactHomeSpotterSummary	|
-|--------|----------|-----------|-------|---------------|-----------------------|
-|2055	 |41644		|606148		|13511	|607953			|15671					|
+|DimAgent|DimAgentSCD|DimDevice	|DimSession	|DimUser|FactHomeSpotter|FactHomeSpotterSummary	|
+|--------|-----------|----------|-----------|-------|---------------|-----------------------|
+|2056	 |2128		 |43512		|671885		|13565	|673690			|15738					|
 
 */
 
@@ -103,3 +104,16 @@ select * from logerror(NOLOCK)
 order by 1 desc
 
 TRUNCATE TABLE homeSpotter.tblHomeSpotter_DT
+
+
+
+-- Find an existing index named IX_tblHomeSpotter_DT and delete it if found.   
+IF EXISTS (SELECT name FROM sys.indexes  
+            WHERE name = N'IX_tblHomeSpotter_DT')   
+    DROP INDEX IX_tblHomeSpotter_DT ON homeSpotter.tblHomeSpotter_DT;   
+GO  
+-- Create a nonclustered index called IX_tblHomeSpotter_DT   
+-- on the Purchasing.ProductVendor table using the BusinessEntityID column.   
+CREATE NONCLUSTERED INDEX IX_tblHomeSpotter_DT   
+    ON homeSpotter.tblHomeSpotter_DT (LogTaskID);   
+GO
