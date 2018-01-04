@@ -60,6 +60,11 @@ select * from tblHomeSpotter_DT
 ALTER TABLE tblHomeSpotter_AE
 ADD LogTaskID BIGINT;
 
+select * from logTaskControlFlow
+order by 1 desc
+
+select left('HS_DataFeed_20171227.csv',11)
+SELECT COUNT(1) as cnt ,logtaskId FROM tblHomeSpotter_DT group by logtaskId
 
 LogTaskID BIGINT
 
@@ -195,20 +200,50 @@ ArchiveContainerURL: https://contata.blob.core.windows.net/archivehomespotter
  */
 
  TRUNCATE TABLE homeSpotter.tblHomeSpotter_bcp
+ TRUNCATE TABLE homeSpotter.tblHomeSpotter_DT
 
-select TOP 100 * from homeSpotter.tblHomeSpotter_bcp
+ select * from LogtaskControlFlow order by 1 desc
+select TOP 100 * from homeSpotter.tblHomeSpotter_DT
+
+SELECT COUNT(1) TotalRecords, CAST(session_start_utc As DATE) As Dates
+from homeSpotter.tblHomeSpotter_DT
+group by CAST(session_start_utc AS DATE)
+order by CAST(session_start_utc AS DATE)
+
+--Deleting duplicate from DT Table
+with cte as
+(select *,row_number() over (partition by session_start_utc,session_end_guess_utc order by session_start_utc,session_end_guess_utc)as rn
+from homeSpotter.tblHomeSpotter_DT)
+--select count(1) from cte where rn>1
+
+delete from cte where rn>1
+
+select TOP 10 * from cte
+where rn>1
+
+select [user_id],count(*)
+from homeSpotter.tblHomeSpotter_DT
+group by [user_id]
+having count(*)>1
+
+delete from cte where rn>1
 
 SELECT COUNT(1) As tblHomeSpotter_bcp FROM homeSpotter.tblHomeSpotter_bcp(NOLOCK)
 SELECT COUNT(1) As tblHomeSpotter_FF FROM homeSpotter.tblHomeSpotter_FF(NOLOCK)
 SELECT COUNT(1) As tblHomeSpotter_DT FROM homeSpotter.tblHomeSpotter_DT(NOLOCK)
 SELECT COUNT(1) As tblHomeSpotter_AE FROM homeSpotter.tblHomeSpotter_AE(NOLOCK)
 
-SELECT COUNT(1) As DimAgent					FROM homeSpotter.DimAgent
-SELECT COUNT(1) As DimDevice				FROM homeSpotter.DimDevice
-SELECT COUNT(1) As DimSession				FROM homeSpotter.DimSession
-SELECT COUNT(1) As DimUser					FROM homeSpotter.DimUser
-SELECT COUNT(1) As FactHomeSpotter			FROM homeSpotter.FactHomeSpotter
-SELECT COUNT(1) As FactHomeSpotterSummary	FROM homeSpotter.FactHomeSpotterSummary
+EXEC homeSpotter.usp_InsertHomeSpotter -- Time 00:00:27
+
+EXEC homeSpotter.usp_MergeHomeSpotter -- Time 00:10:11
+
+SELECT COUNT(1) As DimAgent					FROM homeSpotter.DimAgent(NOLOCK) --611
+SELECT COUNT(1) As DimAgentSCD				FROM homeSpotter.DimAgent_SCD --611
+SELECT COUNT(1) As DimDevice				FROM homeSpotter.DimDevice(NOLOCK) --14600
+SELECT COUNT(1) As DimSession				FROM homeSpotter.DimSession(NOLOCK)--55505
+SELECT COUNT(1) As DimUser					FROM homeSpotter.DimUser(NOLOCK)--1942
+SELECT COUNT(1) As FactHomeSpotter			FROM homeSpotter.FactHomeSpotter(NOLOCK)--55504
+SELECT COUNT(1) As FactHomeSpotterSummary	FROM homeSpotter.FactHomeSpotterSummary(NOLOCK)--2543
 
 
 SELECT  * FROM homeSpotter.DimAgent
@@ -270,6 +305,11 @@ where formatted_address = 'NA' --1581550
 select * from tblEcrvAddress
 where crvNumberId = 120649
 
+select * from tblEcrvAddress
+where crvNumberId = 488581
+
+select * from tbleCRVStandardAddressApi
+where crvNumberId = 488581
 
 SELECT recordType,count(1) as TCount from tblEcrvAddress
 group by recordType
@@ -282,7 +322,7 @@ group by recordType
 |eCRV_seller1_property_add	|751820	|
 */
 
-SELECT recordType,count(1) as TCount from tbleCRVStandardAddressApi
+SELECT recordType,count(1) as TCount from tbleCRVStandardAddressApi(NOLOCK)
 group by recordType
 
 /* records in tbleCRVStandardAddressApi
@@ -338,3 +378,21 @@ where recordType != 'eCRV_property_add' --485483
 
 
 drop table #tempTbl
+SELECT * FROM sys.indexes WHERE name = N'IX_tblHomeSpotter_DT'
+
+-- Find an existing index named IX_tblHomeSpotter_DT and delete it if found.   
+IF EXISTS (SELECT name FROM sys.indexes  
+            WHERE name = N'IX_tblHomeSpotter_DT')   
+    DROP INDEX IX_tblHomeSpotter_DT ON homeSpotter.tblHomeSpotter_DT;   
+GO  
+-- Create a nonclustered index called IX_tblHomeSpotter_DT   
+-- on the Purchasing.ProductVendor table using the BusinessEntityID column.   
+CREATE NONCLUSTERED INDEX IX_tblHomeSpotter_DT   
+    ON homeSpotter.tblHomeSpotter_DT ([user],hs_agent_id,device_id,ip_address,session_start_utc,session_end_guess_utc,LogTaskID);   
+GO
+
+sp_who
+SELECT COUNT(1) As DimAgent					FROM homeSpotter.DimAgent(NOLOCK) --2055
+SELECT COUNT(1) As DimAgentSCD				FROM homeSpotter.DimAgent_SCD(NOLOCK) --2127
+
+select count(1) from trulia.Trulia_Check

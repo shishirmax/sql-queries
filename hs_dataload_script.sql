@@ -15,32 +15,32 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\December2017\30Dec17\edina_contata_sessions.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\December2017\31Dec17\edina_contata_sessions_12_31_2017.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
 EXEC homeSpotter.usp_MergeHomeSpotter
 
 
-SELECT COUNT(1) As DimAgent					FROM homeSpotter.DimAgent(NOLOCK) --2055
-SELECT COUNT(1) As DimAgentSCD				FROM homeSpotter.DimAgent_SCD --2127
-SELECT COUNT(1) As DimDevice				FROM homeSpotter.DimDevice --41644
-SELECT COUNT(1) As DimSession				FROM homeSpotter.DimSession --606148
-SELECT COUNT(1) As DimUser					FROM homeSpotter.DimUser --13511
-SELECT COUNT(1) As FactHomeSpotter			FROM homeSpotter.FactHomeSpotter --607953
-SELECT COUNT(1) As FactHomeSpotterSummary	FROM homeSpotter.FactHomeSpotterSummary --15671
+SELECT COUNT(1) As DimAgent					FROM homeSpotter.DimAgent(NOLOCK) 
+SELECT COUNT(1) As DimAgentSCD				FROM homeSpotter.DimAgent_SCD 
+SELECT COUNT(1) As DimDevice				FROM homeSpotter.DimDevice 
+SELECT COUNT(1) As DimSession				FROM homeSpotter.DimSession 
+SELECT COUNT(1) As DimUser					FROM homeSpotter.DimUser 
+SELECT COUNT(1) As FactHomeSpotter			FROM homeSpotter.FactHomeSpotter 
+SELECT COUNT(1) As FactHomeSpotterSummary	FROM homeSpotter.FactHomeSpotterSummary 
 
 /*
 |DimAgent|DimAgentSCD|DimDevice	|DimSession	|DimUser|FactHomeSpotter|FactHomeSpotterSummary	|
 |--------|-----------|----------|-----------|-------|---------------|-----------------------|
-|2056	 |2128		 |43512		|671885		|13565	|673690			|15738					|
+|2056	 |2128		 |44171		|692912		|13585	|694717			|15761					|
 
 */
 
-SELECT COUNT(1) As tblHomeSpotter_bcp FROM homeSpotter.tblHomeSpotter_bcp
-SELECT COUNT(1) As tblHomeSpotter_FF FROM homeSpotter.tblHomeSpotter_FF
-SELECT COUNT(1) As tblHomeSpotter_DT FROM homeSpotter.tblHomeSpotter_DT
-SELECT COUNT(1) As tblHomeSpotter_AE FROM homeSpotter.tblHomeSpotter_AE
+SELECT COUNT(1) As tblHomeSpotter_bcp FROM homeSpotter.tblHomeSpotter_bcp(NOLOCK)
+SELECT COUNT(1) As tblHomeSpotter_FF FROM homeSpotter.tblHomeSpotter_FF(NOLOCK)
+SELECT COUNT(1) As tblHomeSpotter_DT FROM homeSpotter.tblHomeSpotter_DT(NOLOCK)
+SELECT COUNT(1) As tblHomeSpotter_AE FROM homeSpotter.tblHomeSpotter_AE(NOLOCK)
 
 SELECT * FROM  homeSpotter.tblHomeSpotter_AE
 where DAY(modifieddate) = 28
@@ -51,10 +51,12 @@ SELECT * FROM homeSpotter.DimDevice
 SELECT TOP 10 * FROM homeSpotter.DimSession
 SELECT * FROM homeSpotter.DimUser
 
-SELECT COUNT(1) TotalRecords, CAST(SessionnStart As DATE) As Dates
-from homeSpotter.DimSession
-group by CAST(SessionnStart AS DATE)
-order by CAST(SessionnStart AS DATE)
+select TOP 10 * from homeSpotter.tblHomeSpotter_DT
+
+SELECT COUNT(1) TotalRecords, CAST(session_start_utc As DATE) As Dates
+from homeSpotter.tblHomeSpotter_DT
+group by CAST(session_start_utc AS DATE)
+order by CAST(session_start_utc AS DATE)
 
 
 --TRUNCATE TABLE   homeSpotter.DimAgent 
@@ -103,7 +105,7 @@ order by 1 desc
 select * from logerror(NOLOCK)
 order by 1 desc
 
-TRUNCATE TABLE homeSpotter.tblHomeSpotter_DT
+homeSpotter.[tblHomeSpotter_DT]
 
 
 
@@ -115,5 +117,5 @@ GO
 -- Create a nonclustered index called IX_tblHomeSpotter_DT   
 -- on the Purchasing.ProductVendor table using the BusinessEntityID column.   
 CREATE NONCLUSTERED INDEX IX_tblHomeSpotter_DT   
-    ON homeSpotter.tblHomeSpotter_DT (LogTaskID);   
+    ON homeSpotter.tblHomeSpotter_DT ([user],hs_agent_id,device_id,ip_address,session_start_utc,session_end_guess_utc,LogTaskID);   
 GO
