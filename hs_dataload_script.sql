@@ -15,7 +15,7 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\December2017\31Dec17\edina_contata_sessions_12_31_2017.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\January2018\02Jan18\edina_contata_sessions_01_02_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
@@ -23,17 +23,17 @@ EXEC homeSpotter.usp_MergeHomeSpotter
 
 
 SELECT COUNT(1) As DimAgent					FROM homeSpotter.DimAgent(NOLOCK) 
-SELECT COUNT(1) As DimAgentSCD				FROM homeSpotter.DimAgent_SCD 
-SELECT COUNT(1) As DimDevice				FROM homeSpotter.DimDevice 
-SELECT COUNT(1) As DimSession				FROM homeSpotter.DimSession 
-SELECT COUNT(1) As DimUser					FROM homeSpotter.DimUser 
-SELECT COUNT(1) As FactHomeSpotter			FROM homeSpotter.FactHomeSpotter 
-SELECT COUNT(1) As FactHomeSpotterSummary	FROM homeSpotter.FactHomeSpotterSummary 
+SELECT COUNT(1) As DimAgentSCD				FROM homeSpotter.DimAgent_SCD (NOLOCK) 
+SELECT COUNT(1) As DimDevice				FROM homeSpotter.DimDevice (NOLOCK) 
+SELECT COUNT(1) As DimSession				FROM homeSpotter.DimSession (NOLOCK) 
+SELECT COUNT(1) As DimUser					FROM homeSpotter.DimUser (NOLOCK) 
+SELECT COUNT(1) As FactHomeSpotter			FROM homeSpotter.FactHomeSpotter (NOLOCK) 
+SELECT COUNT(1) As FactHomeSpotterSummary	FROM homeSpotter.FactHomeSpotterSummary (NOLOCK) 
 
 /*
 |DimAgent|DimAgentSCD|DimDevice	|DimSession	|DimUser|FactHomeSpotter|FactHomeSpotterSummary	|
 |--------|-----------|----------|-----------|-------|---------------|-----------------------|
-|2056	 |2128		 |44171		|692912		|13585	|694717			|15761					|
+|2058	 |2130		 |45196		|734434		|13609	|736239			|15794					|
 
 */
 

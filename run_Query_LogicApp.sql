@@ -214,7 +214,7 @@ order by CAST(session_start_utc AS DATE)
 with cte as
 (select *,row_number() over (partition by session_start_utc,session_end_guess_utc order by session_start_utc,session_end_guess_utc)as rn
 from homeSpotter.tblHomeSpotter_DT)
---select count(1) from cte where rn>1
+select count(1) from cte where rn>1
 
 delete from cte where rn>1
 
@@ -328,10 +328,11 @@ group by recordType
 /* records in tbleCRVStandardAddressApi
 |recordType					|TCount	 |
 |---------------------------|--------|
-|eCRV_buyer1_property_add	|1240168 |
-|eCRV_property_add			|482252	 |
-|eCRV_seller1_property_add	|1302140 |
+|eCRV_buyer1_property_add	|1332253 |
+|eCRV_property_add			|482260	 |
+|eCRV_seller1_property_add	|1399400 |
 */
+
 
 SELECT recordType,count(1) as TCount from tbleCRVStandardAddressApi
 where formatted_address = 'NA'
