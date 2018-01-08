@@ -15,7 +15,7 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\edina_contata_sessions_01_03_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\edina_contata_sessions_01_06_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
@@ -33,7 +33,7 @@ SELECT COUNT(1) As FactHomeSpotterSummary	FROM homeSpotter.FactHomeSpotterSummar
 /*
 |DimAgent|DimAgentSCD|DimDevice	|DimSession	|DimUser|FactHomeSpotter|FactHomeSpotterSummary	|
 |--------|-----------|----------|-----------|-------|---------------|-----------------------|
-|2058	 |2130		 |45630		|755622		|13630	|757427			|15817					|
+|2065	 |2137		 |47163		|825391		|13688	|827197			|15887					|
 
 */
 
@@ -64,10 +64,10 @@ select TOP 10 * from homeSpotter.tblHomeSpotter_DT
 
 select TOP 10 * FROM homeSpotter.FactHomeSpotter
 
-SELECT COUNT(1) TotalRecords, CAST(session_start_utc As DATE) As Dates
-from homeSpotter.tblHomeSpotter_DT
-group by CAST(session_start_utc AS DATE)
-order by CAST(session_start_utc AS DATE)
+SELECT COUNT(1) TotalRecords, CAST(SessionnStart As DATE) As Dates
+from homeSpotter.DimSession
+group by CAST(SessionnStart AS DATE)
+order by CAST(SessionnStart AS DATE)
 
 
 --TRUNCATE TABLE   homeSpotter.DimAgent 

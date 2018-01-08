@@ -20,6 +20,8 @@ SELECT COUNT(1) As FactHomeSpotterSummary	FROM homeSpotter.FactHomeSpotterSummar
 SELECT  COUNT(*),LEN(DeviceId) FROM homeSpotter.DimDevice
 GROUP BY LEN(DeviceId)
 
+SELECT DISTINCT DeviceId FROM homeSpotter.DimDevice
+
 ALTER TABLE homeSpotter.DimDevice
 ADD IsApple BIT
 
