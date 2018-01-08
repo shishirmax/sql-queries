@@ -325,6 +325,7 @@ group by recordType
 SELECT recordType,count(1) as TCount from tbleCRVStandardAddressApi(NOLOCK)
 group by recordType
 
+
 /* records in tbleCRVStandardAddressApi
 |recordType					|TCount	 |
 |---------------------------|--------|
@@ -345,6 +346,12 @@ group by recordType
 |eCRV_property_add			|100875	|
 |eCRV_seller1_property_add	|762027	|
 */
+SELECT COUNT(1) TotalRecords, CAST(Modifieddate As DATE) As Dates
+from tbleCRVStandardAddressApi(NOLOCK)
+where formatted_address = 'NA'
+group by CAST(Modifieddate AS DATE)
+order by CAST(Modifieddate AS DATE)
+
 
 SELECT recordType,count(1) as TCount from tbleCRVStandardAddressApi
 where formatted_address != 'NA'

@@ -51,6 +51,30 @@ PRINT @Limit
 SELECT @logTaskId = LogTaskId FROM @counter WHERE RowId = @Value
 PRINT @logTaskId
 	
+	--Merge into DimSession
+	MERGE INTO homeSpotter.DimSession AS T  
+				USING(
+						SELECT	DISTINCT ISNULL(ip_address, '-1') ip_address,  
+								ISNULL(session_start_utc, '1900-01-01 00:00:00') session_start_utc,
+								ISNULL(session_end_guess_utc, '1900-01-01 00:00:00') session_end_guess_utc,
+								--ModifiedDate,  
+								ER.LogTaskID  
+						FROM homeSpotter.[tblHomeSpotter_DT] (NOLOCK) ER  
+						JOIN @counter C 
+							ON		ER.LogTaskID = C.LogTaskID  
+								AND C.RowId = @Value
+					) AS S  
+				ON		T.IpAddress		= S.ip_address 
+					AND T.SessionnStart = S.session_start_utc
+					AND T.SessionnEnd	= S.session_end_guess_utc
+				WHEN MATCHED 
+				THEN UPDATE   
+					SET T.ModifiedDate	= GETDATE(), 
+						T.ModifiedBy	= S.LogTaskID  
+				WHEN NOT MATCHED THEN INSERT (IpAddress, SessionnStart, SessionnEnd, CreatedDate, CreatedBy)  
+				VALUES(S.ip_address, S.session_start_utc, S.session_end_guess_utc, GETDATE(), S.LogTaskID);
+
+	SELECT COUNT(1) FROM homeSpotter.DimSession
 	----Merge into FactHomeSpotterSummary
 	--			MERGE INTO homeSpotter.FactHomeSpotterSummary AS T  
 	--			USING(
@@ -210,28 +234,7 @@ PRINT @logTaskId
 	--				S.LogTaskID  
 	--			);
 
-	----Merge into DimSession
-	--MERGE INTO homeSpotter.DimSession AS T  
-	--			USING(
-	--					SELECT	DISTINCT ISNULL(ip_address, '-1') ip_address,  
-	--							ISNULL(session_start_utc, '1900-01-01 00:00:00') session_start_utc,
-	--							ISNULL(session_end_guess_utc, '1900-01-01 00:00:00') session_end_guess_utc,
-	--							--ModifiedDate,  
-	--							ER.LogTaskID  
-	--					FROM homeSpotter.[tblHomeSpotter_DT] (NOLOCK) ER  
-	--					JOIN @counter C 
-	--						ON		ER.LogTaskID = C.LogTaskID  
-	--							AND C.RowId = @Value
-	--				) AS S  
-	--			ON		T.IpAddress		= S.ip_address 
-	--				AND T.SessionnStart = S.session_start_utc
-	--				AND T.SessionnEnd	= S.session_end_guess_utc
-	--			WHEN MATCHED 
-	--			THEN UPDATE   
-	--				SET T.ModifiedDate	= GETDATE(), 
-	--					T.ModifiedBy	= S.LogTaskID  
-	--			WHEN NOT MATCHED THEN INSERT (IpAddress, SessionnStart, SessionnEnd, CreatedDate, CreatedBy)  
-	--			VALUES(S.ip_address, S.session_start_utc, S.session_end_guess_utc, GETDATE(), S.LogTaskID);
+
 	----Merge into DimAgent
 	--			MERGE INTO homeSpotter.DimAgent AS T  
 	--			USING(

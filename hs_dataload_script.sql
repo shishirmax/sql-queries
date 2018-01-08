@@ -15,25 +15,25 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\January2018\02Jan18\edina_contata_sessions_01_02_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\edina_contata_sessions_01_03_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
 EXEC homeSpotter.usp_MergeHomeSpotter
 
 
-SELECT COUNT(1) As DimAgent					FROM homeSpotter.DimAgent(NOLOCK) 
-SELECT COUNT(1) As DimAgentSCD				FROM homeSpotter.DimAgent_SCD (NOLOCK) 
-SELECT COUNT(1) As DimDevice				FROM homeSpotter.DimDevice (NOLOCK) 
-SELECT COUNT(1) As DimSession				FROM homeSpotter.DimSession (NOLOCK) 
-SELECT COUNT(1) As DimUser					FROM homeSpotter.DimUser (NOLOCK) 
-SELECT COUNT(1) As FactHomeSpotter			FROM homeSpotter.FactHomeSpotter (NOLOCK) 
+SELECT COUNT(1) As DimAgent					FROM homeSpotter.DimAgent				(NOLOCK) 
+SELECT COUNT(1) As DimAgentSCD				FROM homeSpotter.DimAgent_SCD			(NOLOCK) 
+SELECT COUNT(1) As DimDevice				FROM homeSpotter.DimDevice				(NOLOCK) 
+SELECT COUNT(1) As DimSession				FROM homeSpotter.DimSession				(NOLOCK) 
+SELECT COUNT(1) As DimUser					FROM homeSpotter.DimUser				(NOLOCK) 
+SELECT COUNT(1) As FactHomeSpotter			FROM homeSpotter.FactHomeSpotter		(NOLOCK) 
 SELECT COUNT(1) As FactHomeSpotterSummary	FROM homeSpotter.FactHomeSpotterSummary (NOLOCK) 
 
 /*
 |DimAgent|DimAgentSCD|DimDevice	|DimSession	|DimUser|FactHomeSpotter|FactHomeSpotterSummary	|
 |--------|-----------|----------|-----------|-------|---------------|-----------------------|
-|2058	 |2130		 |45196		|734434		|13609	|736239			|15794					|
+|2058	 |2130		 |45630		|755622		|13630	|757427			|15817					|
 
 */
 
@@ -47,11 +47,22 @@ where DAY(modifieddate) = 28
 
 SELECT * FROM homeSpotter.DimAgent
 SELECT * FROM homeSpotter.DimAgent_SCD where EndDate IS NOT NULL
-SELECT * FROM homeSpotter.DimDevice
-SELECT TOP 10 * FROM homeSpotter.DimSession
-SELECT * FROM homeSpotter.DimUser
+
+SELECT  COUNT(*),LEN(DeviceId) FROM homeSpotter.DimDevice
+GROUP BY LEN(DeviceId)
+
+select TOP 10 * FROM homeSpotter.DimDevice
+where  LEN(DeviceId) = 14
+
+SELECT COUNT(DISTINCT IpAddress),COUNT(IpAddress),count(1) FROM homeSpotter.DimSession
+WHERE ModifiedDate IS NOT NULL
+
+SELECT TOP 10 * FROM homeSpotter.DimUser
+
 
 select TOP 10 * from homeSpotter.tblHomeSpotter_DT
+
+select TOP 10 * FROM homeSpotter.FactHomeSpotter
 
 SELECT COUNT(1) TotalRecords, CAST(session_start_utc As DATE) As Dates
 from homeSpotter.tblHomeSpotter_DT
