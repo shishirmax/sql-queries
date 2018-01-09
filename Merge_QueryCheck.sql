@@ -1,4 +1,4 @@
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\edina_contata_sessions_01_03_2018.csv -S tcp:contata.database.windows.net -d Edina_QA -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_01_07_2018.csv -S tcp:contata.database.windows.net -d Edina_QA -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
@@ -17,6 +17,14 @@ SELECT COUNT(1) As DimUser					FROM homeSpotter.DimUser				(NOLOCK)
 SELECT COUNT(1) As FactHomeSpotter			FROM homeSpotter.FactHomeSpotter		(NOLOCK) 
 SELECT COUNT(1) As FactHomeSpotterSummary	FROM homeSpotter.FactHomeSpotterSummary (NOLOCK) 
 
+SELECT COUNT(1) TotalRecords, CAST(SessionnStart As DATE) As Dates
+from homeSpotter.DimSession
+group by CAST(SessionnStart AS DATE)
+order by CAST(SessionnStart AS DATE)
+
+SELECT TOP 100 * from homeSpotter.DimSession
+order by SessionnStart desc
+TRUNCATE TABLE homeSpotter.tblHomeSpotter_DT
 SELECT  COUNT(*),LEN(DeviceId) FROM homeSpotter.DimDevice
 GROUP BY LEN(DeviceId)
 
@@ -53,6 +61,23 @@ PRINT @Limit
 SELECT @logTaskId = LogTaskId FROM @counter WHERE RowId = @Value
 PRINT @logTaskId
 	
+	--Insert into DimSession
+	INSERT INTO homeSpotter.DimSession (IpAddress, SessionnStart, SessionnEnd, CreatedDate, CreatedBy)  
+				SELECT	DISTINCT ISNULL(ip_address, '-1') ip_address,  
+						ISNULL(session_start_utc, '1900-01-01 00:00:00') session_start_utc,
+						ISNULL(session_end_guess_utc, '1900-01-01 00:00:00') session_end_guess_utc,
+						GETDATE(),  
+						S.LogTaskID  
+				FROM homeSpotter.[tblHomeSpotter_DT] (NOLOCK) S  
+				JOIN homeSpotter.DimSession T 
+					ON		
+					S.LogTaskID = @logTaskId 
+					AND	
+					T.IpAddress		= S.ip_address 
+					AND T.SessionnStart = S.session_start_utc
+					AND T.SessionnEnd	= S.session_end_guess_utc
+				WHERE T.ISessionId IS NULL
+
 	--Merge into DimSession
 	MERGE INTO homeSpotter.DimSession AS T  
 				USING(
@@ -76,7 +101,7 @@ PRINT @logTaskId
 				WHEN NOT MATCHED THEN INSERT (IpAddress, SessionnStart, SessionnEnd, CreatedDate, CreatedBy)  
 				VALUES(S.ip_address, S.session_start_utc, S.session_end_guess_utc, GETDATE(), S.LogTaskID);
 
-	SELECT COUNT(1) FROM homeSpotter.DimSession
+	SELECT TOP 10 *  FROM homeSpotter.DimSession WHERE ISessionId IS NULL
 	----Merge into FactHomeSpotterSummary
 	--			MERGE INTO homeSpotter.FactHomeSpotterSummary AS T  
 	--			USING(
