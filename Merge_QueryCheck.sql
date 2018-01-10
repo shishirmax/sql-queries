@@ -1,4 +1,4 @@
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_01_07_2018.csv -S tcp:contata.database.windows.net -d Edina_QA -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_01_08_2018.csv -S tcp:contata.database.windows.net -d Edina_QA -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
@@ -69,7 +69,7 @@ PRINT @logTaskId
 						GETDATE(),  
 						S.LogTaskID  
 				FROM homeSpotter.[tblHomeSpotter_DT] (NOLOCK) S  
-				JOIN homeSpotter.DimSession T 
+				LEFT JOIN homeSpotter.DimSession T 
 					ON		
 					S.LogTaskID = @logTaskId 
 					AND	
