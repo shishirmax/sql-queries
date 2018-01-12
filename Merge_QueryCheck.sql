@@ -22,6 +22,9 @@ from homeSpotter.DimSession
 group by CAST(SessionnStart AS DATE)
 order by CAST(SessionnStart AS DATE)
 
+select * from logTaskControlFlow(NOLOCK)-- where FeedName = 'HS_DataFeed'
+order by 1 desc
+
 SELECT TOP 100 * from homeSpotter.DimSession
 order by SessionnStart desc
 TRUNCATE TABLE homeSpotter.tblHomeSpotter_DT

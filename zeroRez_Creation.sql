@@ -33,6 +33,7 @@ truncate table ZeroRez.ZeroRez_bcp
 --bcp ZeroRez.ZeroRez_bcp in D:\Edina\ZeroRez\ZeroRez-Data.csv -S tcp:contata.database.windows.net -d Edina_qa -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
 
 --exec ZeroRez.usp_LoadFlat'/zerorezsource/ZeroRez-Data.csv','ZeroRez-Data.csv'
+Columns: 'emails','phones','client_tags','net_promoter_labels','products','source'
 
 select TOP 100 * from ZeroRez.ZeroRez_bcp
 order by 1 desc
@@ -149,5 +150,312 @@ select max(len(city)) from ZeroRez.ZeroRez_bcp
 select count(1) as recCount, len(city) as lenCount from ZeroRez.ZeroRez_bcp
 group by city
 order by lenCount desc
+select TOP 10 * from ZeroRez.ZeroRez_bcp
+
+--state
+--8 distinct state
+--under state column (MINNESOTA) is also available, only 1 records
+--more number of records available for MN state(90947) 
+--maximum character length: 9
+select distinct state from ZeroRez.ZeroRez_bcp where state is not null
+select max(len(state)) from ZeroRez.ZeroRez_bcp 
+select state, count(*) as rc from ZeroRez.ZeroRez_bcp 
+group by state
+order by rc desc
+
+--postal_code
+--60 NULL records
+--301 distinct postal code
+--maximum character length = 5
+--value is of integer type
+select max(len(postal_code)) from ZeroRez.ZeroRez_bcp
+select len(postal_code) as lcount,count(1) as rcount from ZeroRez.ZeroRez_bcp
+group by len(postal_code)
+
+select postal_code,count(1) from ZeroRez.ZeroRez_bcp 
+group by postal_code
+
+--email
+--8657 NULL records
+--71156 distinct emails
+--maximum character length = 77
+--multiple emails available inside emails column seperated by pipe(|) character
+--[jeffyoung21@hotmail.com|jeffyoungrealtor@gmail.com|jeffyoungrealtor@gmail.com]
+--[tracygoldberger@mac.com|tracygoldberger@mac.com|bridgette.johnson@lakesmn.com]
+--1264 columns contains multiple email records in emails column
+--There are few records where emails column does not contain email type data
+--e.g
+--|
+--||
+--0
+--na
+--nananananana.batman
+--nicole_bye56782yahoo.com
+--no
+--no email
+--cindyhorton3.gmail
+--k@j
+--There are records available with same first_name,last_name,emails and phones but have different address
+select max(len(emails)) from ZeroRez.ZeroRez_bcp
+select len(emails) as lc,count(1) as rc from ZeroRez.ZeroRez_bcp
+group by len(emails)
+order by len(emails) desc
+
 select * from ZeroRez.ZeroRez_bcp
-where len(city)>21
+where len(emails)>75
+
+select TOP 10 * from ZeroRez.ZeroRez_bcp
+where emails NOT like '%|%'--1264
+
+select emails,count(1)as cr from ZeroRez.ZeroRez_bcp
+where emails not like '%.com'--'%@%'
+group by emails
+order by cr desc
+
+select * from ZeroRez.ZeroRez_bcp
+where emails = 'dkennedy7766@comcast.net'
+
+--phones
+--20 NULL records
+--No blank records
+--79399 distinct records
+--maximum character length = 51
+--multiple phone number is available under phones column seperated by pipe(|)
+--phones column have not fixed type phone pattern, many garbage like value is also available.
+--': 612-812-2619','(952) 292-0187','(612)-280-4227','7633600265|552','7632213055|','|9529131635','1234567','|','0','+1 (612) 594-2444','651-653-2235|651-332-1598|612-381-6983|612-381-6983'
+select top 10 * from ZeroRez.ZeroRez_bcp where phones like '%-%'
+select max(len(phones)) from ZeroRez.ZeroRez_bcp
+where phones is not null
+
+select len(phones) as lc,count(1) as rc from ZeroRez.ZeroRez_bcp
+where phones not like '%_|_%'
+group by len(phones)
+order by len(phones) desc
+
+select * from ZeroRez.ZeroRez_bcp where len(phones) IN('51','1','7','9','17','13','14')
+select TOP 100 phones,count(1) from ZeroRez.ZeroRez_bcp
+group by phones
+
+select TOP 100 * from ZeroRez.ZeroRez_bcp
+where phones = '203-733-0157|952-255-8332'
+
+--client_tags
+--28900 NULL records
+--5311 distinct value
+--maximum character length = 116
+--multiple tags are available in the column seperated by pipe(|)
+--example: jHill|areaRugs|areaRugFollowUp|airDuctLead|inspectAirDuctsAppt|request|doNotAssign|gWogen|airDuctFollowUp|seniortech
+--from records it seems like many value sin client_tags are fixed available tags(e.g:'airDuctFollowUp|pets','pets|airDuctFollowUp') and few are custom(e.g:'donotemailpromotions')
+--many records have single tags too(e.g: 'sOlson','refill','ducts')
+
+select distinct client_tags from ZeroRez.ZeroRez_bcp
+select * from ZeroRez.ZeroRez_bcp  where client_tags like '%ducts'
+select max(len(client_tags)) from ZeroRez.ZeroRez_bcp 
+
+select len(client_tags) as lc,count(1) as rc from ZeroRez.ZeroRez_bcp
+where client_tags not like '%_|_%'
+group by len(client_tags)
+order by len(client_tags) desc
+
+select * from ZeroRez.ZeroRez_bcp where len(client_tags) = 5
+'referralCard|airQuality' 'donotemailpromotions'
+
+--net_promoter_labels
+--76322 NULL records
+--6 distinct records
+--e.g(detractor,passive|promoter,detractor|passive,detractor|promoter,promoter,passive)
+--maximum character length : 18
+--some records have mixed labels also (e.g:'passive|promoter','detractor|passive','detractor|promoter')
+select max(len(net_promoter_labels)) from ZeroRez.ZeroRez_bcp 
+
+select distinct net_promoter_labels from ZeroRez.ZeroRez_bcp 
+select net_promoter_labels,count(1) from ZeroRez.ZeroRez_bcp
+group by net_promoter_labels
+
+select * from ZeroRez.ZeroRez_bcp 
+where net_promoter_labels = 'detractor|passive'
+
+--zones
+--2355 NULL records
+--84 distinct records
+--maximum character lenth = 34
+--this column also contain some special character like &,$,@
+--15700 records available which do not have special characters
+--e.g: (Aquamarine,Loudoun,Violet,Brown,Blue,Orange,Red,Coral,MediumAquaMarine,Teal,Peoria,MediumSlateBlue)
+--for same zone all records have same city,state and postal_code e.g(look for zones = 'Orange','MediumAquaMarine'), for few values there are difference in data.e.g(zones='Dark Orange 1','2 @ $314 Blue')
+select distinct zones from ZeroRez.ZeroRez_bcp
+select max(len(zones)) from ZeroRez.ZeroRez_bcp where zones is null
+
+SELECT COUNT(1)
+FROM ZeroRez.ZeroRez_bcp
+WHERE zones not like '%[^a-Z0-9]%'
+
+select zones, count(1) from ZeroRez.ZeroRez_bcp
+WHERE zones  like '%[^a-Z0-9]%'
+group by zones
+
+select * from ZeroRez.ZeroRez_bcp
+where zones = '2 @ $314 Blue'
+
+
+--products
+--3978 NULL records
+--57670 distinct records
+--maximum character length = 1208
+--only one record available whose column size is 1208
+--e.g(100--$169 Two Room Special With Stairs|101-- $139 Two Room Special With Stairs|102--Oversized Area|102--Traffic Area Clean|103--Hallway|106--Stair Clean|109--Family Room|118--FREE Speed Drying|119--FREE Plus One Service|120 - Waste Disposal|140--Discount|143--$15 Gonna Love It Gift Card|152--Area Rug Protector|153--Area Rug Padding|155--Rug Delivery|162--Wool Hand Knot (Shop)|163--Wool Hand Tuft (Shop)|165--Wool Machine Woven (Shop)|167--Area Rugs Biological Treatment|170--In-Home Area Rug Estimate|181--Free Home Service Inspection: Area rugs - customer declined inspection|182--Free Home Service Inspection: Area rugs assessed - cleaning not immediately needed|197--Zerorez Spotter Kit|200--Fiber Protection|202--Deodorizer|205--Water Claw Treatment|206--Topical Biological Treatment|350--Chair Clean|351--Couch Clean|399a Inspect Air Ducts|400--Duct and Return Cleaning - Standard|401a--Air Duct Promo Discount|401--Duct and Return Cleaning - Premium|407a--Furnace Cleaning|420--Duct Waste Disposal Fee|432--Free Home Service Inspection: Ducts +ÛGÈºG«£ customer declined inspection|433--Free Home Service Inspection: Ducts assessed +ÛGÈºG«£ cleaning not immediately needed|y101a--$99 Two Room Special)
+--mixed values seperated by pipe(|) character
+--e.g(100--$159 Three Room Special|102--Area Carpet Clean (please specify)|102--Traffic Area Clean|103--Hallway|106--Stair Clean|107--Landing|108--Bedroom|113a - $154 December Two Room Special with Stairs|118--FREE Speed Drying|119--FREE Plus One Service|120 - Waste Disposal|142--$20 Gonna Love It Gift Card|151--Area Rug Clean (Shop)|152--Area Rug Protector|155b--$20 Off Promo|155--Rug Delivery|167--Area Rugs Biological Treatment|182--Free Home Service Inspection: Area rugs assessed - cleaning not immediately needed|196--ZeroStink Spotter|197--Zerorez Spotter Kit|200--Fiber Protection|205--Water Claw Treatment|206--Topical Biological Treatment|400--Duct and Return Cleaning - Standard|401a--Air Duct Promo Discount|402--Dryer Vent Cleaning|405a--Breathe Clean Bulbs|405--Breathe Clean System|407a--Furnace Cleaning|420--Duct Waste Disposal Fee|432--Free Home Service Inspection: Ducts +ÛGÈºG«£ customer declined inspection|y101--$139 Three Room Special|y101--$154 Two Room Special With Stairs)
+--column contains different special caharacters also e.g('+ÛÈº«£')
+select max(len(products)) from ZeroRez.ZeroRez_bcp
+
+select len(products) as lc,count(1) as rc from ZeroRez.ZeroRez_bcp
+group by len(products)
+order by len(products) desc
+
+select * from ZeroRez.ZeroRez_bcp
+where len(products) = 994
+
+SELECT TOP 10 *
+FROM ZeroRez.ZeroRez_bcp
+WHERE products   like '%|%'
+
+
+--source
+--171 NULL records
+--2153 Disctinct records
+--maximum character length = 109
+--multiple values availavke in on single column seperated with pipe(|) character
+--e.g('Area Rug Division|Customer Drop-Off|Employee Referral|Non-Revenue|Repeat Customer','Area Rug Division|KDWB 101.3 Dave Ryan|Non-Revenue|Radio')
+--records also available which is not seperated using pipe character.
+--e.g('Angie's List','Air Duct','Yelp','Book Now')
+select distinct source  from ZeroRez.ZeroRez_bcp where source like '%[|]%'
+
+select count(*) from ZeroRez.ZeroRez_bcp
+where source not like '%[-!#%&+,./:;<=>@`{|}~"()*\\\_\^\?\[\]\'']%'
+
+select source,count(1) from ZeroRez.ZeroRez_bcp
+where source not like '%[|]%'
+group by source
+
+select source,client_tags,count(1) from ZeroRez.ZeroRez_bcp
+where source not like '%[|]%' and client_tags is not null
+group by source,client_tags
+order by source
+
+select TOP 10 * from ZeroRez.ZeroRez_bcp
+where source = 'ZEROREZ Events'
+
+
+--job_count
+--0 NULL Records
+--32 distinct records
+--maximum character length = 2
+--Integer type data
+--minimum job count value available = 0
+--maximum job count value available = 40
+--the value for job count goes from 0-40
+
+select max(len(job_count)) from ZeroRez.ZeroRez_bcp
+select DISTINCT job_count from ZeroRez.ZeroRez_bcp order by job_count
+select job_count,count(1) as rc from ZeroRez.ZeroRez_bcp
+group by job_count
+order by rc desc
+
+
+--last_service_date
+--date type column
+--NO NULL records
+--1000 distinct records
+--distinct year(2015,2016,2017)
+--column can be cast to datetime column
+--sample data: '1/2/2015','1/10/2015'
+select max(len(last_service_date)) from ZeroRez.ZeroRez_bcp
+select distinct top 10 last_service_date from ZeroRez.ZeroRez_bcp
+select TRY_CAST(last_service_date as DATETIME) from ZeroRez.ZeroRez_bcp
+
+--lifetime_total
+--Replaced double quote in the lifetime_total column (cleaning data)
+--NO NULL records
+--10587 distinct records
+--maximum character length = 9
+--max value for lifetime_total =  19985.810
+--min value for lifetime_total =  0
+--value is of amount type
+--the column can be cast into decimal data type
+select max(CAST(lifetime_total AS DECIMAL(10,3))) from ZeroRez.ZeroRez_bcp
+
+select distinct CAST(lifetime_total AS DECIMAL(10,3)) AS DistinctLifetimeTotal from ZeroRez.ZeroRez_bcp
+order by 1 desc
+
+select * from ZeroRez.ZeroRez_bcp
+where CAST(lifetime_total AS DECIMAL(10,3)) = 19985.810
+--2 records available for the user with maximum lifetime_total value
+--same user but with different products and source
+
+select distinct lifetime_total from ZeroRez.ZeroRez_bcp
+
+select lifetime_total,count(1) from ZeroRez.ZeroRez_bcp
+group by lifetime_total
+
+select try_cast(lifetime_total as decimal(18,3)) from ZeroRez.ZeroRez_bcp
+
+select TOP 10 Street1,street2,city,state,postal_code,ISNULL(street1,' ')+','+ISNULL(street2,' ')+','+ISNULL(city,' ')+','+ISNULL(state,' ')+','+ISNULL(postal_code,' ') As originalAddress
+from ZeroRez.ZeroRez_bcp 
+where street2 is not null
+
+select street1+','+ISNULL(street2,'')+','+city+','+state+','+postal_code from ZeroRez.ZeroRez_bcp 
+
+select value from STRING_SPLIT('Area Rug Division|KDWB 101.3 Dave Ryan|Non-Revenue|Radio','|')
+
+select item from dbo.SplitString('Area Rug Division|KDWB 101.3 Dave Ryan|Non-Revenue|Radio','|')
+
+SELECT TOP 10 * FROM ZeroRez.ZeroRez_bcp
+SELECT * FROM ZeroRez.ZeroRez_split
+where IZeroRezId = 11795
+
+select B.* from 
+ZeroRez.ZeroRez_bcp(NOLOCK) A
+join 
+ZeroRez.ZeroRez_split(NOLOCK) B
+on A.IZeroRezId = B.IZeroRezId
+where A.IZeroRezId = 4
+
+/*
+Split_FFTables:
+SELECT * FROM			ZeroRez.tblAddress_FF
+SELECT * FROM			ZeroRez.tblClientTags_FF
+SELECT * FROM			ZeroRez.tblEmail_FF
+SELECT * FROM			ZeroRez.tblNetPromoterLabels_FF
+SELECT * FROM			ZeroRez.tblPhone_FF
+SELECT * FROM			ZeroRez.tblProducts_FF
+SELECT COUNT(*) FROM	ZeroRez.tblSource_FF
+SELECT COUNT(*) FROM	ZeroRez.tblZeroRez_FF
+*/
+
+--ZeroRez.ZeroRez_bcp
+
+
+select top 10 * from ZeroRez.tblAddress_FF
+SELECT top 10 * FROM ZeroRez.tblClientTags_FF
+SELECT top 10 * FROM ZeroRez.tblZeroRez_FF
+
+--ZeroRez.tblSource_FF
+--215 DISTINCT Source Type value
+--171 NULL records
+--Count for 'Repeat Customer' value = 24435
+
+select distinct source  from ZeroRez.tblSource_FF
+select top 10 * from ZeroRez.tblSource_FF where source is not null
+
+select source,count(1) as rc from ZeroRez.tblSource_FF
+group by Source
+order by rc desc
+
+select A.personid,B.* 
+from ZeroRez.tblSource_FF A
+left join ZeroRez.ZeroRez_bcp B
+on A.PersonID = B.IZeroRezId
+where A.source is null
+
+
