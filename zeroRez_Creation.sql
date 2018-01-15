@@ -232,6 +232,12 @@ where phones not like '%_|_%'
 group by len(phones)
 order by len(phones) desc
 
+select * from ZeroRez.ZeroRez_bcp
+where phones = '|'
+
+select * from ZeroRez.tblPhone_FF
+where PersonID  = 86284
+
 select * from ZeroRez.ZeroRez_bcp where len(phones) IN('51','1','7','9','17','13','14')
 select TOP 100 phones,count(1) from ZeroRez.ZeroRez_bcp
 group by phones
@@ -297,6 +303,7 @@ group by zones
 select * from ZeroRez.ZeroRez_bcp
 where zones = '2 @ $314 Blue'
 
+select distinct zones from ZeroRez.ZeroRez_bcp
 
 --products
 --3978 NULL records
@@ -346,6 +353,10 @@ order by source
 select TOP 10 * from ZeroRez.ZeroRez_bcp
 where source = 'ZEROREZ Events'
 
+select min(len(source)) from ZeroRez.ZeroRez_Split
+
+select count(1)
+
 
 --job_count
 --0 NULL Records
@@ -357,7 +368,11 @@ where source = 'ZEROREZ Events'
 --the value for job count goes from 0-40
 
 select max(len(job_count)) from ZeroRez.ZeroRez_bcp
-select DISTINCT job_count from ZeroRez.ZeroRez_bcp order by job_count
+
+select count(1),count(try_cast(job_count as int)) from ZeroRez.ZeroRez_bcp
+select max(try_cast(job_count as int)) from ZeroRez.ZeroRez_bcp
+
+select DISTINCT try_cast(job_count as int) As DistinctJobCount from ZeroRez.ZeroRez_bcp order by 1
 select job_count,count(1) as rc from ZeroRez.ZeroRez_bcp
 group by job_count
 order by rc desc
@@ -400,6 +415,28 @@ group by lifetime_total
 
 select try_cast(lifetime_total as decimal(18,3)) from ZeroRez.ZeroRez_bcp
 
+
+--DATA TYPE CHECK FOR DT TABLES
+select count(first_name),count(try_cast(first_name as varchar))						from ZeroRez.ZeroRez_split	VARCHAR
+select count(last_name),count(try_cast(last_name as varchar))						from ZeroRez.ZeroRez_split	VARCHAR
+select count(street1),count(try_cast(street1 as varchar))							from ZeroRez.ZeroRez_split	VARCHAR
+select count(street2),count(try_cast(street2 as varchar))							from ZeroRez.ZeroRez_split	VARCHAR
+select count(city),count(try_cast(city as varchar))									from ZeroRez.ZeroRez_split	VARCHAR
+select count([state]),count(try_cast([state] as varchar))							from ZeroRez.ZeroRez_split	VARCHAR
+select count(postal_code),count(try_cast(postal_code as BIGINT))					from ZeroRez.ZeroRez_split	BIGINT
+select count(emails),count(try_cast(emails as varchar))								from ZeroRez.ZeroRez_split	VARCHAR
+select count(phones),count(try_cast(phones as BIGINT))								from ZeroRez.ZeroRez_split	BIGINT
+select count(client_tags),count(try_cast(client_tags as varchar))					from ZeroRez.ZeroRez_split	VARCHAR
+select count(net_promoter_labels),count(try_cast(net_promoter_labels as varchar))	from ZeroRez.ZeroRez_split	VARCHAR
+select count(zones),count(try_cast(zones as varchar))								from ZeroRez.ZeroRez_split	VARCHAR
+select count(products),count(try_cast(products as varchar))							from ZeroRez.ZeroRez_split	VARCHAR
+select count(source),count(try_cast(source as varchar))								from ZeroRez.ZeroRez_split	VARCHAR
+select count(job_count),count(try_cast(job_count as int))							from ZeroRez.ZeroRez_split	INT
+select count(last_service_date),count(try_cast(last_service_date as datetime))		from ZeroRez.ZeroRez_split	DATETIME
+select count(lifetime_total),count(try_cast(lifetime_total as decimal))				from ZeroRez.ZeroRez_split	DECIMAL
+
+--imp metrics are: % null, % empty, mean, median, 1st Standard deviation, 2nd SD, min, max
+
 select TOP 10 Street1,street2,city,state,postal_code,ISNULL(street1,' ')+','+ISNULL(street2,' ')+','+ISNULL(city,' ')+','+ISNULL(state,' ')+','+ISNULL(postal_code,' ') As originalAddress
 from ZeroRez.ZeroRez_bcp 
 where street2 is not null
@@ -413,6 +450,27 @@ select item from dbo.SplitString('Area Rug Division|KDWB 101.3 Dave Ryan|Non-Rev
 SELECT TOP 10 * FROM ZeroRez.ZeroRez_bcp
 SELECT * FROM ZeroRez.ZeroRez_split
 where IZeroRezId = 11795
+
+select count(1),street1,IzeroRezId from ZeroRez.ZeroRez_split
+where street1 is null
+group by street1,IzeroRezId
+
+--CALCULATING NULL 
+select count(distinct IzeroRezId) from ZeroRez.ZeroRez_split
+where lifetime_total is null
+
+--CALCULATING BLANK
+select count(distinct IzeroRezId) from ZeroRez.ZeroRez_split
+where CAST(lifetime_total AS DECIMAL(18,5)) = 0.00
+
+select distinct * from ZeroRez.ZeroRez_split
+where CAST(lifetime_total AS DECIMAL(18,5)) = 0.00
+
+select * from ZeroRez.ZeroRez_bcp
+where IZeroRezId = 2087
+
+select * from  ZeroRez.ZeroRez_split
+where street1 is null
 
 select B.* from 
 ZeroRez.ZeroRez_bcp(NOLOCK) A
@@ -445,13 +503,83 @@ SELECT top 10 * FROM ZeroRez.tblZeroRez_FF
 --171 NULL records
 --Count for 'Repeat Customer' value = 24435
 
-select distinct source  from ZeroRez.tblSource_FF
+select count(distinct source)from ZeroRez.tblSource_FF --214
+select count(distinct source) from ZeroRez.ZeroRez_Split --214
+
+
 select top 10 * from ZeroRez.tblSource_FF where source is not null
 
-select source,count(1) as rc from ZeroRez.tblSource_FF
-group by Source
-order by rc desc
+select top 10 * from ZeroRez.ZeroRez_Split
 
+--Getting Frequency for Source
+select source,count(distinct IZeroRezId) as frequency from ZeroRez.ZeroRez_Split
+where source is not null
+group by Source
+order by frequency desc
+
+--Getting Frequency for products
+select products,count(distinct IZeroRezId) as frequency from ZeroRez.ZeroRez_Split
+where products is not null
+group by products
+order by frequency desc
+
+
+--Getting Frequency for job_count
+select job_count,count(distinct IZeroRezId) as frequency from ZeroRez.ZeroRez_Split
+where job_count is not null
+group by rollup(job_count)
+order by frequency desc
+
+select count(1) from ZeroRez.ZeroRez_bcp
+where products like '%120 - Waste Disposal%' --80887
+
+
+--DISTINCT COLUMN CHECK
+SELECT COUNT(DISTINCT first_name) FROM ZeroRez.ZeroRez_split WHERE first_name =''
+SELECT COUNT(DISTINCT last_name) FROM ZeroRez.ZeroRez_split WHERE last_name = ''
+SELECT COUNT(DISTINCT street1) FROM ZeroRez.ZeroRez_split WHERE street1 = ''
+SELECT COUNT(DISTINCT street2) FROM ZeroRez.ZeroRez_split
+SELECT COUNT(DISTINCT city) FROM ZeroRez.ZeroRez_split
+SELECT COUNT(DISTINCT state) FROM ZeroRez.ZeroRez_split
+SELECT COUNT(DISTINCT postal_code) FROM ZeroRez.ZeroRez_split
+SELECT COUNT(DISTINCT emails) FROM ZeroRez.ZeroRez_split
+SELECT COUNT(DISTINCT phones) FROM ZeroRez.ZeroRez_split
+SELECT COUNT(DISTINCT client_tags) FROM ZeroRez.ZeroRez_split
+SELECT COUNT(DISTINCT net_promoter_labels) FROM ZeroRez.ZeroRez_split
+SELECT COUNT(DISTINCT zones) FROM ZeroRez.ZeroRez_split
+SELECT COUNT(DISTINCT products) FROM ZeroRez.ZeroRez_split
+SELECT COUNT(DISTINCT source) FROM ZeroRez.ZeroRez_split
+SELECT COUNT(DISTINCT job_count) FROM ZeroRez.ZeroRez_split
+SELECT COUNT(DISTINCT CAST(last_service_date As DATETIME)) FROM ZeroRez.ZeroRez_split
+SELECT COUNT(DISTINCT lifetime_total) FROM ZeroRez.ZeroRez_split
+
+select COUNT(DISTINCT PersonID) from ZeroRez.tblSource_FF
+where Source = 'Repeat Customer'
+
+--BLANK CHECK
+select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where first_name = ''
+select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where last_name = ''
+select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where street1 = ''
+select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where street2 = ''
+select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where city = ''
+select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where state = ''
+select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where postal_code = ''
+select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where emails = ''
+select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where phones = ''
+select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where client_tags = ''
+select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where net_promoter_labels = ''
+select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where zones = ''
+select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where products = ''
+select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where source = ''
+select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where job_count = ''
+select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where last_service_date = ''
+select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where lifetime_total = ''
+
+select TOP 10 * 
+from ZeroRez.ZeroRez_Split A
+where A.phones = ''
+and IZeroRezId IN (Select DISTINCT IZeroRezId from ZeroRez.ZeroRez_Split )
+ 
 select A.personid,B.* 
 from ZeroRez.tblSource_FF A
 left join ZeroRez.ZeroRez_bcp B
