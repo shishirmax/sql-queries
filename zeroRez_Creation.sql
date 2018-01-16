@@ -242,7 +242,7 @@ select * from ZeroRez.ZeroRez_bcp where len(phones) IN('51','1','7','9','17','13
 select TOP 100 phones,count(1) from ZeroRez.ZeroRez_bcp
 group by phones
 
-select TOP 100 * from ZeroRez.ZeroRez_bcp
+select TOP 100 phones from ZeroRez.ZeroRez_bcp
 where phones = '203-733-0157|952-255-8332'
 
 --client_tags
@@ -289,7 +289,7 @@ where net_promoter_labels = 'detractor|passive'
 --15700 records available which do not have special characters
 --e.g: (Aquamarine,Loudoun,Violet,Brown,Blue,Orange,Red,Coral,MediumAquaMarine,Teal,Peoria,MediumSlateBlue)
 --for same zone all records have same city,state and postal_code e.g(look for zones = 'Orange','MediumAquaMarine'), for few values there are difference in data.e.g(zones='Dark Orange 1','2 @ $314 Blue')
-select distinct zones from ZeroRez.ZeroRez_bcp
+select distinct zones from ZeroRez.ZeroRez_split
 select max(len(zones)) from ZeroRez.ZeroRez_bcp where zones is null
 
 SELECT COUNT(1)
@@ -314,7 +314,7 @@ select distinct zones from ZeroRez.ZeroRez_bcp
 --mixed values seperated by pipe(|) character
 --e.g(100--$159 Three Room Special|102--Area Carpet Clean (please specify)|102--Traffic Area Clean|103--Hallway|106--Stair Clean|107--Landing|108--Bedroom|113a - $154 December Two Room Special with Stairs|118--FREE Speed Drying|119--FREE Plus One Service|120 - Waste Disposal|142--$20 Gonna Love It Gift Card|151--Area Rug Clean (Shop)|152--Area Rug Protector|155b--$20 Off Promo|155--Rug Delivery|167--Area Rugs Biological Treatment|182--Free Home Service Inspection: Area rugs assessed - cleaning not immediately needed|196--ZeroStink Spotter|197--Zerorez Spotter Kit|200--Fiber Protection|205--Water Claw Treatment|206--Topical Biological Treatment|400--Duct and Return Cleaning - Standard|401a--Air Duct Promo Discount|402--Dryer Vent Cleaning|405a--Breathe Clean Bulbs|405--Breathe Clean System|407a--Furnace Cleaning|420--Duct Waste Disposal Fee|432--Free Home Service Inspection: Ducts +ÛGÈºG«£ customer declined inspection|y101--$139 Three Room Special|y101--$154 Two Room Special With Stairs)
 --column contains different special caharacters also e.g('+ÛÈº«£')
-select max(len(products)) from ZeroRez.ZeroRez_bcp
+select max(len(products)) from ZeroRez.ZeroRez_split
 
 select len(products) as lc,count(1) as rc from ZeroRez.ZeroRez_bcp
 group by len(products)
@@ -323,8 +323,8 @@ order by len(products) desc
 select * from ZeroRez.ZeroRez_bcp
 where len(products) = 994
 
-SELECT TOP 10 *
-FROM ZeroRez.ZeroRez_bcp
+SELECT TOP 10 products
+FROM ZeroRez.ZeroRez_split
 WHERE products   like '%|%'
 
 
@@ -336,7 +336,10 @@ WHERE products   like '%|%'
 --e.g('Area Rug Division|Customer Drop-Off|Employee Referral|Non-Revenue|Repeat Customer','Area Rug Division|KDWB 101.3 Dave Ryan|Non-Revenue|Radio')
 --records also available which is not seperated using pipe character.
 --e.g('Angie's List','Air Duct','Yelp','Book Now')
-select distinct source  from ZeroRez.ZeroRez_bcp where source like '%[|]%'
+select distinct source  from ZeroRez.ZeroRez_split where source like '%[|]%'
+
+select * from zerorez.zerorez_bcp
+where source like '%Money Mailer - Promo MM%'
 
 select count(*) from ZeroRez.ZeroRez_bcp
 where source not like '%[-!#%&+,./:;<=>@`{|}~"()*\\\_\^\?\[\]\'']%'
@@ -437,9 +440,30 @@ select count(lifetime_total),count(try_cast(lifetime_total as decimal))				from 
 
 --imp metrics are: % null, % empty, mean, median, 1st Standard deviation, 2nd SD, min, max
 
-select TOP 10 Street1,street2,city,state,postal_code,ISNULL(street1,' ')+','+ISNULL(street2,' ')+','+ISNULL(city,' ')+','+ISNULL(state,' ')+','+ISNULL(postal_code,' ') As originalAddress
+select Street1,street2,city,state,postal_code,ISNULL(street1,' ')+','+ISNULL(street2,' ')+','+ISNULL(city,' ')+','+ISNULL(state,' ')+','+ISNULL(postal_code,' ') As originalAddress, count(1) As rc
 from ZeroRez.ZeroRez_bcp 
-where street2 is not null
+--where 
+--street1 is not null 
+--and street2 is not null
+--and city is not null
+--and state is not null
+--and postal_code is not null
+group by Street1,street2,city,state,postal_code
+having count(1)>1
+order by rc desc
+
+select * from ZeroRez.ZeroRez_bcp
+where
+street1 = '17 1st Street South'
+and street2 = 'Unit A1007'
+and city = 'Minneapolis'
+and state = 'MN'
+and postal_code = '55401'
+
+select * from ZeroRez.ZeroRez_bcp 
+where first_name = 'Beth'
+and last_name = 'Evenson'
+
 
 select street1+','+ISNULL(street2,'')+','+city+','+state+','+postal_code from ZeroRez.ZeroRez_bcp 
 
@@ -481,22 +505,27 @@ where A.IZeroRezId = 4
 
 /*
 Split_FFTables:
-SELECT * FROM			ZeroRez.tblAddress_FF
-SELECT * FROM			ZeroRez.tblClientTags_FF
-SELECT * FROM			ZeroRez.tblEmail_FF
-SELECT * FROM			ZeroRez.tblNetPromoterLabels_FF
-SELECT * FROM			ZeroRez.tblPhone_FF
-SELECT * FROM			ZeroRez.tblProducts_FF
+SELECT * FROM	ZeroRez.tblAddress_FF
+SELECT * FROM	ZeroRez.tblClientTags_FF
+SELECT * FROM	ZeroRez.tblEmail_FF
+SELECT * FROM	ZeroRez.tblNetPromoterLabels_FF
+SELECT * FROM	ZeroRez.tblPhone_FF
+SELECT * FROM	ZeroRez.tblProducts_FF
 SELECT COUNT(*) FROM	ZeroRez.tblSource_FF
 SELECT COUNT(*) FROM	ZeroRez.tblZeroRez_FF
 */
 
 --ZeroRez.ZeroRez_bcp
 
-
+SELECT top 10 * FROM ZeroRez.tblEmail_FF where email is not null and email <> ''
 select top 10 * from ZeroRez.tblAddress_FF
 SELECT top 10 * FROM ZeroRez.tblClientTags_FF
 SELECT top 10 * FROM ZeroRez.tblZeroRez_FF
+SELECT TOP 10 * FROM ZeroRez.tblProducts_FF
+SELECT TOP 10 * FROM	ZeroRez.tblPhone_FF where PhoneNumber IS NOT NULL and PhoneNumber <> ''
+
+select top 10 phones from ZeroRez.ZeroRez_Split
+SELECT TOP 10 * FROM	ZeroRez.tblNetPromoterLabels_FF where NetPromoterLabels is not null and NetPromoterLabels <> ''
 
 --ZeroRez.tblSource_FF
 --215 DISTINCT Source Type value
@@ -529,6 +558,85 @@ select job_count,count(distinct IZeroRezId) as frequency from ZeroRez.ZeroRez_Sp
 where job_count is not null
 group by rollup(job_count)
 order by frequency desc
+
+--Getting Frequency for lifetime_total
+select CAST(lifetime_total as money) as lifetime_total,NTILE(10) OVER(ORDER BY CAST(lifetime_total as money) DESC) AS tile ,count(distinct IZeroRezId) as frequency from ZeroRez.ZeroRez_Split
+where CAST(lifetime_total as money) is not null
+group by CAST(lifetime_total as money)
+order by CAST(lifetime_total as money)--frequency desc
+
+--******MEAN******
+select sum(CAST(lifetime_total as decimal(28,8))) from ZeroRez.ZeroRez_bcp --62384330.30
+select avg(CAST(lifetime_total as decimal(28,8))) from ZeroRez.ZeroRez_bcp --672.49132548 MEAN
+select count(1) from ZeroRez.ZeroRez_bcp --92766
+select (62384330.30/92766)
+
+select sum(cast(job_count as int)) from ZeroRez.ZeroRez_bcp --208405
+select avg(cast(job_count as int)) from ZeroRez.ZeroRez_bcp --2 MEAN
+select cast((208405/92766)
+--*****MEDIAN*****
+select 
+((Select Top 1 lifetime_total
+		From   (
+				Select Top 50 Percent CAST(lifetime_total as money) as lifetime_total
+				From	ZeroRez.ZeroRez_bcp
+				Where	CAST(lifetime_total as money) Is NOT NULL
+				Order By CAST(lifetime_total as money)
+				) As A
+		Order By CAST(lifetime_total as money) DESC)
+		+
+(Select Top 1 lifetime_total
+		From   (
+				Select Top 50 Percent CAST(lifetime_total as money) as lifetime_total
+				From	ZeroRez.ZeroRez_bcp
+				Where	CAST(lifetime_total as money) Is NOT NULL
+				Order By CAST(lifetime_total as money) DESC
+				) As A
+		Order By CAST(lifetime_total as money) Asc))/2 --453.00 MEDIAN
+
+
+select 
+((Select Top 1 job_count
+		From   (
+				Select Top 50 Percent CAST(job_count as int) as job_count
+				From	ZeroRez.ZeroRez_bcp
+				Where	CAST(job_count as int) Is NOT NULL
+				Order By CAST(job_count as int)
+				) As A
+		Order By CAST(job_count as int) DESC)
+		+
+(Select Top 1 job_count
+		From   (
+				Select Top 50 Percent CAST(job_count as int) as job_count
+				From	ZeroRez.ZeroRez_bcp
+				Where	CAST(job_count as int) Is NOT NULL
+				Order By CAST(job_count as int) DESC
+				) As A
+		Order By CAST(job_count as int) Asc))/2 --2 MEDIAN
+
+--******MODE*****
+SELECT TOP 1 with ties CAST(lifetime_total as money)
+FROM   ZeroRez.ZeroRez_bcp
+WHERE  CAST(lifetime_total as money) IS Not NULL
+GROUP  BY CAST(lifetime_total as money)
+ORDER  BY COUNT(*) DESC --173.00 MODE
+
+SELECT TOP 1 with ties cast(job_count as int)
+FROM   ZeroRez.ZeroRez_bcp
+WHERE  cast(job_count as int) IS Not NULL
+GROUP  BY cast(job_count as int)
+ORDER  BY COUNT(*) DESC --1 MODE
+
+
+--******Standard Deviation******
+SELECT STDEV(CAST(lifetime_total as money))  
+FROM ZeroRez.ZeroRez_bcp 
+GO 
+
+SELECT STDEV(cast(job_count as int))  
+FROM ZeroRez.ZeroRez_bcp 
+GO 
+
 
 select count(1) from ZeroRez.ZeroRez_bcp
 where products like '%120 - Waste Disposal%' --80887
@@ -585,5 +693,12 @@ from ZeroRez.tblSource_FF A
 left join ZeroRez.ZeroRez_bcp B
 on A.PersonID = B.IZeroRezId
 where A.source is null
+
+select * from sys.objects
+where schema_id = 13 and type = 'U'
+
+select * from sys.columns
+where object_id = 884198200
+order by name desc
 
 

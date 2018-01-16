@@ -130,3 +130,7 @@ GO
 CREATE NONCLUSTERED INDEX IX_tblHomeSpotter_DT   
     ON homeSpotter.tblHomeSpotter_DT ([user],hs_agent_id,device_id,ip_address,session_start_utc,session_end_guess_utc,LogTaskID);   
 GO
+
+select DISTINCT DESCRIPTION from t
+'Implemantion of the CR systems at dealership level for understanding of the customer concern & faster resolution'
+'Trend analysis for Customer Complaint Ratio at Regional / Zonal / Area level both for Sales and Service operations'
