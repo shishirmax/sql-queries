@@ -440,25 +440,29 @@ select count(lifetime_total),count(try_cast(lifetime_total as decimal))				from 
 
 --imp metrics are: % null, % empty, mean, median, 1st Standard deviation, 2nd SD, min, max
 
-select Street1,street2,city,state,postal_code,ISNULL(street1,' ')+','+ISNULL(street2,' ')+','+ISNULL(city,' ')+','+ISNULL(state,' ')+','+ISNULL(postal_code,' ') As originalAddress, count(1) As rc
-from ZeroRez.ZeroRez_bcp 
+select first_name,last_name,phones,emails,Street1,street2,city,state,postal_code,ISNULL(street1,' ')+','+ISNULL(street2,' ')+','+ISNULL(city,' ')+','+ISNULL(state,' ')+','+ISNULL(postal_code,' ') As originalAddress, count(1) As rc
+from ZeroRez.ZeroRez_bcp
 --where 
 --street1 is not null 
 --and street2 is not null
 --and city is not null
 --and state is not null
 --and postal_code is not null
-group by Street1,street2,city,state,postal_code
+group by first_name,last_name,phones,emails,Street1,street2,city,state,postal_code
 having count(1)>1
 order by rc desc
 
-select * from ZeroRez.ZeroRez_bcp
+select TOP 500 * from ZeroRez.ZeroRez_bcp
 where
 street1 = '17 1st Street South'
 and street2 = 'Unit A1007'
 and city = 'Minneapolis'
 and state = 'MN'
 and postal_code = '55401'
+
+select * from ZeroRez.ZeroRez_bcp
+where first_name = 'Beth'
+and last_name = 'Evenson'
 
 select * from ZeroRez.ZeroRez_bcp 
 where first_name = 'Beth'
