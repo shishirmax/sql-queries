@@ -15,7 +15,7 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_01_13_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_01_16_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
@@ -31,9 +31,9 @@ SELECT COUNT(1) As FactHomeSpotter			FROM homeSpotter.FactHomeSpotter		(NOLOCK)
 SELECT COUNT(1) As FactHomeSpotterSummary	FROM homeSpotter.FactHomeSpotterSummary (NOLOCK) 
 
 /*
-|DimAgent|DimAgentSCD|DimDevice	|DimSession	|DimUser|FactHomeSpotter|FactHomeSpotterSummary	|
-|--------|-----------|----------|-----------|-------|---------------|-----------------------|
-|2077	 |2153		 |50458		|991219		|13812	|963982			|16048					|
+|DimAgent|DimAgentSCD|DimDevice	|DimSession		|DimUser|FactHomeSpotter	|FactHomeSpotterSummary	|
+|--------|-----------|----------|---------------|-------|-------------------|-----------------------|
+|2077	 |2155		 |51669		|1060010		|13867	|1032773			|16110					|
 
 */
 

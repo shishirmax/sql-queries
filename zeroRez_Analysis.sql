@@ -142,6 +142,8 @@ select * from ZeroRez.DimSource
 select * from ZeroRez.DimSourceGroup
 select * from ZeroRez.DimZones
 
+select count(*) from ZeroRez.DimDedupZeroRez
+
 CREATE FUNCTION dbo.udf_GetNumeric
 (@strAlphaNumeric VARCHAR(256))
 RETURNS VARCHAR(256)
@@ -238,9 +240,49 @@ group by originalAddress
 having count(1)>1
 
 select * from #tempAdd where rc>3
+select * from zerorez.tblZerorezStandardAddressApi(NOLOCK) order by modifieddate desc
 
-select * from zerorez.tblZerorezStandardAddressApi
-where originaladdress = '843 Lois Lane   Lino Lakes, MN, 55014'
+
+select OriginalAddress,
+	case when OriginalAddress like '%(%)%' 
+		then substring(OriginalAddress,1,charindex('(',OriginalAddress)-1)+''+substring(OriginalAddress,charindex(')',OriginalAddress)+1,len(OriginalAddress))
+		else originalAddress
+	end updatedAddress
+from zerorez.tblZerorezStandardAddressApi(NOLOCK) where formatted_address = 'NA'  and originaladdress like '%(%)%'order by 1
+declare @str nvarchar(max)
+select @str = 'select case when OriginalAddress like ''%(%)%'' then substring(OriginalAddress,1,charindex(''('',OriginalAddress)-1)+''''+substring(OriginalAddress,charindex('')'',OriginalAddress)+1,len(OriginalAddress)) else originalAddress end updatedAddress from zerorez.tblZerorezStandardAddressApi(NOLOCK) where formatted_address = ''NA''  and originaladdress like ''%(%)%''order by 1'
+print @str
+
+select case when OriginalAddress like '%(%)%' then substring(OriginalAddress,1,charindex('(',OriginalAddress)-1)+''+substring(OriginalAddress,charindex(')',OriginalAddress)+1,len(OriginalAddress)) else originalAddress end updatedAddress from zerorez.tblZerorezStandardAddressApi(NOLOCK) where formatted_address = 'NA'  and originaladdress like '%(%)%'order by 1
+
+
+select * from zerorez.zerorez_bcp where izerorezid = 34257
+
+select * from zerorez.tblZerorezStandardAddressApi(NOLOCK) where formatted_address = 'NA' AND IzeroRezId NOT IN(90610,83402,73059,73058,69958,69957,69478,68819,65917,65872,65516,60911,60306,54506,53913,53527,53177,48393,45380,44004,42525,41817
+,40518,40401,38734,10083,18156,22645,36580) order by 1 desc
+
+
+UPDATE zerorez.[tblZerorezStandardAddressApi] 
+set  formatted_Address = '"5346 Woodbury Dr, Woodbury, MN 55129, USA"',
+	Latitude = '44.8713802',
+	Longitude = '-92.903187',
+  Modifieddate = getdate()
+WHERE IzeroRezId =  30160
+
+select * from zerorez.zerorez_bcp where izerorezId IN(
+ '68819'
+,'65917'
+,'65872'
+,'65516'
+,'36580'
+,'36579'
+,'36541'
+,'36502'
+,'25691'
+,'25690'
+,'7878'
+,'7807')
+
 
 select * from zerorez.ZeroRez_bcp
 where IZeroRezId = 92432 IN 
@@ -258,3 +300,18 @@ set @num =( next value for GetGroupId);
 select @num as groupId
 
 select * from Edina.tableMapping
+
+SELECT TOP 10 *
+FROM [ZeroRez].DimAddress ES
+INNER JOIN [ZeroRez].[tblZerorezStandardAddressApi] SA
+ON 
+ REPLACE(
+  REPLACE(
+   CONCAT(
+    COALESCE(Street1,''),
+     COALESCE(Street2,''),
+      COALESCE(City,''),
+       COALESCE(State,''),
+        COALESCE(zip,'')
+         ),' ',''),',','') = REPLACE(
+                REPLACE(SA.[OriginalAddress],' ',''),',','')
