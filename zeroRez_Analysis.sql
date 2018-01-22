@@ -256,10 +256,14 @@ print @str
 select case when OriginalAddress like '%(%)%' then substring(OriginalAddress,1,charindex('(',OriginalAddress)-1)+''+substring(OriginalAddress,charindex(')',OriginalAddress)+1,len(OriginalAddress)) else originalAddress end updatedAddress from zerorez.tblZerorezStandardAddressApi(NOLOCK) where formatted_address = 'NA'  and originaladdress like '%(%)%'order by 1
 
 
-select * from zerorez.zerorez_bcp where izerorezid = 34257
+select * from zerorez.zerorez_bcp where izerorezid = 40401
 
-select * from zerorez.tblZerorezStandardAddressApi(NOLOCK) where formatted_address = 'NA' AND IzeroRezId NOT IN(90610,83402,73059,73058,69958,69957,69478,68819,65917,65872,65516,60911,60306,54506,53913,53527,53177,48393,45380,44004,42525,41817
-,40518,40401,38734,10083,18156,22645,36580) order by 1 desc
+select * from zerorez.tblZerorezStandardAddressApi(NOLOCK) where formatted_address = 'NA' order by 1 
+
+select postal_code,zones,count(1) from zerorez.zerorez_bcp 
+where zones is not null
+group by postal_code,zones
+order by 3 desc
 
 
 UPDATE zerorez.[tblZerorezStandardAddressApi] 
@@ -315,3 +319,14 @@ ON
         COALESCE(zip,'')
          ),' ',''),',','') = REPLACE(
                 REPLACE(SA.[OriginalAddress],' ',''),',','')
+
+select * from zerorez.tblZeroRezDedupSummary --82357
+bcp "select * from zerorez.tblZeroRezDedupSummary" queryout D:\Edina\ZeroRez\tblZeroRezDedupSummary.txt -S tcp:contata.database.windows.net -d Edina_qa -U contata.admin@contata -P C@ntata123 -q -c -t"|"
+
+select * from zerorez.tblZerorezStandardAddressApi(NOLOCK) where formatted_address = 'NA' order by 1 
+
+select * from zerorez.tblZeroRezDedupSummary where ZeroRezID
+in
+(select IZeroRezId from zerorez.tblZerorezStandardAddressApi(NOLOCK) where formatted_address = 'NA' )
+
+select * from zerorez.tblZeroRezDedupSummary where StandardAddress = 'NA'
