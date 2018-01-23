@@ -647,45 +647,45 @@ where products like '%120 - Waste Disposal%' --80887
 
 
 --DISTINCT COLUMN CHECK
-SELECT COUNT(DISTINCT first_name) FROM ZeroRez.ZeroRez_split WHERE first_name =''
-SELECT COUNT(DISTINCT last_name) FROM ZeroRez.ZeroRez_split WHERE last_name = ''
-SELECT COUNT(DISTINCT street1) FROM ZeroRez.ZeroRez_split WHERE street1 = ''
-SELECT COUNT(DISTINCT street2) FROM ZeroRez.ZeroRez_split
-SELECT COUNT(DISTINCT city) FROM ZeroRez.ZeroRez_split
-SELECT COUNT(DISTINCT state) FROM ZeroRez.ZeroRez_split
-SELECT COUNT(DISTINCT postal_code) FROM ZeroRez.ZeroRez_split
-SELECT COUNT(DISTINCT emails) FROM ZeroRez.ZeroRez_split
-SELECT COUNT(DISTINCT phones) FROM ZeroRez.ZeroRez_split
-SELECT COUNT(DISTINCT client_tags) FROM ZeroRez.ZeroRez_split
-SELECT COUNT(DISTINCT net_promoter_labels) FROM ZeroRez.ZeroRez_split
-SELECT COUNT(DISTINCT zones) FROM ZeroRez.ZeroRez_split
-SELECT COUNT(DISTINCT products) FROM ZeroRez.ZeroRez_split
-SELECT COUNT(DISTINCT source) FROM ZeroRez.ZeroRez_split
-SELECT COUNT(DISTINCT job_count) FROM ZeroRez.ZeroRez_split
-SELECT COUNT(DISTINCT CAST(last_service_date As DATETIME)) FROM ZeroRez.ZeroRez_split
-SELECT COUNT(DISTINCT lifetime_total) FROM ZeroRez.ZeroRez_split
+	SELECT COUNT(DISTINCT first_name) FROM ZeroRez.ZeroRez_split WHERE first_name =''
+	SELECT COUNT(DISTINCT last_name) FROM ZeroRez.ZeroRez_split WHERE last_name = ''
+	SELECT COUNT(DISTINCT street1) FROM ZeroRez.ZeroRez_split WHERE street1 = ''
+	SELECT COUNT(DISTINCT street2) FROM ZeroRez.ZeroRez_split
+	SELECT COUNT(DISTINCT city) FROM ZeroRez.ZeroRez_split
+	SELECT COUNT(DISTINCT state) FROM ZeroRez.ZeroRez_split
+	SELECT COUNT(DISTINCT postal_code) FROM ZeroRez.ZeroRez_split
+	SELECT COUNT(DISTINCT emails) FROM ZeroRez.ZeroRez_split
+	SELECT COUNT(DISTINCT phones) FROM ZeroRez.ZeroRez_split
+	SELECT COUNT(DISTINCT client_tags) FROM ZeroRez.ZeroRez_split
+	SELECT COUNT(DISTINCT net_promoter_labels) FROM ZeroRez.ZeroRez_split
+	SELECT COUNT(DISTINCT zones) FROM ZeroRez.ZeroRez_split
+	SELECT COUNT(DISTINCT products) FROM ZeroRez.ZeroRez_split
+	SELECT COUNT(DISTINCT source) FROM ZeroRez.ZeroRez_split
+	SELECT COUNT(DISTINCT job_count) FROM ZeroRez.ZeroRez_split
+	SELECT COUNT(DISTINCT CAST(last_service_date As DATETIME)) FROM ZeroRez.ZeroRez_split
+	SELECT COUNT(DISTINCT lifetime_total) FROM ZeroRez.ZeroRez_split
 
 select COUNT(DISTINCT PersonID) from ZeroRez.tblSource_FF
 where Source = 'Repeat Customer'
 
---BLANK CHECK
-select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where first_name = ''
-select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where last_name = ''
-select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where street1 = ''
-select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where street2 = ''
-select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where city = ''
-select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where state = ''
-select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where postal_code = ''
-select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where emails = ''
-select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where phones = ''
-select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where client_tags = ''
-select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where net_promoter_labels = ''
-select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where zones = ''
-select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where products = ''
-select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where source = ''
-select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where job_count = ''
-select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where last_service_date = ''
-select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where lifetime_total = ''
+	--BLANK CHECK
+	select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where first_name = ''
+	select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where last_name = ''
+	select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where street1 = ''
+	select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where street2 = ''
+	select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where city = ''
+	select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where state = ''
+	select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where postal_code = ''
+	select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where emails = ''
+	select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where phones = ''
+	select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where client_tags = ''
+	select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where net_promoter_labels = ''
+	select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where zones = ''
+	select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where products = ''
+	select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where source = ''
+	select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where job_count = ''
+	select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where last_service_date = ''
+	select count(DISTINCT IZeroRezId) from ZeroRez.ZeroRez_Split where lifetime_total = ''
 
 select TOP 10 * 
 from ZeroRez.ZeroRez_Split A
@@ -704,5 +704,27 @@ where schema_id = 13 and type = 'U'
 select * from sys.columns
 where object_id = 884198200
 order by name desc
+GO
 
 
+select max(GroupId) from LogTaskControlFlow
+select * from LogTaskControlFlow order by 1 desc
+
+exec ZeroRez.usp_LoadFlatToBCP'/zerorezsource/ZeroRez-Data.csv','ZeroRez-Data.csv',185
+exec ZeroRez.usp_LoadBCPToFF 187
+
+select count(1) from ZeroRez.vw_ZeroRez
+
+select count(1) from ZeroRez.ZeroRez_bcp
+
+truncate table ZeroRez.tblAddress_FF
+truncate table ZeroRez.tblEmail_FF
+truncate table ZeroRez.tblPhone_FF
+truncate table ZeroRez.tblClientTags_FF
+truncate table ZeroRez.tblNetPromoterLabels_FF
+truncate table ZeroRez.tblSource_FF
+truncate table ZeroRez.tblProducts_FF
+truncate table ZeroRez.tblZeroRez_FF
+
+
+truncate table ZeroRez.ZeroRez_bcp

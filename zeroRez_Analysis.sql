@@ -256,7 +256,7 @@ print @str
 select case when OriginalAddress like '%(%)%' then substring(OriginalAddress,1,charindex('(',OriginalAddress)-1)+''+substring(OriginalAddress,charindex(')',OriginalAddress)+1,len(OriginalAddress)) else originalAddress end updatedAddress from zerorez.tblZerorezStandardAddressApi(NOLOCK) where formatted_address = 'NA'  and originaladdress like '%(%)%'order by 1
 
 
-select * from zerorez.zerorez_bcp where izerorezid = 40401
+select * from zerorez.zerorez_bcp where izerorezid = 8487
 
 select * from zerorez.tblZerorezStandardAddressApi(NOLOCK) where formatted_address = 'NA' order by 1 
 
@@ -267,11 +267,20 @@ order by 3 desc
 
 
 UPDATE zerorez.[tblZerorezStandardAddressApi] 
-set  formatted_Address = '"5346 Woodbury Dr, Woodbury, MN 55129, USA"',
-	Latitude = '44.8713802',
-	Longitude = '-92.903187',
+set  formatted_Address = '"15331 Woodside Ln, Minnetonka, MN 55345, USA"',
+	Latitude = '44.9229171',
+	Longitude = '-93.4746876',
   Modifieddate = getdate()
-WHERE IzeroRezId =  30160
+WHERE IzeroRezId =  8487
+
+select * from zerorez.DimAddress where IAddressId = 18990
+where StandardAddress = '7 Woodside, Quezon City, 1110 Metro Manila, Philippines'
+
+select * from zerorez.tblZeroRezDedupSummary_23Jan18 where zerorezid = 8487
+
+update zerorez.tblZeroRezDedupSummary_23Jan18
+set StandardAddress = '15331 Woodside Ln, Minnetonka, MN 55345, USA'
+where zerorezid = 8487
 
 select * from zerorez.zerorez_bcp where izerorezId IN(
  '68819'
@@ -326,7 +335,8 @@ bcp "select * from temp" queryout D:\Edina\ZeroRez\tblZeroRezDump.txt -S tcp:con
 
 select * from temp(nolock) order by ZeroRezId
 
-select * from zerorez.tblZerorezStandardAddressApi(NOLOCK) where formatted_address = 'NA' order by 1 
+select * from zerorez.tblZerorezStandardAddressApi(NOLOCK) where izerorezid = 8487
+formatted_address = 'NA' order by 1 
 
 select * from zerorez.tblZeroRezDedupSummary where ZeroRezID
 in
