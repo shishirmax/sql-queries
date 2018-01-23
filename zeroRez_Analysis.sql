@@ -321,7 +321,10 @@ ON
                 REPLACE(SA.[OriginalAddress],' ',''),',','')
 
 select * from zerorez.tblZeroRezDedupSummary --82357
-bcp "select * from zerorez.tblZeroRezDedupSummary" queryout D:\Edina\ZeroRez\tblZeroRezDedupSummary.txt -S tcp:contata.database.windows.net -d Edina_qa -U contata.admin@contata -P C@ntata123 -q -c -t"|"
+
+bcp "select * from temp" queryout D:\Edina\ZeroRez\tblZeroRezDump.txt -S tcp:contata.database.windows.net -d Edina_qa -U contata.admin@contata -P C@ntata123 -q -c -t"|"
+
+select * from temp(nolock) order by ZeroRezId
 
 select * from zerorez.tblZerorezStandardAddressApi(NOLOCK) where formatted_address = 'NA' order by 1 
 
