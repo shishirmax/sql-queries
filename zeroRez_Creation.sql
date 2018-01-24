@@ -715,7 +715,7 @@ exec ZeroRez.usp_LoadBCPToFF 187
 
 select count(1) from ZeroRez.vw_ZeroRez
 
-select count(1) from ZeroRez.ZeroRez_bcp
+truncate table ZeroRez.ZeroRez_bcp
 
 truncate table ZeroRez.tblAddress_FF
 truncate table ZeroRez.tblEmail_FF
