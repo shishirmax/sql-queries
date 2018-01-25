@@ -265,6 +265,11 @@ where zones is not null
 group by postal_code,zones
 order by 3 desc
 
+select CAST(Modifieddate as DATE),Count(1) from zerorez.[tblZerorezStandardAddressApi] 
+group by CAST(Modifieddate as DATE)
+
+select * from zerorez.[tblZerorezStandardAddressApi] 
+where CAST(Modifieddate as DATE) = '2018-01-18'
 
 UPDATE zerorez.[tblZerorezStandardAddressApi] 
 set  formatted_Address = '"15331 Woodside Ln, Minnetonka, MN 55345, USA"',
@@ -364,5 +369,36 @@ order by zip
 zip in('55112','55117','55126')
 select top 10 * from zerorez.zerorez_bcp
 
+select * from zerorez.zerorez_bcp
+--where izerorezid =36180
+where first_name = 'Dave & Deb & Don'
 
-select count(1) from zerorez.tblZeroRezDedupSummary_23Jan18 --82357
+select * from zerorez.tblZeroRezDedupSummary_23Jan18 --82357
+where FirstName like '%&%&%'--like '%and%' --'%Dave & Deb & Don%'
+
+select * from zerorez.tblZeroRezDedupSummary_23Jan18 --82357
+where FirstName like '%_-_%' --7126 --7201
+
+SELECT * FROM zerorez.tblZeroRezDedupSummary_23Jan18 where PATINDEX('%[^a-zA-Z0-9]%',FirstName) >2
+
+SELECT * FROM zerorez.tblZeroRezDedupSummary_23Jan18 WHERE FirstName LIKE '%[^0-9a-zA-Z]%' COLLATE Latin1_General_BIN
+
+select FirstName,ltrim(rtrim(FirstName)),len(FirstName),Len(ltrim(rtrim(FirstName))) from zerorez.tblZeroRezDedupSummary_23Jan18
+where firstname like '% or %'
+
+--FirstName like '%_-_%' gives FirstName containing name with '-'
+--FirstName like '%_ &_%' gives 7201 records where FirstName column contains & character with names
+--FirstName like '%_ and _%' gives FirstName containing name with 'and'
+--FirstName like '%_ or _%' gives FirstName containing name with 'or'
+DECLARE 
+	@messyfname VARCHAR(100) = 'Kim or Sam',
+	@cleanfname VARCHAR(100),
+	@cleanfname2 VARCHAR(100)
+
+SET @cleanfname = SUBSTRING(@messyfname,1,CHARINDEX('or',@messyfname)-1)
+SET @cleanfname2 = SUBSTRING(@messyfname,CHARINDEX('or',@messyfname)+2,LEN(@messyfname))
+PRINT @messyfname
+PRINT LTRIM(RTRIM(@cleanfname))
+PRINT LTRIM(RTRIM(@cleanfname2))
+
+ltrim(rtrim(substring_index(FirstName,'&',-1)))
