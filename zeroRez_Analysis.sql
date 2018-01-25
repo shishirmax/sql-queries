@@ -377,7 +377,7 @@ select * from zerorez.tblZeroRezDedupSummary_23Jan18 --82357
 where FirstName like '%&%&%'--like '%and%' --'%Dave & Deb & Don%'
 
 select * from zerorez.tblZeroRezDedupSummary_23Jan18 --82357
-where FirstName like '%_-_%' --7126 --7201
+where FirstName like '%/%' --7126 --7201
 
 SELECT * FROM zerorez.tblZeroRezDedupSummary_23Jan18 where PATINDEX('%[^a-zA-Z0-9]%',FirstName) >2
 
@@ -401,4 +401,31 @@ PRINT @messyfname
 PRINT LTRIM(RTRIM(@cleanfname))
 PRINT LTRIM(RTRIM(@cleanfname2))
 
-ltrim(rtrim(substring_index(FirstName,'&',-1)))
+DECLARE 
+	@messyfname VARCHAR(100) = 'Jana/ Linda/Norleen',
+	@cleanfname VARCHAR(100),
+	@cleanfname1 VARCHAR(100),
+	@cleanfname2 VARCHAR(100),
+	@cleanfname3 VARCHAR(100)
+	SELECT @cleanfname = 
+	CASE
+		WHEN @messyfname like '%/%'
+			THEN
+				@cleanfname1 = SUBSTRING(@messyfname,1,CHARINDEX('/',@messyfname)-1),
+				@cleanfname2 = SUBSTRING(@messyfname,CHARINDEX('/',@messyfname)+1,LEN(@messyfname))
+		WHEN @messyfname like '%/%/%'
+			THEN
+				@cleanfname1 = SUBSTRING(@messyfname,1,CHARINDEX('/',@messyfname)-1),
+				@cleanfname2 = SUBSTRING(@messyfname,CHARINDEX('/',@messyfname)+1,LEN(@messyfname)),
+				@cleanfname3 = SUBSTRING(@cleanfname2,CHARINDEX('/',@cleanfname2)+1,LEN(@cleanfname2))
+		ELSE @messyfname
+	END
+
+PRINT @messyfname
+PRINT LTRIM(RTRIM(@cleanfname))
+PRINT LTRIM(RTRIM(@cleanfname1))
+PRINT LTRIM(RTRIM(@cleanfname2))
+PRINT LTRIM(RTRIM(@cleanfname3))
+
+select SUBSTRING('Linda/Norleen',CHARINDEX('/','Linda/Norleen')+1,LEN('Linda/Norleen'))
+
