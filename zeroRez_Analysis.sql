@@ -343,3 +343,26 @@ in
 (select IZeroRezId from zerorez.tblZerorezStandardAddressApi(NOLOCK) where formatted_address = 'NA' )
 
 select * from zerorez.tblZeroRezDedupSummary where StandardAddress = 'NA'
+
+
+select top 10 *  from zerorez.tblZeroRezDedupSummary_23Jan18
+
+select count(distinct zip) from zerorez.tblZeroRezDedupSummary_23Jan18
+
+--State >> Zip >> City
+select zip,city,count(1) from zerorez.tblZeroRezDedupSummary_23Jan18
+group by Zip,City
+order by City
+
+SELECT city,cast(count(lifetimeTotal)as numeric) from zerorez.tblZeroRezDedupSummary_23Jan18
+group by city
+
+select  * from zerorez.tblZeroRezDedupSummary_23Jan18
+where City = 'Arden Hills'
+order by zip
+
+zip in('55112','55117','55126')
+select top 10 * from zerorez.zerorez_bcp
+
+
+select count(1) from zerorez.tblZeroRezDedupSummary_23Jan18 --82357
