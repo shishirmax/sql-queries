@@ -15,12 +15,12 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_01_23_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_01_24_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
 EXEC homeSpotter.usp_MergeHomeSpotter
-
+select @@TRANCOUNT
 
 SELECT COUNT(1) As DimAgent					FROM homeSpotter.DimAgent				(NOLOCK) 
 SELECT COUNT(1) As DimAgentSCD				FROM homeSpotter.DimAgent_SCD			(NOLOCK) 
@@ -41,6 +41,14 @@ SELECT COUNT(1) As tblHomeSpotter_bcp FROM homeSpotter.tblHomeSpotter_bcp(NOLOCK
 SELECT COUNT(1) As tblHomeSpotter_FF FROM homeSpotter.tblHomeSpotter_FF(NOLOCK)
 SELECT COUNT(1) As tblHomeSpotter_DT FROM homeSpotter.tblHomeSpotter_DT(NOLOCK)
 SELECT COUNT(1) As tblHomeSpotter_AE FROM homeSpotter.tblHomeSpotter_AE(NOLOCK)
+
+TRUNCATE TABLE  homeSpotter.tblHomeSpotter_bcp
+TRUNCATE TABLE  homeSpotter.tblHomeSpotter_FF
+TRUNCATE TABLE  homeSpotter.tblHomeSpotter_DT
+SELECT TOP 10 * FROM homeSpotter.tblHomeSpotter_bcp order by ModifiedDate desc
+
+delete from homeSpotter.tblHomeSpotter_bcp
+where [user_id] = 'user_id'
 
 SELECT * FROM  homeSpotter.tblHomeSpotter_AE
 where DAY(modifieddate) = 28
@@ -69,6 +77,7 @@ from homeSpotter.DimSession
 group by CAST(SessionnStart AS DATE)
 order by CAST(SessionnStart AS DATE)
 
+TRUNCATE TABLE homeSpotter.tblHomeSpotter_bcp
 
 --TRUNCATE TABLE   homeSpotter.DimAgent 
 --TRUNCATE TABLE   homeSpotter.DimDevice
@@ -134,3 +143,8 @@ GO
 select DISTINCT DESCRIPTION from t
 'Implemantion of the CR systems at dealership level for understanding of the customer concern & faster resolution'
 'Trend analysis for Customer Complaint Ratio at Regional / Zonal / Area level both for Sales and Service operations'
+
+SELECT @@TRANCOUNt
+Rollback
+
+sp_who
