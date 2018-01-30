@@ -379,7 +379,16 @@ where FirstName like '%&%&%'--like '%and%' --'%Dave & Deb & Don%'
 select * from zerorez.tblZeroRezDedupSummary_23Jan18 --82357
 where FirstName like '%/%' --7126 --7201
 
-SELECT * FROM zerorez.tblZeroRezDedupSummary_23Jan18 where PATINDEX('%[^a-zA-Z0-9]%',FirstName) >2
+SELECT * FROM zerorez.tblZeroRezDedupSummary_23Jan18 where PATINDEX('%[^a-zA-Z0-9]%',LastName) >1
+
+select * from zerorez.tblZeroRezDedupSummary_23Jan18
+where LastName like '%[^0-9a-zA-Z ]%'
+
+select * from zerorez.tblZeroRezDedupSummary_23Jan18
+where LastName like '%?%'
+
+select * from zerorez.tblZeroRezDedupSummary_23Jan18
+where FirstName like '%?%'
 
 SELECT * FROM zerorez.tblZeroRezDedupSummary_23Jan18 WHERE FirstName LIKE '%[^0-9a-zA-Z]%' COLLATE Latin1_General_BIN
 
