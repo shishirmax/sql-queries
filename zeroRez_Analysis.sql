@@ -438,3 +438,5 @@ PRINT LTRIM(RTRIM(@cleanfname3))
 
 select SUBSTRING('Linda/Norleen',CHARINDEX('/','Linda/Norleen')+1,LEN('Linda/Norleen'))
 
+select top 10 * from [ZeroRez].[tblZerorezStandardAddressApi]
+order by IzeroRezId
