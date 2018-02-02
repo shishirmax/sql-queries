@@ -33,7 +33,7 @@ SELECT COUNT(1) As FactHomeSpotterSummary	FROM homeSpotter.FactHomeSpotterSummar
 /*
 |DimAgent|DimAgentSCD|DimDevice	|DimSession		|DimUser|FactHomeSpotter	|FactHomeSpotterSummary	|
 |--------|-----------|----------|---------------|-------|-------------------|-----------------------|
-|2111	 |2190		 |56627		|1365922		|14116	|1338687			|16430					|
+|2113	 |2193		 |57338		|1414971		|14171	|1387736			|16496					|
 
 */
 
@@ -148,3 +148,12 @@ SELECT @@TRANCOUNt
 Rollback
 
 sp_who
+
+--zerorez
+select * from [ZeroRez].[FactZeroRezDedupData] 
+where 
+	EmailGroupId				IS NULL
+or	PhoneGroupId				IS NULL
+or	ClientTagGroupId			IS NULL
+or	NetPromoterLabelsGroupID	IS NULL
+or	ProductGroupId				IS NULL
