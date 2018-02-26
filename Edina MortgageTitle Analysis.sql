@@ -116,9 +116,35 @@ select count(1),CAST(NULLIF(closingStart,'NULL') As DATETIME) As ClosingStart,CA
 group by CAST(NULLIF(closingStart,'NULL') As DATETIME),CAST(NULLIF(closingEnd,'NULL') As DATETIME)
 order by 1 desc
 
-propertyAddress
-propertyCity
-propertyState
+select count(distinct propertyAddress) from Edina.tblEdinaTitle_FF --148334
+select count(1) from Edina.tblEdinaTitle_FF
+where propertyAddress = ''
+
+select count(1)As RecCount,propertyAddress from Edina.tblEdinaTitle_FF
+where PATINDEX('%[^a-zA-Z0-9]%',propertyAddress) <1
+group by propertyAddress
+having count(1)>1
+order by 1 desc
+
+select count(distinct propertyCity) from Edina.tblEdinaTitle_FF --1965
+select count(1) from Edina.tblEdinaTitle_FF
+where propertyCity IS NULL
+
+select count(1)As RecCount,propertyCity from Edina.tblEdinaTitle_FF
+group by propertyCity
+having count(1)>1
+order by 2
+
+
+select count(distinct propertyState) from Edina.tblEdinaTitle_FF--37
+select count(1) from Edina.tblEdinaTitle_FF
+where propertyState IS NULL
+
+select count(1)As RecCount,propertyState from Edina.tblEdinaTitle_FF
+group by propertyState
+having count(1)>1
+order by 2
+
 propertyZip
 buyer
 seller

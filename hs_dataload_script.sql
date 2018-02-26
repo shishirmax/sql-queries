@@ -15,7 +15,7 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_01_30_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_02_24_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
@@ -65,12 +65,20 @@ where  LEN(DeviceId) = 14
 SELECT COUNT(DISTINCT IpAddress),COUNT(IpAddress),count(1) FROM homeSpotter.DimSession
 WHERE ModifiedDate IS NOT NULL
 
-SELECT TOP 10 * FROM homeSpotter.DimUser
+SELECT count(distinct [User]) FROM homeSpotter.DimUser
+
+select top 100 * FROM homeSpotter.DimUser
+order by 1
+where [User] = 'a.greenheck@gmail.com'
+
+select count(1) from homeSpotter.DimSession
+where createdby = 8
 
 
 select TOP 10 * from homeSpotter.tblHomeSpotter_DT
 
-select TOP 10 * FROM homeSpotter.FactHomeSpotter
+select * FROM homeSpotter.FactHomeSpotter
+where IHomeSpotterId = 3962
 
 SELECT COUNT(1) TotalRecords, CAST(SessionnStart As DATE) As Dates
 from homeSpotter.DimSession
