@@ -44,8 +44,13 @@ order by ModifiedDate desc
 -- ON P.Email   = U.[User]
 --WHERE P.Email IS NULL
 
-select count(HomeSpotterPersonId) from [dbo].[DimPerson]
+select * 
+into #tempPerson
+from [dbo].[DimPerson]
 where HomeSpotterPersonId is not null
+
+select * from #tempPerson
 
 select * from [dbo].[DimPerson]
 where CAST(ModifiedDate As DATE) = '2018-02-26' --14198
+
