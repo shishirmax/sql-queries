@@ -65,7 +65,7 @@ where  LEN(DeviceId) = 14
 SELECT COUNT(DISTINCT IpAddress),COUNT(IpAddress),count(1) FROM homeSpotter.DimSession
 WHERE ModifiedDate IS NOT NULL
 
-SELECT count(distinct [User]) FROM homeSpotter.DimUser
+SELECT count(1) FROM homeSpotter.DimUser
 
 select top 100 * FROM homeSpotter.DimUser
 order by 1
