@@ -10,6 +10,17 @@ where email is not null --5651
 select count(distinct Email) from [dbo].[tblEdinaWebsiteData_DT]
 where Email is not null --57868
 
+select
+A.HomeSpotterId
+,A.[user]
+,B.Email 
+,B.FirstName
+,B.LastName
+from tblHomeSpotter_DT_BAK A
+inner join tblEdinaWebsiteData_DT B
+on A.[user] = B.Email
+where A.[user] is not null
+
 select count(distinct BuyerEmail) from [dbo].[tblEdinaSales_DT]
 where BuyerEmail is not null --60152
 
