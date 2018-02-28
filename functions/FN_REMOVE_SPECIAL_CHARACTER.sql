@@ -1,0 +1,39 @@
+/****** Object:  UserDefinedFunction [dbo].[FN_REMOVE_SPECIAL_CHARACTER]    Script Date: 2/28/2018 5:43:06 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE FUNCTION [dbo].[FN_REMOVE_SPECIAL_CHARACTER] (    
+ @INPUT_STRING varchar(300))  
+RETURNS VARCHAR(300)  
+AS   
+BEGIN  
+   
+
+DECLARE @NEWSTRING VARCHAR(100)   
+SET @NEWSTRING = @INPUT_STRING ;   
+With SPECIAL_CHARACTER as  
+(  
+SELECT '(' as item  
+UNION ALL   
+SELECT ')' as item  
+UNION ALL   
+SELECT '-' as item  
+UNION ALL   
+SELECT ' ' as item  
+UNION ALL   
+SELECT '+1' as item  
+UNION ALL   
+SELECT '.' as item  
+UNION ALL   
+SELECT ':' as item  
+   
+ )  
+SELECT @NEWSTRING = Replace(@NEWSTRING, ITEM, '') FROM SPECIAL_CHARACTER    
+return @NEWSTRING   
+END
+GO
+
