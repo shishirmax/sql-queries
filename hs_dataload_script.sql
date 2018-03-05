@@ -15,7 +15,7 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_02_25_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 20000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_03_03_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
@@ -33,7 +33,7 @@ SELECT COUNT(1) As FactHomeSpotterSummary	FROM homeSpotter.FactHomeSpotterSummar
 /*
 |DimAgent|DimAgentSCD|DimDevice	|DimSession		|DimUser|FactHomeSpotter	|FactHomeSpotterSummary	|
 |--------|-----------|----------|---------------|-------|-------------------|-----------------------|
-|2113	 |2193		 |57338		|1414971		|14171	|1387736			|16496					|
+|2156	 |2245		 |68288		|2317338		|14837	|2290109			|17312					|
 
 */
 
@@ -65,11 +65,19 @@ where  LEN(DeviceId) = 14
 SELECT COUNT(DISTINCT IpAddress),COUNT(IpAddress),count(1) FROM homeSpotter.DimSession
 WHERE ModifiedDate IS NOT NULL
 
-SELECT count(1) FROM homeSpotter.DimUser
+SELECT * FROM homeSpotter.DimUser
+order by 3
+
+select count(1), cast(createddate as date)
+from homespotter.DimUser
+group by cast(createddate as date)
+order by cast(createddate as date)
 
 select top 100 * FROM homeSpotter.DimUser
 order by 1
-where [User] = 'a.greenheck@gmail.com'
+
+select * FROM homeSpotter.DimUser
+where [User] = '09hannahanderson09@gmail.com'
 
 select count(1) from homeSpotter.DimSession
 where createdby = 8

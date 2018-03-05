@@ -20,6 +20,9 @@ WHERE FirstName LIKE '%[0-9]%'
 OR
 LastName LIKE '%[0-9]%'
 
+SELECT * FROM [ZeroRez].[DimClient] 
+WHERE FirstName LIKE '%"%' or LastName LIKE '%"%'
+
 DECLARE @str VARCHAR(400)
 DECLARE @expres  VARCHAR(50) = '%[0-9]%'
 SET @str = 'Hoang Van-63'
@@ -34,3 +37,11 @@ select top 10 * from ZeroRez.ZeroRez_bcp
 select replace('Hoang Van-63',substring('Hoang Van-63',PATINDEX('%[0-9]%','Hoang Van-63'),1),'')
 
 SELECT REPLACE('Cindy A2')
+
+select * from [dbo].[LogError]
+select * from [dbo].[LogTaskControlFlow]
+order by 2 desc
+
+DECLARE @txt VARCHAR(100)
+SET @txt = 'Julie A1'
+SELECT REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@txt,'0',''),'1',''),'2',''),'3',''),'4',''),'5',''),'6',''),'7',''),'8',''),'9','')
