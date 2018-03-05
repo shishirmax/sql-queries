@@ -29,5 +29,8 @@ SELECT @str
 
 select REPLACE(REPLACE('Mary @ Dan','@',''),'  ',' ')
 
-select top 10 * from ZeroRez.ZeroRez_bcp  
+select top 10 * from ZeroRez.ZeroRez_bcp 
 
+select replace('Hoang Van-63',substring('Hoang Van-63',PATINDEX('%[0-9]%','Hoang Van-63'),1),'')
+
+SELECT REPLACE('Cindy A2')
