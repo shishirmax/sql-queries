@@ -16,9 +16,9 @@ Characters Found
 */
 
 SELECT * FROM [ZeroRez].[DimClient] 
-WHERE FirstName LIKE '%[0-9.~!@#$%^*]%'
+WHERE FirstName LIKE '%[0-9]%'
 OR
-LastName LIKE '%[0-9.~!@#$%^*]%'
+LastName LIKE '%[0-9]%'
 
 SELECT * FROM [ZeroRez].[DimClient] 
 WHERE FirstName LIKE '%"%' or LastName LIKE '%"%'
@@ -45,3 +45,21 @@ order by 2 desc
 DECLARE @txt VARCHAR(100)
 SET @txt = 'Ann M. & Jim'
 SELECT REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@txt,'.',''),'"',''),'0',''),'1',''),'2',''),'3',''),'4',''),'5',''),'6',''),'7',''),'8',''),'9','')
+
+
+--ERA-132
+select * from [ZeroRez].[FactZeroRezDedupData] where EmailGroupId is NULL 
+or EmailGroupId =''
+
+--ERA-133
+select * from [ZeroRez].[FactZeroRezDedupData] where PhoneGroupId is NULL 
+or PhoneGroupId =''
+
+select abs(checksum(NewId()) % 10)
+
+select CAST(RAND(CHECKSUM(NEWID())) * 10  as INT)
+
+select RAND(convert(varbinary, newid())) magic_number 
+
+SELECT table_name, 1.0 + floor(14 * RAND(convert(varbinary, newid()))) magic_number 
+FROM information_schema.tables
