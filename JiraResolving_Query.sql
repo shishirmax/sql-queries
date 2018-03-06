@@ -16,9 +16,9 @@ Characters Found
 */
 
 SELECT * FROM [ZeroRez].[DimClient] 
-WHERE FirstName LIKE '%[0-9]%'
+WHERE FirstName LIKE '%[0-9.~!@#$%^*]%'
 OR
-LastName LIKE '%[0-9]%'
+LastName LIKE '%[0-9.~!@#$%^*]%'
 
 SELECT * FROM [ZeroRez].[DimClient] 
 WHERE FirstName LIKE '%"%' or LastName LIKE '%"%'
@@ -43,5 +43,5 @@ select * from [dbo].[LogTaskControlFlow]
 order by 2 desc
 
 DECLARE @txt VARCHAR(100)
-SET @txt = 'Julie A1'
-SELECT REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@txt,'0',''),'1',''),'2',''),'3',''),'4',''),'5',''),'6',''),'7',''),'8',''),'9','')
+SET @txt = 'Ann M. & Jim'
+SELECT REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(@txt,'.',''),'"',''),'0',''),'1',''),'2',''),'3',''),'4',''),'5',''),'6',''),'7',''),'8',''),'9','')
