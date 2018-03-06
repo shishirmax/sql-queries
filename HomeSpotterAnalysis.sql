@@ -90,10 +90,14 @@ order by  [user]
 select * from #tempcount
 drop table #tempcount
 
-select * from tblHomeSpotter_DT_BAK
-where [user] = '09hannahanderson09@gmail.com'
+select * from tblHomeSpotter_DT_BAK 
+where [user] = 'pols0036@gmail.com'
 
-select top 10 * from tblHomeSpotter_DT_BAK
+select top 100 * from tblHomeSpotter_DT_BAK
+where 
+[user] is not null
+and hs_agent_id is not null
+order by newid()
 order by ModifiedDate desc
 
 select distinct [user] from tblHomeSpotter_DT_BAK
