@@ -63,3 +63,17 @@ select RAND(convert(varbinary, newid())) magic_number
 
 SELECT table_name, 1.0 + floor(14 * RAND(convert(varbinary, newid()))) magic_number 
 FROM information_schema.tables
+
+set nocount on;
+
+if object_id('dbo.Tally') is not null drop table dbo.tally
+go
+
+select top 10 identity(int,1,1) as ID
+into dbo.Tally from SysColumns
+
+alter table dbo.Tally
+add constraint PK_ID primary key clustered(ID)
+go
+
+select * from dbo.Tally
