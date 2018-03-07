@@ -90,3 +90,14 @@ DECLARE @N INT
         --==== Increment the counter
            SET @N = @N + 1
     END
+
+--###################################################################################################
+
+--===============================================
+--      Display the count from 1 to 10
+--      using a Tally table.
+--===============================================
+ SELECT N
+   FROM dbo.Tally
+  WHERE N <= 10
+  ORDER BY N

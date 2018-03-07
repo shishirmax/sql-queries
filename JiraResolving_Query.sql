@@ -77,3 +77,56 @@ add constraint PK_ID primary key clustered(ID)
 go
 
 select * from dbo.Tally
+
+select top 10 * FROM SysColumns
+
+--ERA 231
+select count(1),
+OrderNumber,
+ClosingStart,
+ClosingEnd,
+AddressId,
+BuyerAccountID,
+SellerAccountID,
+OwnersPolicySold,
+SellingAgentCodeID,
+ListingAgentCodeID,
+GrossCommision,
+LastModifiedOn from edina.facttitle
+group by
+OrderNumber,
+ClosingStart,
+ClosingEnd,
+AddressId,
+BuyerAccountID,
+SellerAccountID,
+OwnersPolicySold,
+SellingAgentCodeID,
+ListingAgentCodeID,
+GrossCommision,
+LastModifiedOn 
+having count(1)>1 
+
+--ERA 229
+select TOP 100 * from edina.facttitle 
+where 
+ITitleID is null
+or OrderNumber	is null
+or ClosingStart	is null
+or ClosingEnd	is null
+or AddressId	is null
+or BuyerAccountID	is null
+or SellerAccountID	is null
+or OwnersPolicySold	is null
+or SellingAgentCodeID	is null
+or ListingAgentCodeID	is null
+or GrossCommision	is null
+or LastModifiedOn	is null
+
+select * from Edina.tblEdinaTitle_DT
+
+select * from Edina.DimOrderNumber
+select * from DimDate
+
+
+--bcp "select * from lubetech.tblFileImport" queryout D:\Edina\lubetechData.csv -S tcp:contata.database.windows.net -d Edina_dev -U contata.admin@contata -P C@ntata123 -q -c -t"|"
