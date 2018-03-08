@@ -80,6 +80,7 @@ select * from dbo.Tally
 
 select top 10 * FROM SysColumns
 
+
 --ERA 231
 select count(1),
 OrderNumber,
@@ -108,20 +109,169 @@ LastModifiedOn
 having count(1)>1 
 
 --ERA 229
-select TOP 100 * from edina.facttitle 
+select TOP 100 * from Edina.FactTitle 
 where 
-ITitleID is null
-or OrderNumber	is null
-or ClosingStart	is null
-or ClosingEnd	is null
-or AddressId	is null
-or BuyerAccountID	is null
-or SellerAccountID	is null
-or OwnersPolicySold	is null
-or SellingAgentCodeID	is null
-or ListingAgentCodeID	is null
-or GrossCommision	is null
-or LastModifiedOn	is null
+		ClosingStart	is null --Will Get Fixed as soon older dated will be uploaded in DimDate table
+and		ClosingEnd		is null --Will Get Fixed as soon older dated will be uploaded in DimDate table
+and		BuyerAccountID	is null
+and		SellerAccountID	is null
+
+SELECT COUNT(1) FROM Edina.FactTitle
+WHERE BuyerAccountID IS NULL --6354
+
+SELECT COUNT(1) FROM Edina.FactTitle
+WHERE SellerAccountID IS NULL --43145
+
+Usp_EdinaMergeFact
+Usp_EdinaMergeFactSales
+Usp_MergeTitleFact
+
+
+ SELECT T.OrderNumber as OrderNumberID  
+  ,T.OwnersPolicySold as OwnerPolicySoldID  
+  ,DT.ITitleID  
+  ,DT.orderNumber  
+  ,DT.propertyAddress  
+  ,DT.propertyCity  
+  ,DT.propertyState  
+  ,DT.propertyZip  
+  ,DT.buyer  
+  ,DT.seller  
+  ,DT.ownersPolicySold  
+  ,DT.sellingAgentCode  
+  ,DT.listingAgentCode  
+  INTO #TempTable  
+  FROM Edina.FactTitle T  
+  INNER JOIN Edina.DimOrderNumber DO ON DO.IOrderNumberID=T.OrderNumber  
+  INNER JOIN Edina.DimPolicySold PD ON PD.IPolicySoldId=T.OwnersPolicySold  
+  INNER JOIN Edina.[tblEdinaTitle_DT] DT     
+   ON  ISNULL(DT.OrderNumber,'')  = DO.OrderNumber  
+   AND ISNULL(DT.ownersPolicySold,'') = PD.PolicySold 
+
+DROP TABLE #TempTable
+select * from #TempTable
+
+
+select * from Edina.[tblEdinaTitle_DT]
+
+--UPDATE T SET BuyerAccountID=AccountID --(166235 rows affected) ON Updating BuyerAccountID
+SELECT COUNT(1),DA.AccountID,DT.ITitleID,DT.OrderNumberID,DT.OwnerPolicySoldID,T.OrderNumber,T.OwnersPolicySold,DA.PersonRoleId
+  FROM Edina.FactTitle T  
+	INNER JOIN #TempTable DT  
+		ON DT.OrderNumberID=T.OrderNumber  
+		AND DT.OwnerPolicySoldID=T.OwnersPolicySold  
+	INNER JOIN Edina.DimAccount DA    
+		ON DA.AccountId=DT.ITitleID  
+		AND DA.PersonRoleId=4
+	GROUP BY DA.AccountID,DT.ITitleID,DT.OrderNumberID,DT.OwnerPolicySoldID,T.OrderNumber,T.OwnersPolicySold,DA.PersonRoleId
+	HAVING COUNT(1)>1
+  -- WHERE DA.AccountId IS NULL
+		--OR DT.ITitleID IS NULL
+
+SELECT COUNT(1)
+FROM #TempTable
+WHERE ITitleID IS NULL
+
+   UPDATE T SET SellerAccountID=AccountID  --(129444 rows affected) On Updating SellerAccountID
+  FROM Edina.FactTitle T  
+  INNER JOIN #TempTable DT   
+   ON DT .OrderNumberID=T.OrderNumber  
+   AND DT .OwnerPolicySoldID=T.OwnersPolicySold  
+  INNER JOIN Edina.DimAccount DA    
+   ON DA.AccountId=DT.ITitleID  
+   AND DA.PersonRoleId=5  
+
+
+SELECT TOP 10 * FROM Edina.DimAccount
+
+SELECT    
+  DO.IOrderNumberID as IOrderNumber ,      
+  DD.DateId,      
+  DD2.DateId,      
+  PD.IPolicySoldId,   
+  DT.grossCommission ,   
+  DD3.DateId,  
+  GETDATE(),  
+  @logTaskId  
+  FROM Edina.[tblEdinaTitle_DT] DT      
+  INNER JOIN Edina.DimOrderNumber DO ON DO.OrderNumber=ISNULL(DT.OrderNumber,'')  
+  INNER JOIN Edina.DimPolicySold PD ON PD.PolicySold=ISNULL(DT.ownersPolicySold,'')  
+  LEFT JOIN DimDate DD ON DD.Date=ISNULL(CAST(DT.ClosingStart AS DATE),'1990-01-01')  
+  LEFT JOIN DimDate DD2 ON DD2.Date=ISNULL(CAST(DT.ClosingEnd AS DATE),'1990-01-01')  
+  LEFT JOIN DimDate DD3 ON DD3.Date=ISNULL(CAST(DT.LastModifiedOn AS DATE),'1990-01-01')  
+  LEFT JOIN Edina.FactTitle T   
+  ON DO.IOrderNumberID=T.OrderNumber      
+  AND PD.IPolicySoldId=T.OwnersPolicySold  
+  WHERE T.ITitleID IS NULL
+
+SELECT DD.Date,DT.ClosingStart,DateId FROM 
+Edina.[tblEdinaTitle_DT] DT 
+LEFT JOIN DimDate DD ON DD.Date=ISNULL(CAST(DT.ClosingStart AS DATE),'1990-01-01') 
+WHERE DateId IS NULL
+
+
+
+SELECT * FROM DimDate
+WHERE DateId IS NULL
+
+
+----Title
+--1. Load from flat file to FF
+EXEC [Edina].[usp_LoadFlatToFF] '/sourceedinasales/Title-updated2015.csv','Title-updated2015.csv',  9999
+EXEC [Edina].[usp_LoadFlatToFF] '/sourceedinasales/Title-updated2016.csv','Title-updated2016.csv',  9999
+EXEC [Edina].[usp_LoadFlatToFF] '/sourceedinasales/Title-updated2017.csv','Title-updated2017.csv',  9999
+
+--2. Cleanup of data
+EXEC [Edina].[usp_CleanTitleRules]
+EXEC [dbo].[usp_getDataTypeErrors] 'Edina','tblEdinaTitle_DT','tblEdinaTitle_FF'
+
+--3. Load data to DT Tables
+EXEC [Edina].[usp_LoadEdinaToDT] 9999
+
+--4. Load One time data
+EXEC [Edina].[OneTimeDataLoad]
+--5. load Dimensions
+[Edina].[Usp_MergeTitleData]
+--6. Load Fact
+EXEC [Edina].[Usp_MergeTitleFact]
+
+
+
+	DROP EXTERNAL DATA SOURCE contata 
+	CREATE EXTERNAL DATA SOURCE contata        
+	WITH ( TYPE = BLOB_STORAGE, LOCATION = 'https://contata.blob.core.windows.net/sourceedinasales')
+
+
+	--BULK INSERT  lubetech.tbl_StPaulFinalBCP FROM 'St Paul - Final.CSV' 
+	--WITH (DATA_SOURCE = 'contata', FORMAT = 'CSV', FIELDTERMINATOR  = ',',FIRSTROW = 2, ROWTERMINATOR = '\n'); 
+
+	BULK INSERT  lubetech.tbl_Final421BCP FROM 'Final - 421.csv' 
+	WITH (DATA_SOURCE = 'contata', FORMAT = 'CSV', FIELDTERMINATOR  = ',',FIRSTROW = 2, ROWTERMINATOR = '\n'); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 select * from Edina.tblEdinaTitle_DT
 
