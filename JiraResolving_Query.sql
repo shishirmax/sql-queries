@@ -248,31 +248,6 @@ EXEC [Edina].[Usp_MergeTitleFact]
 	BULK INSERT  lubetech.tbl_Final421BCP FROM 'Final - 421.csv' 
 	WITH (DATA_SOURCE = 'contata', FORMAT = 'CSV', FIELDTERMINATOR  = ',',FIRSTROW = 2, ROWTERMINATOR = '\n'); 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 select * from Edina.tblEdinaTitle_DT
 
 select * from Edina.DimOrderNumber
@@ -280,3 +255,52 @@ select * from DimDate
 
 
 --bcp "select * from lubetech.tblFileImport" queryout D:\Edina\lubetechData.csv -S tcp:contata.database.windows.net -d Edina_dev -U contata.admin@contata -P C@ntata123 -q -c -t"|"
+
+
+--ERA-150 
+--Data is getting inserted into Edina.DimAddress table through Usp_MergeMortgage SP
+--RTRIM and LTRIM hass been added to the column for removing the Leading and Trailing Spaces, If Data will be uploaded again, all Issue with the leading and trailing spaces will get resolved.
+select * from [Edina].[DimAddress] 
+where --AddressLine1 like ' %'
+City like '% '
+
+select * from [Edina].[DimAddress] 
+where State LIKE '% '
+
+update [Edina].[DimAddress] set StandardAddress = LTRIM(RTRIM(StandardAddress))
+AddressLine1
+AddressLine2
+City
+State
+Zip
+OriginalAddress
+StandardAddress
+
+select count(1) from [Edina].[DimAddress] --239757
+
+select TOP 100 * from [Edina].[DimAddress] 
+where datalength(City) <> 0 --check if a SQL Server text column is empty
+
+select * from [Edina].[DimAddress] 
+where StandardAddress = 'NA' --2546
+
+
+
+/*
+Edina.DimAddress Dependencies
+1. Usp_EdinaMergeFact
+2. usp_MergeEdinaPropertyToDW
+3. Usp_MergeMortgage
+4. Usp_MergeMortgageFact
+5. Usp_MergeSalesData
+6. Usp_MergeSalesFact
+7. Usp_MergeTitleData
+8. Usp_MergeTitleFact
+*/
+
+SELECT RTRIM(LTRIM('Waseca '))
+'Waseca'
+'mn'
+'Blaine '
+
+'3925 200th St E,Farmington ,MN,55024'
