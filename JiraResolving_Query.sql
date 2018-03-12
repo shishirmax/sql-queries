@@ -304,3 +304,78 @@ SELECT RTRIM(LTRIM('Waseca '))
 'Blaine '
 
 '3925 200th St E,Farmington ,MN,55024'
+
+--ERA-200
+/*
+Dependencies of SP on Edina.DimPerson table
+1. Usp_MergeCampaignFact
+2. usp_MergeEdinaToDW
+3. Usp_MergeEmailData
+4. Usp_MergeMortgage
+5. Usp_MergeSalesData
+6. Usp_MergeSalesFact
+7. Usp_MergeTitleData
+8. Usp_MergeWebsiteData
+9. Usp_MergeWebsiteFact
+*/
+Select * from edina.DimPerson where SUBSTRING (Email,CHARINDEX('@', Email)+1,Len(Email)) like '%..%'
+
+
+/*
+cheryl@spacetables..com
+snickers94@yahoo..com
+eklone@gmail..com
+shfranko@usfamily..net
+bartoncherri@yaho..com
+
+These emails getting inserted through Edina.tblEdinaSales_DT table
+*/
+
+
+select top 10 * from Edina.DimPerson
+where datalength(Email) <> 0 
+
+select count(1),Email
+from Edina.DimPerson
+group by Email
+
+select * from Edina.tblEdinaEmailResults_DT
+where Email = 'cheryl@spacetables..com'
+
+select top 10 * from Edina.tblPerson_DT
+
+select * from Edina.tblEdinaSales_DT
+where BuyerEmail IN
+(
+'cheryl@spacetables..com'
+,'snickers94@yahoo..com'
+,'eklone@gmail..com'
+,'shfranko@usfamily..net'
+,'bartoncherri@yaho..com'
+)
+
+select * from Edina.tblEdinaSales_DT
+where
+SUBSTRING (BuyerEmail,CHARINDEX('@', BuyerEmail)+1,Len(BuyerEmail)) like '%..%'
+
+select * from Edina.tblEdinaSales_DT
+WHERE ISNULL(BuyerEmail, '') <> ''     
+     AND     
+     (    
+      CHARINDEX(' ', LTRIM(RTRIM(BuyerEmail)))  <> 0 OR    
+      CHARINDEX('/', LTRIM(RTRIM(BuyerEmail)))  <> 0 OR    
+      CHARINDEX(':', LTRIM(RTRIM(BuyerEmail)))  <> 0 OR    
+      CHARINDEX(';', LTRIM(RTRIM(BuyerEmail)))  <> 0 OR    
+      (LEN(LTRIM(RTRIM(BuyerEmail)))-1 <= CHARINDEX('.', LTRIM(RTRIM(BuyerEmail)))) OR    
+      (LTRIM(RTRIM(BuyerEmail)) like '%@%@%')OR     
+      (LTRIM(RTRIM(BuyerEmail)) Not Like '_%@_%.__%')OR
+	  SUBSTRING (LTRIM(RTRIM(BuyerEmail)),CHARINDEX('@', LTRIM(RTRIM(BuyerEmail)))+1,Len(LTRIM(RTRIM(BuyerEmail)))) like '%..%'    
+     )
+
+select * from Edina.tblEdinaSales_DT
+--where CHARINDEX(' ', LTRIM(RTRIM(BuyerEmail)))  <> 0
+where BuyerEmail = 'Lucke, Steve [Lucke.Steve@dorsey.com]'
+
+'nick_ehalt@hotmail.com 
+j_leier@hotmail.com '
+'pshane@ faegre.com'

@@ -15,11 +15,13 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_03_07_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_03_10_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
 EXEC homeSpotter.usp_MergeHomeSpotter
+
+
 select @@TRANCOUNT
 
 SELECT COUNT(1) As DimAgent					FROM homeSpotter.DimAgent				(NOLOCK) 
@@ -91,6 +93,7 @@ select TOP 10 * from homeSpotter.tblHomeSpotter_DT
 select * FROM homeSpotter.FactHomeSpotter
 where IHomeSpotterId = 3962
 
+--DAILY SESSION COUNT
 SELECT COUNT(1) TotalRecords, CAST(SessionnStart As DATE) As Dates
 from homeSpotter.DimSession
 group by CAST(SessionnStart AS DATE)
