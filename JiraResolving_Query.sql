@@ -374,8 +374,18 @@ WHERE ISNULL(BuyerEmail, '') <> ''
 
 select * from Edina.tblEdinaSales_DT
 --where CHARINDEX(' ', LTRIM(RTRIM(BuyerEmail)))  <> 0
-where BuyerEmail = 'Lucke, Steve [Lucke.Steve@dorsey.com]'
+where BuyerEmail = '+16514103796@tmomail.net'
 
+
+select top 10 * from Edina.tblEdinaSales_AE
+|Invalid Zip provided
 'nick_ehalt@hotmail.com 
 j_leier@hotmail.com '
 'pshane@ faegre.com'
+
+
+--ERA-202
+select * from [dbo].[tblHomeSpotter_DT_BAK]
+where [user] = 'brian+tester@homespotter.com'
+
+ select * from edina.DimPerson where Email like '%[#!$&*?+/\;:]%' 
