@@ -389,3 +389,25 @@ select * from [dbo].[tblHomeSpotter_DT_BAK]
 where [user] = 'brian+tester@homespotter.com'
 
  select * from edina.DimPerson where Email like '%[#!$&*?+/\;:]%' 
+
+--ERA-196
+
+select * from edina.DimPerson where FirstName like '%[0-9#@$*?]%' 
+
+select * from edina.DimPerson	where LastName like '%[0-9#@$*?]%'
+
+select * from edina.DimPerson	where MiddleName like '%[0-9#@$*?]%' 
+
+select * from edina.DimPerson 
+where LastName like '%[0-9]%'
+
+select * from edina.DimPerson 
+where FirstName like '%[#@$*?.]%'
+
+select * from edina.DimPerson 
+where MiddleName like '%[0-9]%'
+
+select * from [Edina].[tblPerson_DT]
+where LastName like '%[0-9#@$*?]%'
+
+--e.g: LastName Data: 'Cliffe and Charles M Cliffe II Trustees of the Elizabeth G Cliffe Trust Created Under Agreement Dated August 9 2011 and their succ','Cliffe and Charles M Cliffe II Trustees of the Elizabeth G Cliffe Trust Created Under Agreement Dated August 9 2011 and their succ'
