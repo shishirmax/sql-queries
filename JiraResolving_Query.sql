@@ -391,6 +391,8 @@ where [user] = 'brian+tester@homespotter.com'
  select * from edina.DimPerson where Email like '%[#!$&*?+/\;:]%' 
 
 --ERA-196
+--[Edina].[tblEdinaSales_DT]
+--[Edina].[tblPerson_DT]
 
 select * from edina.DimPerson where FirstName like '%[0-9#@$*?]%' 
 
@@ -407,7 +409,13 @@ where FirstName like '%[#@$*?.]%'
 select * from edina.DimPerson 
 where MiddleName like '%[0-9]%'
 
-select * from [Edina].[tblPerson_DT]
-where LastName like '%[0-9#@$*?]%'
+select * from [Edina].[tblEdinaSales_DT]
+where Last like '%[0-9#@$*?]%'
 
 --e.g: LastName Data: 'Cliffe and Charles M Cliffe II Trustees of the Elizabeth G Cliffe Trust Created Under Agreement Dated August 9 2011 and their succ','Cliffe and Charles M Cliffe II Trustees of the Elizabeth G Cliffe Trust Created Under Agreement Dated August 9 2011 and their succ'
+
+-- ERA-273 Task Check
+
+SELECT DISTINCT FileDate FROM ecrv.tblXMlImport_DT where EOMONTH(fileDate) > = '2017-05-31' order by 1
+
+SELECT FileDate, COUNT(1) FileCount FROM ecrv.tblXMlImport_DT where EOMONTH(fileDate) > = '2017-05-31' group by FileDate order by 1
