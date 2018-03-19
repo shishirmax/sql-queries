@@ -11,18 +11,45 @@ select count(distinct Email) from [dbo].[tblEdinaWebsiteData_DT]
 where Email is not null --57868
 
 select
-A.HomeSpotterId
+--count(1)
+--*
+A.IUserId
 ,A.[user]
 ,B.Email 
 ,B.FirstName
 ,B.LastName
-from tblHomeSpotter_DT_BAK A
-inner join tblEdinaWebsiteData_DT B
-on A.[user] = B.Email
-where A.[user] is not null
+,row_number() over(partition by IUserId order by IUserId) as rn
+INTO #tempHomeSpotterEdinaWebsite
+from homeSpotter.DimUser(NOLOCK) A
+inner join tblEdinaWebsiteData_DT(NOLOCK) B
+on A.[user] = B.Email --381316 matched count records with HomeSpotter User(Email) to EdinaWebsiteData Email.
+--where A.[user] is not null
+
+select count(distinct IUserId ) from #tempHomeSpotterEdinaWebsite --11569
+
+select * from #tempHomeSpotterEdinaWebsite where rn = 1
+
+select *, row_number() over(partition by IUserId order by IUserId) as rn
+from #tempHomeSpotterEdinaWebsite
+where rn = 1
+
+drop table #tempHomeSpotterEdinaWebsite
+
+
+select 
+count(1)
+from homespotter.DimUser(NOLOCK) A
+inner join dbo.[tblEdinaSales_DT](NOLOCK) B
+on A.[User] = B.BuyerEmail --1303 matched count records with HomeSpotter User(Email) to EdinaSales BuyerEmail
 
 select count(distinct BuyerEmail) from [dbo].[tblEdinaSales_DT]
 where BuyerEmail is not null --60152
+
+select 
+count(1)
+from homespotter.DimUser(NOLOCK) A
+inner join dbo.tblEdinaEmailResults_DT(NOLOCK) B
+on A.[User] = B.Email --169663 matched count records with HomeSpotter User(Email) to EdinaEmailResults Email
 
 select count(distinct Email) from [dbo].[tblEdinaEmailResults_DT]
 where Email is not null --342584
