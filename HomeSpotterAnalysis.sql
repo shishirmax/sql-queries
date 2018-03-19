@@ -5,7 +5,7 @@ sp_who
 Daily Data Load
 --BCP Script
 Step 1
-bcp dbo.tblHomeSpotter_BAK in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_03_13_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
+bcp dbo.tblHomeSpotter_BAK in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_03_17_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
 
 Step 2: (Remove the header)
 DELETE 
@@ -24,7 +24,7 @@ group by CAST(session_start_utc AS DATE)
 order by CAST(session_start_utc AS DATE)
 */
 
-select count(*) from dbo.tblHomeSpotter_DT_BAK
+select count(*) from dbo.tblHomeSpotter_DT_BAK(NOLOCK)
 order by HomeSpotterId
 
 
@@ -106,9 +106,48 @@ and [user]  like '%_@_%_.__%'
 
 -- RECORD COUNT DAILY
 SELECT COUNT(1) TotalRecords, CAST(session_start_utc As DATE) As Dates
-from tblHomeSpotter_DT_BAK
+from tblHomeSpotter_DT_BAK(NOLOCK)
 group by CAST(session_start_utc AS DATE)
 order by CAST(session_start_utc AS DATE)
+
+
+select 
+top 100 
+count(1) As recordCount 
+--[user_id],
+,[user]
+,device_id
+--,ip_address
+,session_start_utc
+,session_end_guess_utc
+from tblHomeSpotter_DT_BAK(NOLOCK)
+where [user] is not null
+group by 
+[user]
+,device_id
+--,ip_address
+,session_start_utc
+,session_end_guess_utc
+
+select 
+top 100 
+ip_address,
+cast(session_start_utc as date),
+cast(session_end_guess_utc as date)
+from tblHomeSpotter_DT_BAK(NOLOCK)
+where [user] is not null
+group by 
+ip_address,
+cast(session_start_utc as date),
+cast(session_end_guess_utc as date)
+
+
+select count(1) from tblHomeSpotter_DT_BAK(NOLOCK)
+where ip_address = '68.168.169.52'
+
+select max(tbl.reCount),ip_address from 
+(select count(1) as reCount,ip_address from tblHomeSpotter_DT_BAK(NOLOCK)
+group by ip_address) tbl
 
 --select max(CAST(ModifiedDate as DATE)) from tblHomeSpotter_DT_BAK
 --select count(*)  delete from tblHomeSpotter_DT_BAK
