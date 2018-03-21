@@ -3,22 +3,27 @@ select top 10 * from [edina].[DimPerson]
 
 -- ~~~~~~~~~ For eCRV ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 --############################### HomeSpotter With [eCRV].[DimPerson] ##########################
-
-SELECT 
-A.IUserId
-,A.[User]
-,B.IPersonId
-,B.FirstName
-,B.MiddleName
-,B.LastName
-,B.Email
-,ROW_NUMBER() OVER(PARTITION BY IUserId ORDER BY IUserId) AS RowNumber
-INTO #tempHomeSpottereCRVDimPerson
-FROM homeSpotter.DimUser(NOLOCK) A
-INNER JOIN eCRV.DimPerson(NOLOCK) B
-ON A.[User] = B.Email
+SELECT COUNT(1) FROM
+(
+	SELECT 
+		A.IUserId
+		,A.[User]
+		,B.IPersonId
+		,B.FirstName
+		,B.MiddleName
+		,B.LastName
+		,B.Email
+		,ROW_NUMBER() OVER(PARTITION BY IUserId ORDER BY IUserId) AS RowNumber
+		--INTO #tempHomeSpottereCRVDimPerson
+		FROM homeSpotter.DimUser(NOLOCK) A
+		INNER JOIN eCRV.DimPerson(NOLOCK) B
+		ON A.[User] = B.Email
+)tbl
+WHERE tbl.RowNumber =1
 
 SELECT * FROM #tempHomeSpottereCRVDimPerson --135 records matched 
+
+SELECT * FROM #tempHomeSpottereCRVDimPerson WHERE RowNumber = 1
 
 DROP TABLE #tempHomeSpottereCRVDimPerson
 
