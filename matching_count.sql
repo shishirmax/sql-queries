@@ -1,6 +1,63 @@
 select top 10 * from [eCRV].[DimPerson]
 select top 10 * from [edina].[DimPerson]
 
+--################################### Data for Edina IsWebsite #########################################
+
+select count(1) from [edina].[DimPerson]
+where IsWebsite = 1 --69879
+
+select
+IpersonId,
+FirstName,
+LastName,
+Email
+INTO tempEdinaIsWebsite
+FROM edina.DimPerson
+where IsWebsite = 1
+
+select top 10 * from tempEdinaIsWebsite
+where FirstName LIKE '%[@&]%'
+
+
+
+bcp "SELECT IpersonId, FirstName, LTRIM(RTRIM(LastName)) As LastName,LTRIM(RTRIM(value)) As UpdatedFirstName  FROM tempEdinaIsWebsite CROSS APPLY STRING_SPLIT(FirstName, '&') ORDER BY IpersonId" queryout D:\Edina\HomeSpotterFeed\tempEdinaIsWebsite.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123 -q -c -t"|"
+SELECT IpersonId, FirstName, LTRIM(RTRIM(LastName)) As LastName,LTRIM(RTRIM(value)) As UpdatedFirstName  FROM tempEdinaIsWebsite CROSS APPLY STRING_SPLIT(FirstName, '&') ORDER BY IpersonId
+
+--################################### Data for Edina IsCampaign #########################################
+
+select count(1) from [edina].[DimPerson]
+where IsCampaign = 1 --478674
+
+select
+IpersonId,
+FirstName,
+LastName,
+Email
+INTO tempEdinaIsCampaign
+FROM edina.DimPerson
+where IsCampaign = 1
+
+
+select count(1) from tempEdinaIsCampaign --478674
+select count(distinct IpersonId ) from tempEdinaIsCampaign --478674
+
+select count(1),FirstName,LastName,Email from tempEdinaIsCampaign
+group by FirstName,LastName,Email
+having count(1)>1
+
+select * from tempEdinaIsCampaign
+where FirstName = 'Bob' and lastName = 'Hill'
+
+select count(*) from tempEdinaIsCampaign
+where FirstName LIKE '%[&]%' --19386
+
+select top 10 * from tempEdinaIsCampaign
+where FirstName LIKE '% and %' 
+
+select replace('Heather and Carson',' and ',' & ')
+SELECT IpersonId, FirstName, LTRIM(RTRIM(LastName)) As LastName,LTRIM(RTRIM(value)) As UpdatedFirstName FROM tempEdinaIsCampaign CROSS APPLY STRING_SPLIT(REPLACE(FirstName,' and ' ,' & '), '&') ORDER BY IpersonId
+
+bcp "SELECT IpersonId, FirstName, LTRIM(RTRIM(LastName)) As LastName,LTRIM(RTRIM(value)) As UpdatedFirstName FROM tempEdinaIsCampaign CROSS APPLY STRING_SPLIT(REPLACE(FirstName,' and ' ,' & '), '&') ORDER BY IpersonId" queryout D:\Edina\HomeSpotterFeed\tempEdinaIsCampaign.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123 -q -c -t"|"
 -- ~~~~~~~~~ For eCRV ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 --############################### HomeSpotter With [eCRV].[DimPerson] ##########################
 SELECT COUNT(1) FROM
@@ -13,17 +70,26 @@ SELECT COUNT(1) FROM
 		,B.MiddleName
 		,B.LastName
 		,B.Email
+		--,C.AddressLine1
+		--,C.AddressLine2
+		--,C.City
+		--,C.[State]
+		--,C.Zip
 		,ROW_NUMBER() OVER(PARTITION BY IUserId ORDER BY IUserId) AS RowNumber
-		--INTO #tempHomeSpottereCRVDimPerson
+		INTO #tempHomeSpottereCRVDimPerson
 		FROM homeSpotter.DimUser(NOLOCK) A
-		INNER JOIN eCRV.DimPerson(NOLOCK) B
+		INNER JOIN eCRV.DimPerson(NOLOCK) B		
 		ON A.[User] = B.Email
+		--INNER JOIN eCRV.DimAddress(NOLOCK) C
+		--ON B.AddressId = C.IAddressId
 )tbl
 WHERE tbl.RowNumber =1
 
 SELECT * FROM #tempHomeSpottereCRVDimPerson --135 records matched 
 
 SELECT * FROM #tempHomeSpottereCRVDimPerson WHERE RowNumber = 1
+
+bcp "" queryout D:\Edina\HomeSpotterFeed\MatchedRecords.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123 -q -c -t"|"
 
 DROP TABLE #tempHomeSpottereCRVDimPerson
 
@@ -47,18 +113,149 @@ FROM homeSpotter.DimUser(NOLOCK) A
 INNER JOIN [edina].[DimPerson](NOLOCK) B
 ON A.[User] = B.Email --20154
 
+SELECT * FROM #tempHomeSpotterEdinaDimPerson WHERE RowNumber = 1 --12638
+
+DROP TABLE #tempHomeSpotterEdinaDimPerson
+
+SELECT COUNT(*) FROM #tempHomeSpotterEdinaDimPerson 
+WHERE IsSales = 1 --1487
+
+SELECT COUNT(*) FROM #tempHomeSpotterEdinaDimPerson 
+WHERE IsWebsite = 1 --13822
+
+SELECT COUNT(*) FROM #tempHomeSpotterEdinaDimPerson 
+WHERE IsCampaign = 1 --14834
+
+SELECT COUNT(*) FROM #tempHomeSpotterEdinaDimPerson 
+WHERE IsTitle = 1 --0
+
+SELECT COUNT(*) FROM #tempHomeSpotterEdinaDimPerson 
+WHERE IsMortgage = 1 --0
+
+--#################### tempHomeSpotterEdinaDimPersonIsSales ###############################
+CREATE TABLE tempHomeSpotterEdinaDimPersonIsSales
+(
+IUserId			BIGINT
+,[User]			VARCHAR(155)
+,IPersonId		BIGINT
+,FirstName		VARCHAR(155)
+,MiddleName		VARCHAR(155)
+,LastName		VARCHAR(155)
+,Email			VARCHAR(155)
+,RowNumber		BIGINT
+)
+
+INSERT INTO tempHomeSpotterEdinaDimPersonIsSales
+SELECT
+IUserId		
+,[User]		
+,IPersonId	
+,FirstName	
+,MiddleName	
+,LastName	
+,Email		
+,RowNumber
+FROM #tempHomeSpotterEdinaDimPerson 
+WHERE IsSales = 1 
+
+SELECT * FROM tempHomeSpotterEdinaDimPersonIsSales
+bcp "SELECT * FROM tempHomeSpotterEdinaDimPersonIsSales" queryout D:\Edina\HomeSpotterFeed\HomeSpotterEdinaDimPersonIsSales.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123 -q -c -t"|"
+
+--#################### tempHomeSpotterEdinaDimPersonIsCampaign ###############################
+CREATE TABLE tempHomeSpotterEdinaDimPersonIsCampaign
+(
+IUserId			BIGINT
+,[User]			VARCHAR(155)
+,IPersonId		BIGINT
+,FirstName		VARCHAR(155)
+,MiddleName		VARCHAR(155)
+,LastName		VARCHAR(155)
+,Email			VARCHAR(155)
+,RowNumber		BIGINT
+)
+
+INSERT INTO tempHomeSpotterEdinaDimPersonIsCampaign
+SELECT
+IUserId		
+,[User]		
+,IPersonId	
+,FirstName	
+,MiddleName	
+,LastName	
+,Email		
+,RowNumber
+FROM #tempHomeSpotterEdinaDimPerson 
+WHERE IsCampaign = 1 
+
+SELECT * FROM tempHomeSpotterEdinaDimPersonIsCampaign
+bcp "SELECT * FROM tempHomeSpotterEdinaDimPersonIsCampaign" queryout D:\Edina\HomeSpotterFeed\HomeSpotterEdinaDimPersonIsCampaign.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123 -q -c -t"|"
+
+--#################### tempHomeSpotterEdinaDimPersonIsWebsite ###############################
+CREATE TABLE tempHomeSpotterEdinaDimPersonIsWebsite
+(
+IUserId			BIGINT
+,[User]			VARCHAR(155)
+,IPersonId		BIGINT
+,FirstName		VARCHAR(155)
+,MiddleName		VARCHAR(155)
+,LastName		VARCHAR(155)
+,Email			VARCHAR(155)
+,RowNumber		BIGINT
+)
+
+INSERT INTO tempHomeSpotterEdinaDimPersonIsWebsite
+SELECT
+IUserId		
+,[User]		
+,IPersonId	
+,FirstName	
+,MiddleName	
+,LastName	
+,Email		
+,RowNumber
+FROM #tempHomeSpotterEdinaDimPerson 
+WHERE IsWebsite = 1 
+
+SELECT * FROM tempHomeSpotterEdinaDimPersonIsWebsite
+bcp "SELECT * FROM tempHomeSpotterEdinaDimPersonIsWebsite" queryout D:\Edina\HomeSpotterFeed\HomeSpotterEdinaDimPersonIsWebsite.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123 -q -c -t"|"
+
+--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+--######## EXPORTING DATA ##################################################
+CREATE TABLE HomeSpotterMatchEdinaEcrv
+(
+IUserId			BIGINT
+,[User]			VARCHAR(155)
+,IPersonId		BIGINT
+,FirstName		VARCHAR(155)
+,MiddleName		VARCHAR(155)
+,LastName		VARCHAR(155)
+,Email			VARCHAR(155)
+,RowNumber		BIGINT
+)
+
+INSERT INTO HomeSpotterMatchEdinaEcrv
+SELECT * FROM #tempHomeSpottereCRVDimPerson
+UNION
 SELECT * FROM #tempHomeSpotterEdinaDimPerson 
 
-SELECT * FROM #tempHomeSpotterEdinaDimPerson WHERE RowNumber = 1 --12638
+select count(1) from HomeSpotterMatchEdinaEcrv --20294
+SELECT count(distinct IpersonId) from HomeSpotterMatchEdinaEcrv --20293
+select count(1) from HomeSpotterMatchEdinaEcrv Where RowNumber = 1 --HomeSpotterMatchEdinaEcrv
+bcp "SELECT * from HomeSpotterMatchEdinaEcrv" queryout D:\Edina\HomeSpotterFeed\HomeSpotterMatchEdinaEcrv.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123 -q -c -t"|"
 
 /*
 Total 20154 records matched HomeSpotter and Edina
 12638 Distinct records matched.
 The records from HomeSpotter is getting matched with multiple records in other table as the record in other table have same email id associated with Different indivisuals.
 
+
+
+
 */
 
---DROP TABLE #tempHomeSpotterEdinaDimPerson
+DROP TABLE #tempHomeSpotterEdinaDimPerson
 --############################### HomeSpotter With eCRV BuyersForm ##########################
 select count(distinct email) from tblEcrvBuyersForm_DT 
 where email is not null --10077
@@ -278,3 +475,26 @@ drop table #tempOutData
 
 --BCP QUERY OUT
 bcp "SELECT A.IPersonId,A.FirstName,A.MiddleName,A.LastName,A.Email,A.HomeSpotterPersonId,A.EcrvPersonId,A.EcrvAddressId,B.AddressLine1,B.AddressLine2,B.City,B.State,B.Zip FROM [dbo].[DimPerson] A INNER JOIN [dbo].[DimAddress] B ON A.EcrvAddressId = B.EcrvAddressId WHERE HomeSpotterPersonId IS NOT NULL order by IPersonId" queryout D:\Edina\HomeSpotterFeed\MatchedRecords.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123 -q -c -t"|"
+
+/*
+#####################Rematching Count#############################
+*/
+select top 1 * from eCRV.FactSales
+select top 1 * from ecrv.DimAccount
+
+select top 1 * from ecrv.DimPerson
+select top 1 * from ecrv.DimAddress where ISNULL(AddressLIne2,'') <> ''
+
+select * from Edina.DimPerson where IPersonId IN (
+select PersonId from [edina].[DimAccount] where AccountId = 22002)
+
+select top 1 * from Edina.DimAddress
+select top 1 * from Edina.DimPerson 
+
+select PersonId from [edina].[DimAccount] where AccountId = 22002
+
+select top 10 * from [edina].[DimPersonRole]
+
+select *
+from homespotter.dimuser  join edina.dimperson
+on homespotter.dimuser.[User]=edina.dimperson.email
