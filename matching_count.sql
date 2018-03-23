@@ -85,7 +85,9 @@ SELECT COUNT(1) FROM
 )tbl
 WHERE tbl.RowNumber =1
 
-SELECT * FROM #tempHomeSpottereCRVDimPerson --135 records matched 
+SELECT *,
+row_number() over(partition by IuserId,[User],FirstName Order by IuserId,[User],FirstName) as rnn  
+FROM #tempHomeSpottereCRVDimPerson --135 records matched 
 
 SELECT * FROM #tempHomeSpottereCRVDimPerson WHERE RowNumber = 1
 
@@ -117,20 +119,20 @@ SELECT * FROM #tempHomeSpotterEdinaDimPerson WHERE RowNumber = 1 --12638
 
 DROP TABLE #tempHomeSpotterEdinaDimPerson
 
-SELECT COUNT(*) FROM #tempHomeSpotterEdinaDimPerson 
-WHERE IsSales = 1 --1487
+--SELECT COUNT(*) FROM #tempHomeSpotterEdinaDimPerson 
+--WHERE IsSales = 1 --1487
 
-SELECT COUNT(*) FROM #tempHomeSpotterEdinaDimPerson 
-WHERE IsWebsite = 1 --13822
+--SELECT COUNT(*) FROM #tempHomeSpotterEdinaDimPerson 
+--WHERE IsWebsite = 1 --13822
 
-SELECT COUNT(*) FROM #tempHomeSpotterEdinaDimPerson 
-WHERE IsCampaign = 1 --14834
+--SELECT COUNT(*) FROM #tempHomeSpotterEdinaDimPerson 
+--WHERE IsCampaign = 1 --14834
 
-SELECT COUNT(*) FROM #tempHomeSpotterEdinaDimPerson 
-WHERE IsTitle = 1 --0
+--SELECT COUNT(*) FROM #tempHomeSpotterEdinaDimPerson 
+--WHERE IsTitle = 1 --0
 
-SELECT COUNT(*) FROM #tempHomeSpotterEdinaDimPerson 
-WHERE IsMortgage = 1 --0
+--SELECT COUNT(*) FROM #tempHomeSpotterEdinaDimPerson 
+--WHERE IsMortgage = 1 --0
 
 --#################### tempHomeSpotterEdinaDimPersonIsSales ###############################
 CREATE TABLE tempHomeSpotterEdinaDimPersonIsSales
