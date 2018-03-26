@@ -70,23 +70,23 @@ SELECT COUNT(1) FROM
 		,B.MiddleName
 		,B.LastName
 		,B.Email
-		--,C.AddressLine1
-		--,C.AddressLine2
-		--,C.City
-		--,C.[State]
-		--,C.Zip
+		,C.AddressLine1
+		,C.AddressLine2
+		,C.City
+		,C.[State]
+		,C.Zip
 		,ROW_NUMBER() OVER(PARTITION BY IUserId ORDER BY IUserId) AS RowNumber
 		INTO #tempHomeSpottereCRVDimPerson
 		FROM homeSpotter.DimUser(NOLOCK) A
 		INNER JOIN eCRV.DimPerson(NOLOCK) B		
 		ON A.[User] = B.Email
-		--INNER JOIN eCRV.DimAddress(NOLOCK) C
-		--ON B.AddressId = C.IAddressId
+		INNER JOIN eCRV.DimAddress(NOLOCK) C
+		ON B.AddressId = C.IAddressId
 )tbl
 WHERE tbl.RowNumber =1
 
-SELECT *,
-row_number() over(partition by IuserId,[User],FirstName Order by IuserId,[User],FirstName) as rnn  
+SELECT *
+--,row_number() over(partition by IuserId,[User],FirstName Order by IuserId,[User],FirstName) as rnn  
 FROM #tempHomeSpottereCRVDimPerson --135 records matched 
 
 SELECT * FROM #tempHomeSpottereCRVDimPerson WHERE RowNumber = 1
@@ -94,6 +94,17 @@ SELECT * FROM #tempHomeSpottereCRVDimPerson WHERE RowNumber = 1
 bcp "" queryout D:\Edina\HomeSpotterFeed\MatchedRecords.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123 -q -c -t"|"
 
 DROP TABLE #tempHomeSpottereCRVDimPerson
+
+--###################################### Find Duplicate ########################################
+select A.[User],A.FirstName,A.LastName,A.IPersonId, B.dupeCount, A.IUserId
+from #tempHomeSpottereCRVDimPerson A
+inner join (
+    SELECT [User], COUNT(*) AS dupeCount
+    FROM #tempHomeSpottereCRVDimPerson
+    GROUP BY [User]
+    HAVING COUNT(*) = 1
+) B on A.[User] = B.[User]
+
 
 --############################### HomeSpotter With [edina].[DimPerson] ##########################
 SELECT 
@@ -113,9 +124,11 @@ A.IUserId
 INTO #tempHomeSpotterEdinaDimPerson
 FROM homeSpotter.DimUser(NOLOCK) A
 INNER JOIN [edina].[DimPerson](NOLOCK) B
-ON A.[User] = B.Email --20154
+ON A.[User] = B.Email --20179
 
-SELECT * FROM #tempHomeSpotterEdinaDimPerson WHERE RowNumber = 1 --12638
+
+
+SELECT * FROM #tempHomeSpotterEdinaDimPerson WHERE ISNULL(FirstName,'') = '' RowNumber = 1  and ISNULL(FirstName,'') <> ''--12656
 
 DROP TABLE #tempHomeSpotterEdinaDimPerson
 
@@ -435,14 +448,24 @@ WHERE P.Email IS NULL
 select *
 --count(*) 
 into #tempPerson
-from [edina].[DimPerson]
+from dbo.DimPerson
 where HomeSpotterPersonId is not null
 
-select * from #tempPerson 
---Where FirstName is not null
+select * from #tempPerson
+--where day(CreatedDate) = 23 
+Where FirstName is not null and LastName is not null
 order by HomeSpotterPersonId
 
 drop table #tempPerson
+--###################################### Find Duplicate #tempPerson ########################################
+select A.[User],A.FirstName,A.LastName,A.IPersonId, B.dupeCount, A.IUserId
+from #tempHomeSpottereCRVDimPerson A
+inner join (
+    SELECT [User], COUNT(*) AS dupeCount
+    FROM #tempHomeSpottereCRVDimPerson
+    GROUP BY [User]
+    HAVING COUNT(*) = 1
+) B on A.[User] = B.[User]
 
 SELECT 
 	A.IPersonId
@@ -493,6 +516,7 @@ select PersonId from [edina].[DimAccount] where AccountId = 22002)
 select top 1 * from Edina.DimAddress
 select top 1 * from Edina.DimPerson 
 
+select top 1 * from [edina].[DimAccount]
 select PersonId from [edina].[DimAccount] where AccountId = 22002
 
 select top 10 * from [edina].[DimPersonRole]
