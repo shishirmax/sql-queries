@@ -10,12 +10,14 @@ SELECT COUNT(1) FROM homeSpotter.tblHomeSpotterHistory_FF
 SELECT COUNT(1) FROM homeSpotter.tblHomeSpotterHistory_DT
 SELECT COUNT(1) FROM homeSpotter.tblHomeSpotterHistory_AE
 
+SELECT * FROM homeSpotter.tblHomeSpotterHistory_AE
+
 select * FROM homeSpotter.tblHomeSpotterHistory_AE
 truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_03_19_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_03_21_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
@@ -47,7 +49,7 @@ SELECT COUNT(1) As tblHomeSpotter_AE FROM  homeSpotter.tblHomeSpotter_AE (NOLOCK
 TRUNCATE TABLE  homeSpotter.tblHomeSpotter_bcp
 TRUNCATE TABLE  homeSpotter.tblHomeSpotter_FF
 TRUNCATE TABLE  homeSpotter.tblHomeSpotter_DT
-SELECT TOP 10 * FROM homeSpotter.tblHomeSpotter_DT order by ModifiedDate desc
+SELECT TOP 10 * FROM homeSpotter.tblHomeSpotter_AE order by ModifiedDate desc
 
 delete from homeSpotter.tblHomeSpotter_bcp
 where [user_id] = 'user_id'
