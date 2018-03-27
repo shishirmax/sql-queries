@@ -428,6 +428,8 @@ order by ModifiedDate desc
 select top 10 * from [dbo].[tblEcrvAddress]
 select top 10 * from [dbo].[DimAddress] where StandardAddress is not null
 
+
+--############################# updating HomeSpotterPersonId in dbo.DimPerson (DataWarehouse)#####################################
 UPDATE P-- ~14K
 SET HomeSpotterPersonId = IUserId
 	--,CreatedDate = GETDATE()
@@ -453,8 +455,16 @@ where HomeSpotterPersonId is not null
 
 select * from #tempPerson
 --where day(CreatedDate) = 23 
-Where FirstName is not null and LastName is not null
-order by HomeSpotterPersonId
+--Where FirstName is not null and LastName is not null
+order by createddate desc
+
+select A.FirstName,A.LastName,A.Email,A.HomeSpotterPersonId,A.CreatedBy,A.CreatedDate,A.ModifiedDate,B.DCount
+from #tempPerson A
+inner join 
+(select count(1) as DCount,Email from #tempPerson
+group by Email
+having count(1)>1) B
+on A.Email = B.Email
 
 drop table #tempPerson
 --###################################### Find Duplicate #tempPerson ########################################
