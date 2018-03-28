@@ -5,7 +5,7 @@ sp_who
 Daily Data Load
 --BCP Script
 Step 1
-bcp dbo.tblHomeSpotter_BAK in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_03_21_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
+bcp dbo.tblHomeSpotter_BAK in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_03_26_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
 
 Step 2: (Remove the header)
 DELETE 
@@ -111,7 +111,7 @@ group by CAST(session_start_utc AS DATE)
 order by CAST(session_start_utc AS DATE)
 
 select distinct [user] from tblHomeSpotter_DT_BAK(NOLOCK)
-where CAST(session_start_utc AS DATE) = '2017-11-29'
+where CAST(session_start_utc AS DATE) = '2018-03-25'
 
 select 
 top 100 
@@ -157,6 +157,18 @@ FROM tblHomeSpotter_DT_BAK
 SELECT	COUNT(DISTINCT [user])
 FROM tblHomeSpotter_DT_BAK
 
+select sum(cnt)
+from (select distinct [user],count(*) as cnt
+    from tblHomeSpotter_DT_BAK
+    group by [user]
+    having count(*) = 1) T
+
+select count(*) as COUNT_EMAIL,sum(cnt) as COUNT_ROWS
+from (select count(*) as cnt
+    from tblHomeSpotter_DT_BAK
+    group by [user]
+    having count(*) > 1) T
+
 --select max(CAST(ModifiedDate as DATE)) from tblHomeSpotter_DT_BAK
 --select count(*)  delete from tblHomeSpotter_DT_BAK
 --where CAST(ModifiedDate as DATE) = '2018-01-19'
@@ -201,6 +213,8 @@ FROM tblHomeSpotter_DT_BAK
 |21112			|2018-01-01	|
 |20743			|2018-01-02	|
 */
+
+'dculbertson.65@ icloud.com'
 
 select count([user]) from tblHomeSpotter_DT_BAK --828740
 
