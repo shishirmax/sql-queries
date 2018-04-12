@@ -40,7 +40,7 @@ sum(amount) for ProductName in
 (Shoes,Shirt))as Pivoting
 order by CustomerName 
 
-
+select * from CustomerSale
 select CustomerName,Shoes,Shirt
 from CustomerSale
 PIVOT
@@ -51,9 +51,37 @@ PIVOT
 )
 As PivotTable
 
+
 select CustomerName,
 	ProductName,
 	SUM(Amount) as TotalAmount
 from CustomerSale
 group by ProductName,CustomerName
 order by ProductName,CustomerName
+
+-------Another Example
+create table sample(
+	[Name] varchar(100),
+	[Day] int,
+	Price int)
+
+insert into sample
+([Name],[Day],Price)
+values
+('Apple',1,120),
+('Orange',1,80),
+('Banana',1,40),
+('Apple',2,180),
+('Orange',2,90),
+('Banana',2,50)
+
+select * from sample
+
+select [Name],[1] As Day1,[2] As Day2
+from sample
+pivot
+(sum(price)
+for [Day]
+in([1],[2])
+)
+As PivotTable
