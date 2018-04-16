@@ -455,7 +455,7 @@ where HomeSpotterPersonId is not null
 
 select * from #tempPerson
 --where day(CreatedDate) = 23 
---Where FirstName is not null and LastName is not null
+Where FirstName is not null and LastName is not null
 order by createddate desc
 
 select A.FirstName,A.LastName,A.Email,A.HomeSpotterPersonId,A.CreatedBy,A.CreatedDate,A.ModifiedDate,B.DCount
@@ -467,6 +467,22 @@ having count(1)>1) B
 on A.Email = B.Email
 
 drop table #tempPerson
+
+select 
+--count(1) 
+top 10 * 
+from dbo.DimPerson
+Where FirstName is not null and LastName is not null --1301168
+
+--get the schema_id
+
+select schema_id()
+
+select * from sys.tables
+where name like '%email%'
+and schema_id = 1
+
+select count(1) from dbo.DimEmail
 --###################################### Find Duplicate #tempPerson ########################################
 select A.[User],A.FirstName,A.LastName,A.IPersonId, B.dupeCount, A.IUserId
 from #tempHomeSpottereCRVDimPerson A
