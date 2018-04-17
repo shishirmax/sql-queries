@@ -455,7 +455,7 @@ where HomeSpotterPersonId is not null
 
 select * from #tempPerson
 --where day(CreatedDate) = 23 
-Where FirstName is not null and LastName is not null
+--Where FirstName is not null and LastName is not null
 order by createddate desc
 
 select A.FirstName,A.LastName,A.Email,A.HomeSpotterPersonId,A.CreatedBy,A.CreatedDate,A.ModifiedDate,B.DCount

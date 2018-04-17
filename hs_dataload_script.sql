@@ -17,7 +17,7 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_04_11_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_04_14_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
@@ -49,6 +49,16 @@ SELECT COUNT(1) As tblHomeSpotter_AE FROM  homeSpotter.tblHomeSpotter_AE (NOLOCK
 TRUNCATE TABLE  homeSpotter.tblHomeSpotter_bcp
 TRUNCATE TABLE  homeSpotter.tblHomeSpotter_FF
 TRUNCATE TABLE  homeSpotter.tblHomeSpotter_DT
+TRUNCATE TABLE  homeSpotter.tblHomeSpotter_AE
+
+TRUNCATE TABLE homeSpotter.DimAgent				
+TRUNCATE TABLE homeSpotter.DimAgent_SCD			
+TRUNCATE TABLE homeSpotter.DimDevice				
+TRUNCATE TABLE homeSpotter.DimSession				
+TRUNCATE TABLE homeSpotter.DimUser				
+TRUNCATE TABLE homeSpotter.FactHomeSpotter		
+TRUNCATE TABLE homeSpotter.FactHomeSpotterSummary
+
 SELECT TOP 10 * FROM homeSpotter.tblHomeSpotter_AE order by ModifiedDate desc
 
 delete from homeSpotter.tblHomeSpotter_bcp
