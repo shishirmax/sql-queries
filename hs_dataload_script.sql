@@ -46,18 +46,7 @@ SELECT COUNT(1) As tblHomeSpotter_FF FROM  homeSpotter.tblHomeSpotter_FF (NOLOCK
 SELECT COUNT(1) As tblHomeSpotter_DT FROM  homeSpotter.tblHomeSpotter_DT (NOLOCK)
 SELECT COUNT(1) As tblHomeSpotter_AE FROM  homeSpotter.tblHomeSpotter_AE (NOLOCK)
 
-TRUNCATE TABLE  homeSpotter.tblHomeSpotter_bcp
-TRUNCATE TABLE  homeSpotter.tblHomeSpotter_FF
-TRUNCATE TABLE  homeSpotter.tblHomeSpotter_DT
-TRUNCATE TABLE  homeSpotter.tblHomeSpotter_AE
 
-TRUNCATE TABLE homeSpotter.DimAgent				
-TRUNCATE TABLE homeSpotter.DimAgent_SCD			
-TRUNCATE TABLE homeSpotter.DimDevice				
-TRUNCATE TABLE homeSpotter.DimSession				
-TRUNCATE TABLE homeSpotter.DimUser				
-TRUNCATE TABLE homeSpotter.FactHomeSpotter		
-TRUNCATE TABLE homeSpotter.FactHomeSpotterSummary
 
 SELECT TOP 10 * FROM homeSpotter.tblHomeSpotter_AE order by ModifiedDate desc
 

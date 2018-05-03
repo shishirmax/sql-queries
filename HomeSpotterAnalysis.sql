@@ -5,7 +5,7 @@ sp_who
 Daily Data Load
 --BCP Script
 Step 1
-bcp dbo.tblHomeSpotter_BAK in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_04_30_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
+bcp dbo.tblHomeSpotter_BAK in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_05_01_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
 
 Step 2: (Remove the header)
 DELETE 
@@ -27,6 +27,12 @@ order by CAST(session_start_utc AS DATE)
 select count(*) from dbo.tblHomeSpotter_DT_BAK(NOLOCK)
 order by HomeSpotterId
 
+select COUNT(1),session_start_utc,session_end_guess_utc,ip_address from dbo.tblHomeSpotter_DT_BAK
+group by session_start_utc,session_end_guess_utc,ip_address
+having count(1)>1
+
+select * from tblHomeSpotter_DT_BAK
+where ip_address = '68.63.219.208' and session_start_utc = '2018-02-11 00:28:15.000'
 
 select TOP 10 * from dbo.tblHomeSpotter_DT_BAK --481376 
 where [user] is not null
