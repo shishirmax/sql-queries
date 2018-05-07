@@ -17,7 +17,7 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_04_30_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_05_05_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
@@ -88,8 +88,14 @@ where [user] = 'leeseeann@gmail.com'
 select * FROM homeSpotter.DimUser where cast(createddate as date) = '2018-03-06'
 where [User] = '09hannahanderson09@gmail.com'
 
-select top 10 * from homeSpotter.DimSession
+select COUNT(1),SessionnStart,SessionnEnd,IpAddress from homeSpotter.DimSession
 where createdby = 8
+group by SessionnStart,SessionnEnd,IpAddress
+having count(1)>1
+
+SELECT * FROM homeSpotter.DimSession
+where SessionnStart = '2017-11-29 02:39:44.000'
+
 
 select ipaddress,sessionnstart,count(sessionnstart),sessionnend
 from  [homeSpotter].[DimSession]
