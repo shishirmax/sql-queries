@@ -5,7 +5,7 @@ sp_who
 Daily Data Load
 --BCP Script
 Step 1
-bcp dbo.tblHomeSpotter_BAK in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_05_07_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
+bcp dbo.tblHomeSpotter_BAK in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_05_14_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
 
 Step 2: (Remove the header)
 DELETE 
@@ -22,6 +22,9 @@ SELECT COUNT(1) TotalRecords, CAST(session_start_utc As DATE) As Dates
 from tblHomeSpotter_DT_BAK
 group by CAST(session_start_utc AS DATE)
 order by CAST(session_start_utc AS DATE)
+
+
+
 */
 
 select count(*) from dbo.tblHomeSpotter_DT_BAK(NOLOCK)
@@ -281,7 +284,7 @@ where [user_id] IS NOT NULL
 
 --18 NULL
 -- No Unique Column.
--- Max Length : 36
+-- Max Len : 36
 -- DataType Suggested: Varchar
 
 select [user_id], count(1) from tblHomeSpotter_DT_BAK
@@ -320,7 +323,7 @@ select count(1),count(try_cast([user] as varchar)) from tblHomeSpotter
 where [user] IS NOT NULL
 --173017 NULL Records
 --Email type data, Not unique.
--- Max Length: 38
+-- Max Len: 38
 -- DataType Suggested: Varchar
 
 select * from tblHomeSpotter
@@ -387,7 +390,7 @@ select count(1),count(try_cast(hs_agent_id as INT)) from tblHomeSpotter
 where hs_agent_id IS NOT NULL
 --179282 NULL Records
 --Integer type data
---Max length : 6
+--Max Len : 6
 -- DataType Suggested: INT
 
 select * from dbo.tblHomeSpotter_DT_BAK
@@ -415,7 +418,7 @@ where agent_name IS NOT NULL
 --179282 NULL Records
 --No Unique Column
 --String  type data
---Max length : 36
+--Max Len : 36
 -- DataType Suggested: varchar
 
 select * from tblHomeSpotter
@@ -445,7 +448,7 @@ where device_id IS NOT NULL
 --23 NULL Records
 --No Unique Column
 --GUID type data
---Max length : 36
+--Max Len : 36
 -- DataType Suggested: varchar
 
 
@@ -473,7 +476,7 @@ where ip_address IS NOT NULL
 --No NULL Records
 --No Unique Column
 --IP Address type data
---Max length : 15
+--Max Len : 15
 -- DataType Suggested: varchar
 
 select * from tblHomeSpotter
@@ -494,7 +497,7 @@ where session_start_utc IS NOT NULL
 --No NULL Records
 --No Unique Column
 --DateTime type data
---Max length : 19
+--Max Len : 19
 -- DataType Suggested: DateTime
 
 select  count(year(try_cast(replace(session_start_utc,'"','') as datetime))) from tblHomeSpotter
@@ -519,7 +522,7 @@ where session_end_guess_utc IS NOT NULL
 --15628 NULL Records
 --No Unique Column
 --DateTime type data
---Max length : 19
+--Max Len : 19
 -- DataType Suggested: DateTime
 
 select  TOP 50 (year(try_cast(replace(session_end_guess_utc,'"','') as datetime))) from tblHomeSpotter
@@ -543,7 +546,7 @@ where session_end_is_guess IS NOT NULL
 --No NULL Records
 --No Unique Column
 --int type data
---Max length : 1
+--Max Len : 1
 -- DataType Suggested: int
 
 
@@ -567,7 +570,7 @@ where event_count_listing_view IS NOT NULL
 --No NULL Records
 --No Unique Column
 --int type data
---Max length : 3
+--Max Len : 3
 -- DataType Suggested: int
 
 select count(*) ,[user_id]from tblHomeSpotter
@@ -589,7 +592,7 @@ where event_count_run_saved_search IS NOT NULL
 --No NULL Records
 --No Unique Column
 --int type data
---Max length : 1
+--Max Len : 1
 -- DataType Suggested: int
 
 select * from tblHomeSpotter
@@ -609,7 +612,7 @@ where event_count_add_saved_listing IS NOT NULL
 --No NULL Records
 --No Unique Column
 --int type data
---Max length : 2
+--Max Len : 2
 -- DataType Suggested: int
 
 
@@ -631,7 +634,7 @@ where event_count_search_for_agent IS NOT NULL
 --No NULL Records
 --No Unique Column
 --int type data
---Max length : 2
+--Max Len : 2
 -- DataType Suggested: int
 
 select * from tblHomeSpotter
@@ -651,7 +654,7 @@ where event_count_share_app IS NOT NULL
 --No NULL Records
 --No Unique Column
 --int type data
---Max length : 1
+--Max Len : 1
 -- DataType Suggested: int
 
 
@@ -673,7 +676,7 @@ where event_count_app_feedback IS NOT NULL
 --No NULL Records
 --No Unique Column
 --int type data
---Max length : 1
+--Max Len : 1
 -- DataType Suggested: int
 -- Only 3 value type available 0,1,2
 -- 3 different numeric value for different records, event_count_app_feedback values are also same for many records.
@@ -692,7 +695,7 @@ where event_count_call_company IS NOT NULL
 --No NULL Records
 --No Unique Column
 --int type data
---Max length : 1
+--Max Len : 1
 -- DataType Suggested: int
 -- Only 2 value type available 0,1
 --2 different numeric value for different records, event_count_call_company values are also same for many records.
@@ -711,7 +714,7 @@ where event_count_open_mortgage_calc IS NOT NULL
 --No NULL Records
 --No Unique Column
 --int type data
---Max length : 1
+--Max Len : 1
 -- DataType Suggested: int
 -- 10 value type available (0-9)
 --different numeric value for different records, event_count_call_company values are also same for many records.
@@ -758,8 +761,8 @@ select LEN('897C99DB-770E-4DE7-8B0C-A6A06BD0BE97') --36
 select count(1) from tblhomespotter_dt
 --where len(device_id) = 15 --15018
 --where len(device_id) = 36 --263880
---15018 records available whose device_id length is 15(seems like android device users)
---263880 records avilable whose device_id length is 36(seems like apple device users)
+--15018 records available whose device_id Len is 15(seems like android device users)
+--263880 records avilable whose device_id Len is 36(seems like apple device users)
 
 SELECT COUNT(DISTINCT device_id) from tblHomeSpotter_DT
 where len(device_id) = 15
