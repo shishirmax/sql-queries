@@ -17,7 +17,7 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_05_16_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_05_19_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
@@ -118,7 +118,34 @@ group by CAST(SessionnStart AS DATE)
 order by CAST(SessionnStart AS DATE)
 
 --MONTHLY SESSION COUNT
-SELECT COUNT(1) TotalRecords, MONTH(CAST(SessionnStart As DATE)) AS Month,YEAR(CAST(SessionnStart As DATE)) AS Year
+SELECT COUNT(1) TotalRecords, 
+CASE 
+	WHEN MONTH(CAST(SessionnStart As DATE)) = 1
+	THEN 'January' 
+	WHEN MONTH(CAST(SessionnStart As DATE)) = 2
+	THEN 'February'
+	WHEN MONTH(CAST(SessionnStart As DATE)) = 3
+	THEN 'March'
+	WHEN MONTH(CAST(SessionnStart As DATE)) = 4
+	THEN 'April'
+	WHEN MONTH(CAST(SessionnStart As DATE)) = 5
+	THEN 'May'
+	WHEN MONTH(CAST(SessionnStart As DATE)) = 6
+	THEN 'June'
+	WHEN MONTH(CAST(SessionnStart As DATE)) = 7
+	THEN 'July'
+	WHEN MONTH(CAST(SessionnStart As DATE)) = 8
+	THEN 'August'
+	WHEN MONTH(CAST(SessionnStart As DATE)) = 9
+	THEN 'September'
+	WHEN MONTH(CAST(SessionnStart As DATE)) = 10
+	THEN 'October'
+	WHEN MONTH(CAST(SessionnStart As DATE)) = 11
+	THEN 'November'
+	WHEN MONTH(CAST(SessionnStart As DATE)) = 12
+	THEN 'December'
+END
+	AS Month,YEAR(CAST(SessionnStart As DATE)) AS Year
 FROM homespotter.DimSession
 WHERE YEAR(CAST(SessionnStart As DATE)) = 2018 or YEAR(CAST(SessionnStart As DATE)) = 2017
 GROUP BY MONTH(CAST(SessionnStart As DATE)),YEAR(CAST(SessionnStart As DATE))
