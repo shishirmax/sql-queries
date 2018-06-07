@@ -46,8 +46,11 @@ SELECT COUNT(1) As tblHomeSpotter_FF FROM  homeSpotter.tblHomeSpotter_FF (NOLOCK
 SELECT COUNT(1) As tblHomeSpotter_DT FROM  homeSpotter.tblHomeSpotter_DT (NOLOCK)
 SELECT COUNT(1) As tblHomeSpotter_AE FROM  homeSpotter.tblHomeSpotter_AE (NOLOCK)
 
+SELECT TOP 10 * FROM homeSpotter.FactHomeSpotter		
+SELECT TOP 10 * FROM homeSpotter.FactHomeSpotterSummary
+SELECT TOP 10 * FROM homeSpotter.DimAgent
 
-
+SELECT TOP 10 * FROM homeSpotter.DimSession
 SELECT TOP 10 * FROM homeSpotter.tblHomeSpotter_AE order by ModifiedDate desc
 
 delete from homeSpotter.tblHomeSpotter_bcp

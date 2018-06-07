@@ -32,6 +32,10 @@ SELECT COUNT(1)
 DELETE FROM tblHomeSpotter_BAK
 WHERE CAST(session_start_utc As DATE) = '2018-05-16'
 
+SELECT TOP 100 * FROM tblHomeSpotter_DT_BAK
+WHERE [user] IS NOT NULL
+AND hs_agent_id IS NOT NULL
+
 */
 
 select count(*) from dbo.tblHomeSpotter_DT_BAK(NOLOCK)
