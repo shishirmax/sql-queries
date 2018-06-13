@@ -17,7 +17,7 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_06_04_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_06_05_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
@@ -62,7 +62,9 @@ where DAY(modifieddate) <> 28 and MONTH(modifieddate) <> 12
 SELECT * FROM homeSpotter.DimAgent
 ORDER BY ModifiedDate DESC
 
-SELECT * FROM homeSpotter.DimAgent_SCD WHERE EndDate IS NOT NULL
+SELECT * FROM homeSpotter.DimAgent_SCD
+WHERE AgentId = 25648
+--EndDate IS NOT NULL
 ORDER BY EndDate DESC
 
 SELECT  COUNT(*),LEN(DeviceId) FROM homeSpotter.DimDevice

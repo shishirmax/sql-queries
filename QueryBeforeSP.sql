@@ -5,6 +5,9 @@ Score IS NOT NULL
 Invalid object name 'rba.tblPopulationSummary_MN'.
 SELECT TOP 10 * FROM [rba].[tblPopulationSummary_NJ] --3633274
 
+SELECT * FROM [rba].[tblPopulationSummary_NJ]
+
+
 SELECT * 
 INTO 
 [rba].[tblPopulationSummary_MA_BAK]
@@ -13,6 +16,7 @@ FROM [rba].[tblPopulationSummary_MA]
 SELECT * FROM [rba].[tblPopulationSummary_MA]
 WHERE HHID = 'UM090655420-120068213'
 
+DROP TABLE [rba].[tblPopulationSummary_MA]
 --ALTER TABLE [rba].[tblPopulationSummary_MA]
 --ADD  Score NUMERIC(30,20)
 
@@ -118,3 +122,5 @@ IF EXISTS(SELECT 1 FROM sys.external_data_sources WHERE NAME = @container)
 			EXEC SP_EXECUTESQL @sql
 			PRINT 2.3                
 
+
+--sqlcmd -S -S tcp:contata.database.windows.net  -d Edina -U contata.admin@contata -P C@ntata123 -E -s, -W -Q "SELECT * FROM dbo.LogError" > D:\Edina\ToAzureBlob\ogError.csv
