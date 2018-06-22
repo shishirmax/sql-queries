@@ -17,12 +17,14 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_06_08_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_06_18_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
 EXEC homeSpotter.usp_MergeHomeSpotter
 
+
+sp_helptext 'homeSpotter.usp_InsertHomeSpotter'
 
 select @@TRANCOUNT
 
@@ -46,11 +48,14 @@ SELECT COUNT(1) As tblHomeSpotter_FF FROM  homeSpotter.tblHomeSpotter_FF (NOLOCK
 SELECT COUNT(1) As tblHomeSpotter_DT FROM  homeSpotter.tblHomeSpotter_DT (NOLOCK)
 SELECT COUNT(1) As tblHomeSpotter_AE FROM  homeSpotter.tblHomeSpotter_AE (NOLOCK)
 
-SELECT TOP 10 * FROM homeSpotter.FactHomeSpotter		
-SELECT TOP 10 * FROM homeSpotter.FactHomeSpotterSummary
+SELECT TOP 10000 * FROM homeSpotter.FactHomeSpotter		
+SELECT TOP 100 * FROM homeSpotter.FactHomeSpotterSummary
 SELECT TOP 10 * FROM homeSpotter.DimAgent
 
 SELECT TOP 10 * FROM homeSpotter.DimSession
+WHERE ISessionId = 35498
+
+SELECT * FROM 
 SELECT TOP 10 * FROM homeSpotter.tblHomeSpotter_AE order by ModifiedDate desc
 
 delete from homeSpotter.tblHomeSpotter_bcp
@@ -115,6 +120,8 @@ select TOP 10 * from homeSpotter.tblHomeSpotter_DT
 
 select * FROM homeSpotter.FactHomeSpotter
 where IHomeSpotterId = 3962
+
+SELECT TOP 100 * FROM homeSpotter.DimSession
 
 --DAILY SESSION COUNT
 SELECT COUNT(1) TotalRecords, CAST(SessionnStart As DATE) As Dates

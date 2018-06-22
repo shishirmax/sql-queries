@@ -7,6 +7,11 @@ SELECT TOP 10 * FROM [rba].[tblPopulationSummary_NJ] --3633274
 
 SELECT * FROM [rba].[tblPopulationSummary_NJ]
 
+SELECT COUNT(1) FROM [rba].[tblPopulationSummary_MA]
+SELECT COUNT(1) FROM [rba].[tblPopulationSummary_NJ]
+
+SELECT COUNT(1) FROM RBA.tblRBAPopulationSummary_MA
+SELECT COUNT(1) FROM RBA.tblRBAPopulationSummary_NJ 
 
 SELECT * 
 INTO 
