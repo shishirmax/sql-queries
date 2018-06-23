@@ -15,7 +15,7 @@ ROWTERMINATOR='\n'
 
 --BCP Script
 Step 1
-bcp dbo.tblHomeSpotter_BAK in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_06_18_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
+bcp dbo.tblHomeSpotter_BAK in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_06_20_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
 
 Step 2: (Remove the header)
 DELETE 
