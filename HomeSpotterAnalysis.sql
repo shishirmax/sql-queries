@@ -15,7 +15,7 @@ ROWTERMINATOR='\n'
 
 --BCP Script
 Step 1
-bcp dbo.tblHomeSpotter_BAK in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_06_20_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
+bcp dbo.tblHomeSpotter_BAK in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_06_24_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
 
 Step 2: (Remove the header)
 DELETE 
@@ -45,6 +45,9 @@ WHERE CAST(session_start_utc As DATE) = '2018-05-16'
 SELECT TOP 100 * FROM tblHomeSpotter_DT_BAK
 WHERE [user] IS NOT NULL
 AND hs_agent_id IS NOT NULL
+
+SELECT * FROM LogError
+ORDER BY 1 DESC
 
 */
 
