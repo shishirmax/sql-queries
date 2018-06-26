@@ -1,3 +1,4 @@
+--Table with data type columns
 CREATE TABLE subscriptionStatus(
 	ssid BIGINT IDENTITY(1,1)
 	,CustomerID BIGINT
@@ -7,9 +8,71 @@ CREATE TABLE subscriptionStatus(
 	,TransacionTimeStamp DATETIME
 )
 
+--Table with varchar type columns
+CREATE TABLE StagingSubscriptionStatus(
+	CustomerID				VARCHAR(1000)
+	,TransactionID			VARCHAR(1000)
+	,TransactionStatus		VARCHAR(1000)
+	,TransactionReference	VARCHAR(1000)
+	,TransacionTimeStamp	VARCHAR(1000)
+)
+
+--Table for Logging(ErrorLog Table)
+
+CREATE TABLE LogError
+(
+	ErrorID				BIGINT IDENTITY(1,1)
+	,ObjectName			NVARCHAR(1000)
+	,ErrorCode			BIGINT
+	,ErrorDescription	NVARCHAR(1000)
+	,ErrorGenerationTime	DATETIME
+)
+
+--Insert into LogError Table
+INSERT INTO [LogError] (
+	objectName          
+    ,ErrorCode          
+    ,ErrorDescription          
+    ,ErrorGenerationTime)          
+	SELECT          
+	OBJECT_NAME(@@PROCID),          
+	ERROR_NUMBER() AS ErrorCode,          
+	'Error of Severity: ' + CAST(ERROR_SEVERITY() AS varchar(4))          
+	+ ' and State: ' + CAST(ERROR_STATE() AS varchar(8))          
+	+ ' occured in Line: ' + CAST(ERROR_LINE() AS varchar(10))          
+	+ ' with following Message: ' + ERROR_MESSAGE() AS ErrorColumnDescription,          
+	GETDATE() 
+
+SELECT * FROM LogError
+DROP TABLE LogError
+
+--Creating a StoredProcedure for inserting data into subscriptionStatus
+
+
+
+
+
+SELECT * FROM StagingSubscriptionStatus
+TRUNCATE TABLE StagingSubscriptionStatus
 SELECT * FROM subscriptionStatus
 
-SELECT CAST('30/June/2018' AS DATETIME)
+SELECT CAST('"02-June-2018"' AS DATETIME)
+
+--Insert Data using BULK INSERT SCRIPT
+BULK INSERT StagingSubscriptionStatus
+FROM 'D:\GIT\sql-queries\subscription_Schema\Data\data.csv'
+WITH
+(
+FIELDTERMINATOR='|',
+FIRSTROW=2,
+ROWTERMINATOR='\n'
+)
+
+--Insert Data using BCP Script
+bcp dbo.StagingSubscriptionStatus in D:\GIT\sql-queries\subscription_Schema\Data\data.csv -S SHISHIRS -d shishir -U sa -P sysadmin  -b 1000 -q -c -t"|"
+
+--Inserting data into subscriptionStatus Table (DataType columns)
+INSERT INTO subscriptionStatus
 
 ---- Create the variables for the random number generation
 DECLARE @Random INT;
