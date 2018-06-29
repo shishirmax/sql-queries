@@ -15,7 +15,7 @@ ROWTERMINATOR='\n'
 
 --BCP Script
 Step 1
-bcp dbo.tblHomeSpotter_BAK in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_06_25_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
+bcp dbo.tblHomeSpotter_BAK in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_06_27_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
 
 Step 2: (Remove the header)
 DELETE 
@@ -30,6 +30,7 @@ truncate table tblHomeSpotter_BAK
 
 SELECT COUNT(1) TotalRecords, CAST(session_start_utc As DATE) As Dates
 from tblHomeSpotter_DT_BAK
+WHERE MONTH(CAST(session_start_utc AS DATE)) = 6
 group by CAST(session_start_utc AS DATE)
 order by CAST(session_start_utc AS DATE)
 
@@ -107,11 +108,19 @@ DELETE FROM CTE WHERE RN<>1
 select top 10 * from tblHomeSpotter_DT_BAK
 where [user] is not null
 
-SELECT [user],CAST(session_start_utc As DATE) As Dates
+SELECT [user],CAST(session_start_utc As DATE) As Dates,ROW_NUMBER() OVER (PARTITION BY [user] ORDER BY [user]) as UserNo
+into #temptblHomeSpotter_DT_BAK
 from tblHomeSpotter_DT_BAK
-where [user] is not null
+where [user] is not null 
 group by [user],CAST(session_start_utc As DATE)
-order by CAST(session_start_utc AS DATE)
+order by [user]
+--order by CAST(session_start_utc AS DATE)
+
+SELECT * FROM #temptblHomeSpotter_DT_BAK
+WHERE UserNo = 1
+ORDER BY Dates
+
+SELECT 
 
 select count(1) As RCount,[user],cast(session_start_utc as date) As Dates
 into #tempcount
