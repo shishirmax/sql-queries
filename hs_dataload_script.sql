@@ -17,7 +17,7 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_06_26_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 5000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_06_27_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 5000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
@@ -162,7 +162,10 @@ WHERE YEAR(CAST(SessionnStart As DATE)) = 2018 or YEAR(CAST(SessionnStart As DAT
 GROUP BY MONTH(CAST(SessionnStart As DATE)),YEAR(CAST(SessionnStart As DATE))
 ORDER BY MONTH(CAST(SessionnStart As DATE))
 
+SELECT * FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_SCHEMA = 'dbo'
 
+SELECT * FROM HomeSpotterMatchEdinaEcrv
 
 
 --TRUNCATE TABLE   homeSpotter.DimAgent 
