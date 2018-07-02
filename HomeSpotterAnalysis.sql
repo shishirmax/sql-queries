@@ -43,8 +43,9 @@ SELECT COUNT(1)
 DELETE FROM tblHomeSpotter_BAK
 WHERE CAST(session_start_utc As DATE) = '2018-05-16'
 
-SELECT TOP 100 * FROM tblHomeSpotter_DT_BAK
+SELECT TOP 1000 * FROM tblHomeSpotter_DT_BAK
 WHERE [user] IS NOT NULL
+--AND [user] NOT LIKE '%@%'
 AND hs_agent_id IS NOT NULL
 
 SELECT * FROM LogError

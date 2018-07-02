@@ -80,7 +80,7 @@ where  LEN(DeviceId) = 14
 SELECT COUNT(DISTINCT IpAddress),COUNT(IpAddress),count(1) FROM homeSpotter.DimSession
 WHERE ModifiedDate IS NOT NULL
 
-SELECT * FROM homeSpotter.DimUser
+SELECT TOP 100 * FROM homeSpotter.DimUser
 order by 3
 
 select count(1), cast(createddate as date)
