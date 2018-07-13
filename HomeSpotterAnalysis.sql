@@ -30,7 +30,7 @@ truncate table tblHomeSpotter_BAK
 
 SELECT COUNT(1) TotalRecords, CAST(session_start_utc As DATE) As Dates
 from tblHomeSpotter_DT_BAK
-WHERE MONTH(CAST(session_start_utc AS DATE)) = 6
+--WHERE MONTH(CAST(session_start_utc AS DATE)) = 6
 group by CAST(session_start_utc AS DATE)
 order by CAST(session_start_utc AS DATE)
 
