@@ -40,7 +40,7 @@ FROM tblHomeSpotter_DT_BAK
 WHERE CAST(session_start_utc As DATE) = '2018-05-16'
 
 SELECT COUNT(1)
-DELETE FROM tblHomeSpotter_BAK
+FROM tblHomeSpotter_BAK
 WHERE CAST(session_start_utc As DATE) = '2018-05-16'
 
 SELECT TOP 1000 * FROM tblHomeSpotter_DT_BAK
@@ -50,6 +50,10 @@ AND hs_agent_id IS NOT NULL
 
 SELECT * FROM LogError
 ORDER BY 1 DESC
+
+SELECT COUNT(1) FROM tblHomeSpotter_BAK(NOLOCK)
+
+TRUNCATE TABLE tblHomeSpotter_BAK
 
 */
 
