@@ -17,7 +17,7 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_07_17_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 5000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_07_29_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 5000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
@@ -67,7 +67,7 @@ SELECT * FROM homeSpotter.DimAgent
 ORDER BY ModifiedDate DESC
 
 SELECT * FROM homeSpotter.DimAgent_SCD
-WHERE AgentId = 25648
+--WHERE AgentId = 25648
 --EndDate IS NOT NULL
 ORDER BY EndDate DESC
 
