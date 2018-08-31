@@ -211,6 +211,8 @@ sp_RENAME 'homeSpotter.tblHomeSpotterHistory_AE.HS_AE_ID','HSHistoryId','COLUMN'
 select * from logTaskControlFlow(NOLOCK)-- where FeedName = 'HS_DataFeed'
 order by 1 desc
 
+SELECT * FROM [dbo].[LogTaskControlFlowDetails]
+
 select * from logerror(NOLOCK)
 order by 1 desc
 
