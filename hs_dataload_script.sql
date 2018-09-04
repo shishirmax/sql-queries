@@ -17,14 +17,14 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_08_26_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 5000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_09_02_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 5000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
 EXEC homeSpotter.usp_MergeHomeSpotter
 
 
-sp_helptext 'homeSpotter.usp_InsertHomeSpotter'
+sp_helptext 'homeSpotter.usp_MergeHomeSpotter'
 
 select @@TRANCOUNT
 
@@ -161,6 +161,10 @@ FROM homespotter.DimSession
 WHERE YEAR(CAST(SessionnStart As DATE)) = 2018 or YEAR(CAST(SessionnStart As DATE)) = 2017
 GROUP BY MONTH(CAST(SessionnStart As DATE)),YEAR(CAST(SessionnStart As DATE))
 ORDER BY MONTH(CAST(SessionnStart As DATE))
+
+
+
+ SELECT CONVERT(VARCHAR(MAX),GETDATE(),103)
 
 SELECT * FROM INFORMATION_SCHEMA.TABLES
 WHERE TABLE_SCHEMA = 'dbo'
