@@ -80,3 +80,21 @@ DENSE_RANK() OVER(PARTITION BY company ORDER BY power DESC) AS DensePowerRank
 FROM Cars
 ```
 
+## ROW_NUMBER Function
+
+Unlike the RANK and DENSE_RANK functions, the ROW_NUMBER function simply returns the row number of the sorted records starting with 1. For example, if RANK and DENSE_RANK functions of the first two records in the ORDER BY column are equal, both of them are assigned 1 as their RANK and DENSE_RANK. However, the ROW_NUMBER function will assign values 1 and 2 to those rows without taking the fact that they are equally into account. Execute the following script to see the ROW_NUMBER function in action.
+
+```SQL
+SELECT name,company, power,
+ROW_NUMBER() OVER(ORDER BY power DESC) AS RowRank
+FROM Cars
+```
+
+From the output, you can see that ROW_NUMBER function simply assigns a new row number to each record irrespective of its value.
+The PARTITION BY clause can also be used with ROW_NUMBER function as shown below:
+
+```SQL
+SELECT name, company, power,
+ROW_NUMBER() OVER(PARTITION BY company ORDER BY power DESC) AS RowRank
+FROM Cars
+```
