@@ -71,3 +71,17 @@ SELECT * FROM dbo.vwPersonEmployee
 
 
 SELECT MaritalStatus FROM [HumanResources].[Employee]
+
+
+USE [master]
+GO
+ 
+BACKUP DATABASE [ME]
+    TO  DISK = N'D:\DB_Backup\ME.bak' WITH NOFORMAT, 
+    NOINIT,  
+    NAME = N'ME Database Backup', 
+    SKIP, 
+    NOREWIND, 
+    NOUNLOAD,  
+    STATS = 10
+GO
