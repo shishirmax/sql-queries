@@ -48,12 +48,48 @@ SELECT COUNT(1) As tblHomeSpotter_FF FROM  homeSpotter.tblHomeSpotter_FF (NOLOCK
 SELECT COUNT(1) As tblHomeSpotter_DT FROM  homeSpotter.tblHomeSpotter_DT (NOLOCK)
 SELECT COUNT(1) As tblHomeSpotter_AE FROM  homeSpotter.tblHomeSpotter_AE (NOLOCK)
 
-SELECT TOP 10000 * FROM homeSpotter.FactHomeSpotter		
+
+SELECT TOP 100 * FROM homeSpotter.tblHomeSpotter_bcp
+WHERE ip_address like '%174.219.19.118%'
+--WHERE agent_name LIKE '%Mike Ross%'
+--TRUNCATE TABLE homeSpotter.tblHomeSpotter_bcp
+
+--TRUNCATE TABLE homeSpotter.DimAgent				
+--TRUNCATE TABLE homeSpotter.DimAgent_SCD			
+--TRUNCATE TABLE homeSpotter.DimDevice				
+--TRUNCATE TABLE homeSpotter.DimSession				
+--TRUNCATE TABLE homeSpotter.DimUser				
+--TRUNCATE TABLE homeSpotter.FactHomeSpotter		
+--TRUNCATE TABLE homeSpotter.FactHomeSpotterSummary
+
+
+--COUNTING RECORD IN FILE DATE WISE
+SELECT COUNT(1) TotalRecords, CAST(REPLACE(session_start_utc,'"','') As DATE) As Dates
+from homeSpotter.tblHomeSpotter_bcp
+group by CAST(REPLACE(session_start_utc,'"','') As DATE)
+order by CAST(REPLACE(session_start_utc,'"','') As DATE)
+
+
+
+
+
+
+
+SELECT TOP 10 * FROM homeSpotter.FactHomeSpotter		
 SELECT TOP 100 * FROM homeSpotter.FactHomeSpotterSummary
-SELECT TOP 10 * FROM homeSpotter.DimAgent
+SELECT * FROM homeSpotter.DimAgent
+
+SELECT COUNT(1),CreatedBy  FROM homeSpotter.DimSession
+--WHERE DAY(CreatedDate) = 11 and DAY(SessionnStart) = 08
+GROUP BY CreatedBy
 
 SELECT TOP 10 * FROM homeSpotter.DimSession
-WHERE ISessionId = 35498
+WHERE CreatedBy = 1699 
+
+SELECT * FROM homeSpotter.DimSession
+WHERE IpAddress = '104.129.196.125'
+
+--WHERE ISessionId = 35498
 
 SELECT TOP 10 * FROM homeSpotter.tblHomeSpotter_AE order by ModifiedDate desc
 
