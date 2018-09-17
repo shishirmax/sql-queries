@@ -17,7 +17,7 @@ truncate table homeSpotter.tblHomeSpotterHistory_bcp
 
 --**** HomeSpotter **************************************************************
 
-bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_09_04_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 5000 -q -c -t","
+bcp homeSpotter.tblHomeSpotter_bcp in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_09_11_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 5000 -q -c -t","
 
 EXEC homeSpotter.usp_InsertHomeSpotter
 
@@ -54,13 +54,13 @@ WHERE ip_address like '%174.219.19.118%'
 --WHERE agent_name LIKE '%Mike Ross%'
 --TRUNCATE TABLE homeSpotter.tblHomeSpotter_bcp
 
---TRUNCATE TABLE homeSpotter.DimAgent				
---TRUNCATE TABLE homeSpotter.DimAgent_SCD			
---TRUNCATE TABLE homeSpotter.DimDevice				
---TRUNCATE TABLE homeSpotter.DimSession				
---TRUNCATE TABLE homeSpotter.DimUser				
---TRUNCATE TABLE homeSpotter.FactHomeSpotter		
---TRUNCATE TABLE homeSpotter.FactHomeSpotterSummary
+TRUNCATE TABLE homeSpotter.DimAgent				
+TRUNCATE TABLE homeSpotter.DimAgent_SCD			
+TRUNCATE TABLE homeSpotter.DimDevice				
+TRUNCATE TABLE homeSpotter.DimSession				
+TRUNCATE TABLE homeSpotter.DimUser				
+TRUNCATE TABLE homeSpotter.FactHomeSpotter		
+TRUNCATE TABLE homeSpotter.FactHomeSpotterSummary
 
 
 --COUNTING RECORD IN FILE DATE WISE
@@ -215,6 +215,7 @@ SELECT * FROM HomeSpotterMatchEdinaEcrv
 --TRUNCATE TABLE   homeSpotter.FactHomeSpotter
 --TRUNCATE TABLE   homeSpotter.FactHomeSpotterSummary
 
+--##### INITIAL INSERT START
 --SET IDENTITY_INSERT homeSpotter.DimUser ON 
  
 -- INSERT homeSpotter.DimUser (IUserId, [User], CreatedDate, CreatedBy) 
@@ -242,7 +243,7 @@ SELECT * FROM HomeSpotterMatchEdinaEcrv
 -- VALUES (1, '-1', '1900-01-01 00:00:00', '1900-01-01 00:00:00', GETDATE(), -1)
  
 -- SET IDENTITY_INSERT homeSpotter.DimSession OFF
-
+--##### INITIAL INSERT END
 
 sp_RENAME 'homeSpotter.tblHomeSpotterHistory_DT.HS_DT_ID','HSHistoryId','COLUMN' --Done
 sp_RENAME 'homeSpotter.tblHomeSpotterHistory_FF.HS_FF_ID','HSHistoryId','COLUMN' --Done
