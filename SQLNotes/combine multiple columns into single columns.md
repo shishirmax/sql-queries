@@ -8,7 +8,7 @@ Need an output like display all different column data coresponding to same ID in
 |2	|LMNO	|PQRS	|TUVW   |
 |3	|XYZ	|A12B	|C12D   |
 
-*Required Output*
+**Required Output**
 
 |ID |Comp   |
 |---|-------|
@@ -22,7 +22,7 @@ Need an output like display all different column data coresponding to same ID in
 |3	|C12D   |
 |3	|XYZ    |
 
-*Query*
+**Query**
 
 ```SQL
 SELECT ID,Company_1 AS Company
