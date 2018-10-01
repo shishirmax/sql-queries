@@ -1,4 +1,4 @@
-# combine multiple columns into single columns
+# Combine multiple columns into single columns
 
 Need an output like display all different column data coresponding to same ID into single column
 
