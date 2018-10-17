@@ -162,7 +162,7 @@ SELECT TOP 100 * FROM homeSpotter.DimSession
 SELECT COUNT(1) TotalRecords, CAST(SessionnStart As DATE) As Dates
 from homeSpotter.DimSession
 group by CAST(SessionnStart AS DATE)
-order by CAST(SessionnStart AS DATE)
+order by CAST(SessionnStart AS DATE) DESC
 
 --MONTHLY SESSION COUNT
 SELECT COUNT(1) TotalRecords, 
