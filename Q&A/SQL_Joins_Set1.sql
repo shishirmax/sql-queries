@@ -1,0 +1,41 @@
+CREATE TABLE TestJoinT1
+(
+	ID INT
+)
+GO
+
+INSERT INTO TestJoinT1 VALUES (1),(NULL),(1),(NULL)
+GO
+
+CREATE TABLE TestJoinT2
+(
+	ID INT
+)
+GO
+
+INSERT INTO TestJoinT2 VALUES (2),(NULL),(2),(NULL)
+GO
+
+SELECT * FROM TestJoinT1
+SELECT * FROM TestJoinT2
+
+
+SELECT t1.ID,t2.ID
+FROM TestJoinT1 t1
+INNER JOIN TestJoinT2 t2
+ON t1.ID = t2.ID
+
+SELECT t1.ID,t2.ID
+FROM TestJoinT1 t1
+LEFT JOIN TestJoinT2 t2
+ON t1.ID = t2.ID
+
+SELECT t1.ID,t2.ID
+FROM TestJoinT1 t1
+RIGHT JOIN TestJoinT2 t2
+ON t1.ID = t2.ID
+
+SELECT t1.ID,t2.ID
+FROM TestJoinT1 t1
+FULL JOIN TestJoinT2 t2
+ON t1.ID = t2.ID
