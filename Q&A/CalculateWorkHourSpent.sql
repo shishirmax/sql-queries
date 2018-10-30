@@ -55,6 +55,10 @@ DATEDIFF(d,0,WorkEndDateTime-WorkStartDateTime)*9.0+
 (DATEDIFF(MINUTE,0,WorkEndDateTime-WorkStartDateTime)%(24*60))/60.00
  from WorkHour
 
+SELECT WorkStartDateTime,WorkEndDateTime,DATEDIFF(d,WorkStartDateTime,WorkEndDateTime) As DateDiffDay,DATEDIFF(d,WorkStartDateTime,WorkEndDateTime)*9.0 As DateDiffDay9Hr 
+FROM WorkHour
+SELECT WorkStartDateTime,WorkEndDateTime,DATEDIFF(MI,WorkStartDateTime,WorkEndDateTime),(DATEDIFF(MI,WorkStartDateTime,WorkEndDateTime)%(24*60)),(DATEDIFF(MI,WorkStartDateTime,WorkEndDateTime)%(24*60))/60.00 
+FROM WorkHour
 
  UPDATE WorkHour
  SET WorkHourSpent = DATEDIFF(d,0,WorkEndDateTime-WorkStartDateTime)*9.0+
