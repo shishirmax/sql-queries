@@ -15,7 +15,7 @@ ROWTERMINATOR='\n'
 
 --BCP Script
 Step 1
-bcp dbo.tblHomeSpotter_BAK in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_06_30_2018.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123  -b 10000 -q -c -t","
+bcp dbo.tblHomeSpotter_BAK in D:\Edina\HomeSpotterFeed\From_FTP\edina_contata_sessions_06_30_2018.csv -S tcp:<server>.database.windows.net -d <database> -U <username> -P <password>  -b 10000 -q -c -t","
 
 Step 2: (Remove the header)
 DELETE 
@@ -70,7 +70,7 @@ where ip_address = '68.63.219.208' and session_start_utc = '2018-02-11 00:28:15.
 select TOP 10 * from dbo.tblHomeSpotter_DT_BAK --481376 
 where [user] is not null
 
-bcp "select TOP 10 * from dbo.tblHomeSpotter_DT_BAK" queryout D:\Edina\HomeSpotterFeed\Complete.csv -S tcp:contata.database.windows.net -d Edina -U contata.admin@contata -P C@ntata123 -q -c -t","
+
 
 select count(*) from tblHomeSpotter_BAK 
 --select count(*) from tblHomeSpotter_FF_BAK
