@@ -165,6 +165,8 @@ group by CAST(SessionnStart AS DATE)
 order by CAST(SessionnStart AS DATE) DESC
 
 --MONTHLY SESSION COUNT
+
+
 SELECT COUNT(1) TotalRecords, 
 CASE 
 	WHEN MONTH(CAST(SessionnStart As DATE)) = 1
@@ -196,9 +198,7 @@ END
 FROM homespotter.DimSession
 WHERE YEAR(CAST(SessionnStart As DATE)) = 2018 or YEAR(CAST(SessionnStart As DATE)) = 2017
 GROUP BY MONTH(CAST(SessionnStart As DATE)),YEAR(CAST(SessionnStart As DATE))
-ORDER BY MONTH(CAST(SessionnStart As DATE))
-
-
+ORDER BY YEAR(CAST(SessionnStart As DATE))
 
  SELECT CONVERT(VARCHAR(MAX),GETDATE(),103)
 
