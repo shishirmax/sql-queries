@@ -22,13 +22,14 @@ VALUES
 
 SELECT * FROM DeptSalary
 
-;WITH cte AS
+;WITH Result AS
 (
 SELECT SUM(DeptSalary) AS TotalSum,DeptName
 FROM DeptSalary
 GROUP BY DeptName
 )
-SELECT DeptName,TotalSum FROM cte
-WHERE TotalSum = (SELECT MAX(TotalSum) FROM cte)
+SELECT DeptName,TotalSum,DENSE_RANK() OVER(ORDER BY TotalSum DESC) AS DENSERANK FROM Result
+--WHERE DENSERANK = 1
+WHERE TotalSum = (SELECT MAX(TotalSum) FROM Result)
 
 
