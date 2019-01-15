@@ -196,7 +196,8 @@ CASE
 END
 	AS Month,YEAR(CAST(SessionnStart As DATE)) AS Year
 FROM homespotter.DimSession
-WHERE YEAR(CAST(SessionnStart As DATE)) = 2018 or YEAR(CAST(SessionnStart As DATE)) = 2017
+WHERE YEAR(CAST(SessionnStart AS DATE)) BETWEEN 2017 AND 2019
+--WHERE YEAR(CAST(SessionnStart As DATE)) = 2019 OR YEAR(CAST(SessionnStart As DATE)) = 2018 OR YEAR(CAST(SessionnStart As DATE)) = 2017
 GROUP BY MONTH(CAST(SessionnStart As DATE)),YEAR(CAST(SessionnStart As DATE))
 ORDER BY YEAR(CAST(SessionnStart As DATE))
 
