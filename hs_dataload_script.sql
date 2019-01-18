@@ -23,7 +23,7 @@ EXEC homeSpotter.usp_InsertHomeSpotter
 
 EXEC homeSpotter.usp_MergeHomeSpotter
 
-
+sp_helptext 'homeSpotter.usp_InsertHomeSpotter'
 sp_helptext 'homeSpotter.usp_MergeHomeSpotter'
 
 select @@TRANCOUNT
@@ -157,6 +157,18 @@ select * FROM homeSpotter.FactHomeSpotter
 where IHomeSpotterId = 3962
 
 SELECT TOP 100 * FROM homeSpotter.DimSession
+ORDER BY CreatedDate DESC
+
+SELECT COUNT(1),IpAddress
+FROM homeSpotter.DimSession
+WHERE IpAddress <> '-1'
+GROUP BY IpAddress
+ORDER BY 1 DESC
+
+SELECT * FROM homeSpotter.DimSession
+WHERE IpAddress = '198.174.108.202'
+ORDER BY 1
+
 
 --DAILY SESSION COUNT
 SELECT COUNT(1) TotalRecords, CAST(SessionnStart As DATE) As Dates
