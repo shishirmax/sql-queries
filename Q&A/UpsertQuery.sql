@@ -26,7 +26,13 @@ SELECT ROUND(AVG(Salary) - AVG(CAST(REPLACE(Salary,'0','') AS INT)),1) FROM hEmp
 
 
 SELECT * FROM hEmployees
-EXEC InsertOrUpdateEmployee 'Kristeen',5600
+EXEC InsertOrUpdateEmployee 'Julia',2210
+
+SELECT * FROM hEmployees
+WHERE UpdateDate IS NULL
+
+SELECT * FROM hEmployees
+WHERE UpdateDate IS NOT NULL
 
 DELETE FROM hEmployees WHERE NAME = 'Alexa'
 
