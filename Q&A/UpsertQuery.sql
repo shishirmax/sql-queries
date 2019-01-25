@@ -26,7 +26,7 @@ SELECT ROUND(AVG(Salary) - AVG(CAST(REPLACE(Salary,'0','') AS INT)),1) FROM hEmp
 
 
 SELECT * FROM hEmployees
-EXEC InsertOrUpdateEmployee 'Julia',2210
+EXEC InsertOrUpdateEmployee 'Julia',4560
 
 SELECT * FROM hEmployees
 WHERE UpdateDate IS NULL
@@ -97,7 +97,8 @@ AS BEGIN
 	LEFT JOIN hEmployees D
 	ON S.Name = D.Name
 	AND S.Salary = D.Salary
-	WHERE D.InsertDate IS NULL
+	WHERE D.Name IS NULL
+	AND D.Salary IS NULL
 
 	DROP TABLE #tmpData
 
