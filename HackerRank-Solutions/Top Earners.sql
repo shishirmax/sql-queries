@@ -25,3 +25,6 @@ SELECT (months*Salary) As Earnings,COUNT(employee_id) As EmployeeCount
 FROM SampleEmployee
 GROUP BY employee_id,months,Salary) As Query
 GROUP BY EmployeeCount
+
+--rounded to a scale of 2 decimal places
+SELECT ROUND(60.67896,2)
