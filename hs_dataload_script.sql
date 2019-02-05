@@ -169,6 +169,9 @@ SELECT * FROM homeSpotter.DimSession
 WHERE IpAddress = '198.174.108.202'
 ORDER BY 1
 
+SELECT * FROM homeSpotter.DimSession
+WHERE YEAR(SessionnStart) = 2018 AND (MONTH(SessionnStart) BETWEEN 1 AND 2)
+
 
 --DAILY SESSION COUNT
 SELECT COUNT(1) TotalRecords, CAST(SessionnStart As DATE) As Dates
