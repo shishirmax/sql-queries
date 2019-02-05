@@ -6,6 +6,57 @@ WHILE @var>0
 		SET @var = @var - 1
 	END
 
+/*Output:
+
+* * * * *
+* * * * 
+* * * 
+* * 
+*
+
+*/
+
+DECLARE @var INT
+SELECT @var = 1
+WHILE @var <= 5
+	BEGIN
+		PRINT REPLICATE('* ',@var)
+		SET @var = @var + 1
+	END
+/*
+Output:
+* 
+* * 
+* * * 
+* * * * 
+* * * * * 
+
+*/
+
+DECLARE @var int, @x int				 -- declare two variable 
+SELECT @var = 4,@x = 1				 -- initialization 
+WHILE @x <=5							 -- condition 
+BEGIN
+PRINT space(@var) + replicate('*', @x) -- here space for 
+										-- create spaces 
+SET @var = @var - 1					 -- set 
+set @x = @x + 1						 -- set 
+END									 -- End 
+
+/*
+Output:
+    *
+   **
+  ***
+ ****
+*****
+
+*/
+
+
+
+
+
 /*
 REPLICATE Function
 Syntax: REPLICATE ( string_expression ,integer_expression )  
