@@ -36,7 +36,7 @@ FROM cte
 WHERE RowNum2 <=5
 GROUP BY Region,Customer_Name WITH ROLLUP
 --GROUP BY ROLLUP(Region,Customer_Name)
---ORDER BY Region --,3 DESC
+ORDER BY Region --,3 DESC
 
 
 
