@@ -1,29 +1,21 @@
-CREATE TABLE tblURL
+CREATE TABLE InputOrder
 (
-	URL VARCHAR(100)
+	Date DATETIME
+	,OrderID VARCHAR(10)
 )
 
-INSERT INTO tblURL
+INSERT INTO InputOrder
 VALUES
-('www.amazon.com')
-,('www.amazon.ca')
-,('www.amazon.uk')
-,('www.amazon.in')SELECT URL,CHARINDEX('.',URL,5),LEN(URL),SUBSTRING(URL,CHARINDEX('.',URL,5),LEN(URL)) FROM tblURLCREATE TABLE tblCountry(	Suffix VARCHAR(100)	,Country VARCHAR(100))INSERT INTO tblCountryVALUES('.com','United States')
-,('.uk','United Kingdom')
-,('.in','India')
-,('.ca','Canada')
+('2017/01/02','A')
+,('2017/01/31','B')
+,('2017/02/01','C')
+,('2017/09/01','D')
 
---Solution
-SELECT A.URL, B.Country
-FROM tblURL A
-JOIN tblCountry B
-ON PARSENAME(A.URL,1) = REPLACE(B.Suffix,'.','')
+SELECT DATE, OrderID,RANK() OVER(PARTITION BY MONTH(DATE) ORDER BY DATE) FROM InputOrder
 
-SELECT A.URL, B.Country
-FROM tblURL A
-JOIN tblCountry B
-ON SUBSTRING(A.URL,CHARINDEX('.',A.URL,5),LEN(A.URL)) = B.Suffix
+SELECT DATE, OrderID, COUNT(DISTINCT MONTH(DATE))
+FROM InputOrder
+GROUP BY  DATE, OrderID 
 
+SELECT COUNT(DISTINCT MONTH(DATE)) FROM InputOrder
 
-
-
