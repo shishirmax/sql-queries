@@ -24,10 +24,16 @@ CREATE TABLE DataDestination
 
 INSERT INTO DataSource
 VALUES
-(102,'Prateek Nigam',18800,'02-23-2016','Noida',5825859678,3)
+(102,'Raju Rastogi',18800,'02-23-2016','Noida',8574968578,3)
 
 SELECT * FROM DataSource
 SELECT * FROM DataDestination
+
+ALTER TABLE DataDestination
+ADD UpdateColumn INT
+
+UPDATE DataDestination
+SET UpdateColumn = 1001
 
 EXEC sp_UpdateInsert
 
