@@ -65,3 +65,25 @@ SELECT E.Employee_id,E.Salary,I.Incentive_amount,I.Incentive_date,DENSE_RANK() O
 FROM Employee E
 JOIN Incentives I
 ON E.Employee_id = I.Employee_ref_id
+
+
+--Select first_name, incentive amount from employee and incentives table for those employees who have incentives
+
+SELECT E.First_name,I.Incentive_amount
+FROM Employee E
+INNER JOIN Incentives I
+ON E.Employee_id = I.Employee_ref_id
+
+--Select first_name, incentive amount from employee and incentives table for those employees who have incentives and incentive amount greater than 3000
+
+SELECT E.First_name,I.Incentive_amount
+FROM Employee E
+INNER JOIN Incentives I
+ON E.Employee_id = I.Employee_ref_id
+AND I.Incentive_amount>3000
+
+SELECT E.First_name,I.Incentive_amount
+FROM Employee E
+INNER JOIN Incentives I
+ON E.Employee_id = I.Employee_ref_id
+WHERE I.Incentive_amount>3000
