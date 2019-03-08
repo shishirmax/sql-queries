@@ -54,13 +54,13 @@ WHERE ip_address like '%174.219.19.118%'
 --WHERE agent_name LIKE '%Mike Ross%'
 --TRUNCATE TABLE homeSpotter.tblHomeSpotter_bcp
 
-TRUNCATE TABLE homeSpotter.DimAgent				
-TRUNCATE TABLE homeSpotter.DimAgent_SCD			
-TRUNCATE TABLE homeSpotter.DimDevice				
-TRUNCATE TABLE homeSpotter.DimSession				
-TRUNCATE TABLE homeSpotter.DimUser				
-TRUNCATE TABLE homeSpotter.FactHomeSpotter		
-TRUNCATE TABLE homeSpotter.FactHomeSpotterSummary
+--TRUNCATE TABLE homeSpotter.DimAgent				
+--TRUNCATE TABLE homeSpotter.DimAgent_SCD			
+--TRUNCATE TABLE homeSpotter.DimDevice				
+--TRUNCATE TABLE homeSpotter.DimSession				
+--TRUNCATE TABLE homeSpotter.DimUser				
+--TRUNCATE TABLE homeSpotter.FactHomeSpotter		
+--TRUNCATE TABLE homeSpotter.FactHomeSpotterSummary
 
 
 --COUNTING RECORD IN FILE DATE WISE
@@ -169,8 +169,40 @@ SELECT * FROM homeSpotter.DimSession
 WHERE IpAddress = '198.174.108.202'
 ORDER BY 1
 
-SELECT * FROM homeSpotter.DimSession
+SELECT TOP 1000 * FROM homeSpotter.DimSession
 WHERE YEAR(SessionnStart) = 2018 AND (MONTH(SessionnStart) BETWEEN 1 AND 2)
+
+SELECT TOP 5 * FROM homespotter.DimUser
+SELECT TOP 5 * FROM homespotter.DimSession
+SELECT TOp 5 * FROM homespotter.FactHomeSpotter
+--SELECT TOP 5 * FROM homeSpotter.FactHomeSpotterSummary
+SELECT TOP 5 * FROM homeSpotter.DimDevice
+
+SELECT
+	 homespotter.DimUser.IUserID
+	,homespotter.DimUser.[User]
+	,homespotter.DimSession.ISessionId
+	,homespotter.DimSession.IpAddress
+	,homespotter.DimSession.SessionnStart
+	,homespotter.DimSession.SessionnEnd
+	,homeSpotter.DimDevice.DeviceId
+	,homespotter.FactHomeSpotter.UserId
+	,homespotter.FactHomeSpotter.SessionId
+INTO #tmpHsData
+FROM homeSpotter.DimUser
+JOIN homeSpotter.FactHomeSpotter
+ON homeSpotter.DimUser.IUserId = homeSpotter.FactHomeSpotter.UserId
+JOIN homeSpotter.DimSession
+ON homespotter.DimSession.ISessionId = homeSpotter.FactHomeSpotter.SessionId 
+JOIN homeSpotter.DimDevice
+on homeSpotter.DimDevice.IDeviceId = homeSpotter.FactHomeSpotter.DeviceId
+WHERE homespotter.DimUser.[User] <> '-1'
+ORDER BY homespotter.DimSession.SessionnStart
+
+SELECT COUNT(1) FROM #tmpHsData
+SELECT TOP 1 * 
+FROM #tmpHsData
+
 
 
 --DAILY SESSION COUNT

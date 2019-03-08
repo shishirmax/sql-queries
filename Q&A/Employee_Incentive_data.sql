@@ -41,6 +41,7 @@ ALTER TABLE Employee
 ALTER COLUMN Department VARCHAR(100)
 
 SELECT * FROM Employee
+SELECT Employee_id,First_name,Last_name,Salary,Department,Joining_date FROM Employee
 SELECT * FROM Incentives
 
 select * from EMPLOYEE where exists (select * from INCENTIVES)
