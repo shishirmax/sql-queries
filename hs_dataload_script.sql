@@ -200,8 +200,9 @@ WHERE homespotter.DimUser.[User] <> '-1'
 ORDER BY homespotter.DimSession.SessionnStart
 
 SELECT COUNT(1) FROM #tmpHsData
-SELECT TOP 1 * 
+SELECT TOP 100 * 
 FROM #tmpHsData
+ORDER BY SessionnStart
 
 
 
