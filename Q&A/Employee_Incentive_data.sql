@@ -88,3 +88,10 @@ FROM Employee E
 INNER JOIN Incentives I
 ON E.Employee_id = I.Employee_ref_id
 WHERE I.Incentive_amount>3000
+
+
+
+
+
+SELECT * FROM EMPLOYEE
+WHERE Salary = (SELECT MAX(Salary) FROM Employee)
