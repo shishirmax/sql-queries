@@ -1,0 +1,23 @@
+CREATE TABLE Employee
+(
+    employee_id int
+    ,name varchar(200)
+    ,months int
+    ,salary int
+)
+
+INSERT INTO Employee
+VALUES
+(12228,'Rose',15,1968)
+,(33645,'Angela',1,3443)
+,(45692,'Frank',17,1608)
+
+SELECT * FROM Employee
+
+;WITH CTE AS(
+    SELECT employee_id,name,months,salary,(months*salary) as earnings,DENSE_RANK() OVER(ORDER BY (months*salary) DESC) AS RN
+    FROM Employee
+    )
+SELECT MAX(earnings),count(employee_id) FROM CTE
+WHERE RN=1
+
